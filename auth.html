@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Village - A platform to offer and seek help in your community."
+    />
+    <title>Village - Log In / Sign Up</title>
+    <!--  Poppins -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./dist/css/styles.css" />
+    <link rel="icon" href="./media/Logo (6).png" type="image/png" />
+    <meta name="theme-color" content="#4F796C" />
+    <script src="./src/js/main.js" type="module"></script>
+  </head>
+
+  <body class="font-sans bg-bg tracking-min">
+    <!-- Modal Container -->
+<div
+  id="authModal"
+  class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 shadow-2xl z-50 p-3 sm:p-6 lg:p-10"
+>
+  <div
+  class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md sm:max-w-lg lg:max-w-2xl overflow-hidden"
+  >
+        <!-- Header with Switch -->
+        <div
+          class="flex justify-between rounded shadow mb-6 border border-secondary"
+        >
+          <button
+            id="loginTab"
+            class="flex-1 py-1 font-light text-secondary text-center bg-primary-dark border-secondary shadow-sm hover:shadow-md hover:border-1,5"
+          >
+            LOG IN
+          </button>
+          <button
+            id="signupTab"
+            class="flex-1 py-1 font-light text-secondary text-center bg-primary border-secondary shadow-sm hover:shadow-md hover:border-1,5"
+          >
+            SIGN UP
+          </button>
+        </div>
+
+        <!-- Log In Form -->
+        <form id="loginForm" class="block">
+          <div class="mb-4">
+            <label for="loginUsername" class="block text-sm font-light"
+              >Email</label
+            >
+            <input
+              type="text"
+              id="loginUsername"
+              class="mt-1 block w-full px-2 py-1 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary"
+              placeholder="Username"
+              required
+            />
+          </div>
+          <div class="mb-6">
+            <label for="loginPassword" class="block text-sm font-light"
+              >Password</label
+            >
+            <input
+              type="password"
+              id="loginPassword"
+              class="mt-1 block w-full px-2 py-1 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary"
+              placeholder="Password"
+              required
+            />
+          </div>
+          <div class="flex items-center justify-center h-full">
+            <button
+              type="submit"
+              class="bg-primary text-secondary py-1 px-3 rounded hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary-light"
+            >
+              LOG IN
+            </button>
+          </div>
+        </form>
+        <div class="flex justify-between mt-6">
+<div id="loginError" class="text-red-500 text-sm hidden"></div>
+  <button
+    id="searchAsGuest"
+    class="bg-primary-light text-secondary py-1 px-3 rounded hover:bg-primary focus:outline-none focus:ring-2 focus:ring-primary-light"
+  >
+  Guest
+  </button>
+</div>
+
+       <!-- Sign-Up Form -->
+<form id="signupForm" class="hidden">
+  <!-- Avatar Upload -->
+  <div class="flex flex-col items-center justify-center mb-4">
+    <label
+      for="avatarUpload"
+      class="flex items-center justify-center w-24 h-24 rounded-full bg-gray-200 shadow-inner cursor-pointer hover:bg-gray-300"
+    >
+      <span class="text-sm text-gray-500">Upload</span>
+      <input type="file" id="avatarUpload" class="hidden" />
+    </label>
+
+    <!-- Avatar Preview -->
+    <img
+      id="avatarPreview"
+      class="hidden w-24 h-24 rounded-full border mt-4"
+      src=""
+      alt="Avatar Preview"
+    />
+  </div>
+
+
+          <!-- Username -->
+          <div class="mb-4">
+            <label for="username" class="block text-sm font-light"
+              >Username</label
+            >
+            <input
+              type="text"
+              id="username"
+              class="mt-1 block w-full px-2 py-1 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary"
+              required
+            />
+          </div>
+
+          <!-- Full Name -->
+          <div class="mb-4">
+            <label for="registerName" class="block text-sm font-light"
+              >Full Name</label
+            >
+            <input
+              type="text"
+              id="registerName"
+              class="mt-1 block w-full px-2 py-1 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary"
+              required
+            />
+          </div>
+
+          <!-- Email -->
+          <div class="mb-4">
+            <label for="registerEmail" class="block text-sm font-light"
+              >Email</label
+            >
+            <input
+              type="email"
+              id="registerEmail"
+              class="mt-1 block w-full px-2 py-1 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary"
+              required
+            />
+          </div>
+
+          <!-- Password -->
+          <div class="mb-4">
+            <label for="registerPassword" class="block text-sm font-light"
+              >Password</label
+            >
+            <input
+              type="password"
+              id="registerPassword"
+              class="mt-1 block w-full px-2 py-1 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary"
+              required
+            />
+          </div>
+
+          <!-- Repeat Password -->
+          <div class="mb-4">
+            <label for="repeatPassword" class="block text-sm font-light"
+              >Repeat Password</label
+            >
+            <input
+              type="password"
+              id="repeatPassword"
+              class="mt-1 block w-full px-2 py-1 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary"
+              required
+            />
+          </div>
+
+          <!-- Biography -->
+          <div class="mb-4">
+            <label for="biography" class="block text-sm font-light"
+              >Biography</label
+            >
+            <textarea
+              id="biography"
+              class="mt-1 block w-full px-2 py-1 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary"
+              placeholder="Tell us a little about yourself"
+              rows="4"
+            ></textarea>
+          </div>
+
+          <!-- Next Button -->
+          <div class="flex items-center justify-center">
+            <button
+              type="button"
+              id="nextButton"
+              class="bg-primary text-secondary px-2 py-1 rounded hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary-light"
+            >
+              NEXT
+            </button>
+          </div>
+        </form>
+        <!-- Get to Know You Form -->
+  <div
+  id="getToKnowForm"
+  class="hidden p-4 sm:p-6 bg-white rounded-lg shadow-lg w-full"
+>
+          <h2 class="text-sm font-light text-primary-dark mb-6 text-center">
+            Tell us about yourself, <span id="usernameDisplay">User</span>!
+          </h2>
+
+          <!-- Question 1: Why are you joining? -->
+          <div class="space-y-6">
+            <div class="mb-6">
+              <label class="block text-sm font-light text-gray-700 mb-2"
+                >Why are you joining?</label
+              >
+              <div class="space-y-2">
+                <label class="block">
+                  <input
+                    type="radio"
+                    name="joiningReason"
+                    value="offer"
+                    class="mr-2"
+                  />
+                  <span class="font-light text-primary-dark">Offer help</span>
+                </label>
+                <label class="block">
+                  <input
+                    type="radio"
+                    name="joiningReason"
+                    value="seek"
+                    class="mr-2"
+                  />
+                  <span class="font-light text-primary-dark">Seek help</span>
+                </label>
+                <label class="block">
+                  <input
+                    type="radio"
+                    name="joiningReason"
+                    value="both"
+                    class="mr-2"
+                  />
+                  <span class="font-light text-primary-dark">both</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Question 2: Categories of Interest -->
+          <div class="space-y-6">
+            <div class="mb-6">
+              <label class="block text-sm font-light text-primary-dark mb-2">
+                Which categories interest you?
+              </label>
+              <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-4">
+                <!-- Category Icons as Checkboxes -->
+                <label class="cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    name="categories"
+                    value="household"
+                    class="hidden peer"
+                  />
+                  <div
+                    class="flex flex-col items-center border rounded-lg p-2 peer-checked:bg-primary-light peer-checked:border-primary transition"
+                  >
+                    <img src="house.png" alt="Household" class="w-8 h-8 mb-1" />
+                    <span class="text-xs text-primary-dark font-light"
+                      >Household</span
+                    >
+                  </div>
+                </label>
+                <label class="cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    name="categories"
+                    value="cooking"
+                    class="hidden peer"
+                  />
+                  <div
+                    class="flex flex-col items-center border rounded-lg p-2 peer-checked:bg-primary-light peer-checked:border-primary transition"
+                  >
+                    <img src="cooking.png" alt="Cooking" class="w-8 h-8 mb-1" />
+                    <span class="text-xs text-primary-dark font-light"
+                      >Cooking</span
+                    >
+                  </div>
+                </label>
+                <label class="cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    name="categories"
+                    value="crafting"
+                    class="hidden peer"
+                  />
+                  <div
+                    class="flex flex-col items-center border rounded-lg p-2 peer-checked:bg-primary-light peer-checked:border-primary transition"
+                  >
+                    <img
+                      src="crafting.png"
+                      alt="Crafting"
+                      class="w-8 h-8 mb-1"
+                    />
+                    <span class="text-xs text-primary-dark font-light"
+                      >Crafting</span
+                    >
+                  </div>
+                </label>
+                <label class="cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    name="categories"
+                    value="gardening"
+                    class="hidden peer"
+                  />
+                  <div
+                    class="flex flex-col items-center border rounded-lg p-2 peer-checked:bg-primary-light peer-checked:border-primary transition"
+                  >
+                    <img
+                      src="gardening.png"
+                      alt="Gardening"
+                      class="w-8 h-8 mb-1"
+                    />
+                    <span class="text-xs text-primary-dark font-light"
+                      >Gardening</span
+                    >
+                  </div>
+                </label>
+                <label class="cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    name="categories"
+                    value="teaching"
+                    class="hidden peer"
+                  />
+                  <div
+                    class="flex flex-col items-center border rounded-lg p-2 peer-checked:bg-primary-light peer-checked:border-primary transition"
+                  >
+                    <img
+                      src="teaching.png"
+                      alt="Teaching"
+                      class="w-8 h-8 mb-1"
+                    />
+                    <span class="text-xs text-primary-dark font-light"
+                      >Teaching</span
+                    >
+                  </div>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Question 3: Availability -->
+          <div class="space-y-6">
+            <div class="mb-6">
+              <label class="block text-sm font-light text-primary-dark mb-2"
+                >I am available</label
+              >
+              <div class="space-y-2">
+                <label class="block">
+                  <input
+                    type="radio"
+                    name="availability"
+                    value="few-hours"
+                    class="mr-2"
+                  /><span class="text-xs font-light text-primary-dark"
+                    >A few hours a week</span
+                  >
+                </label>
+                <label class="block">
+                  <input
+                    type="radio"
+                    name="availability"
+                    value="1-2-days"
+                    class="mr-2"
+                  />
+                  <span class="text-xs font-light text-primary-dark"
+                    >1–2 days per week</span
+                  >
+                </label>
+                <label class="block">
+                  <input
+                    type="radio"
+                    name="availability"
+                    value="full-time"
+                    class="mr-2"
+                  />
+                  <span class="text-xs font-light text-primary-dark"
+                    >Mostly available</span
+                  >
+                </label>
+                <label class="block">
+                  <input
+                    type="radio"
+                    name="availability"
+                    value="occasionally"
+                    class="mr-2"
+                  />
+                  <span class="text-xs font-light text-primary-dark"
+                    >Occasionally/urgently</span
+                  >
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Question 4: Motivation -->
+          <div class="space-y-6">
+            <div class="mb-6">
+              <label class="block text-sm font-light text-primary-dark mb-2"
+                >What motivates you to join?</label
+              >
+              <select
+                class="block w-full px-2 py-1 font-light border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary"
+              >
+                <option value="community">Connecting with my community</option>
+                <option value="skills">Sharing my skills</option>
+                <option value="affordable">Finding affordable help</option>
+                <option value="learning">Learning something new</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="flex items-center justify-center">
+            <button
+              type="submit"
+              class="bg-primary text-secondary py-1 px-3 rounded hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary-light"
+            >
+              Submit
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

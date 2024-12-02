@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Village - A platform to offer and seek help in your community."
+    />
+    <title>Village</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/heroicons@2.0.13/dist/24/solid/index.min.js"></script>
+          <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./dist/css/styles.css" />
+    <meta name="theme-color" content="#4F796C" />
+    <script src="./src/js/main.js" type="module"></script>
+  </head>
+  <body>
+    <header
+      class="grid grid-cols-3 gap-x-4 px-4 sm:px-6 lg:px-8 bg-white shadow-lg"
+    >
+      <!-- Row 1 -->
+      <div
+        class="flex items-center justify-start pl-2 mt-[-20px] sm:pl-4 lg:pl-6"
+      >
+        <img
+          src="./media/village_logo3.png"
+          alt="Village logo"
+          class="h-40 sm:h-48 lg:h-56 object-contain"
+          style="transform: rotate(-90deg)"
+        />
+      </div>
+      <div class="flex items-center justify-center mt-[-40px]">
+        <h1
+          class="text-3xl sm:text-4xl lg:text-5xl font-normal tracking-medio text-primary drop-shadow-xl leading-tight"
+        >
+          VILLAGE
+        </h1>
+      </div>
+      <div class="flex items-center justify-end mt-[-100px] space-x-3">
+        <!-- Utility Icons -->
+        <!-- Bell -->
+        <button title="Notifications">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 text-primary hover:text-primary-dark transition-colors duration-300"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-5-5.917V5a3 3 0 00-6 0v.083A6.002 6.002 0 002 11v3.159c0 .417-.16.825-.444 1.143L.999 17h5m0 0a3 3 0 006 0m-6 0H5"
+            />
+          </svg>
+        </button>
+        <!-- Coin -->
+        <button title="Credit">
+   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6 text-primary hover:text-primary-dark transition-colors duration-300">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125" />
+</svg>
+          </svg>
+        </button>
+        <!-- Profile -->
+        <button title="Profile">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="h-6 w-6 text-primary hover:text-primary-dark transition-colors duration-300"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+            />
+          </svg>
+        </button>
+        <!-- Settings -->
+        <button title="Settings">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="h-6 w-6 text-primary hover:text-primary-dark transition-colors duration-300"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z"
+            />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+            />
+          </svg>
+        </button>
+        <!-- Log out -->
+        <button title="Logout">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="h-6 w-6 text-primary hover:text-primary-dark transition-colors duration-300"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"
+            />
+          </svg>
+        </button>
+      </div>
+<!-- Row 2: Search Bar -->
+<div class="col-span-3 pb-3 mt-[-40px] flex justify-center">
+  <div class="relative w-3/4 max-w-xl">
+    <input
+      type="text"
+      placeholder="Search listings, users, or categories"
+      class="w-full p-2 sm:p-3 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-primary-light text-primary-dark-700 placeholder-primary-dark-500"
+    />
+    <button
+      type="submit"
+      class="absolute right-2 top-1/2 transform -translate-y-1/2"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="h-6 w-6 text-primary-dark hover:text-primary-light transition-colors duration-300"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+        />
+      </svg>
+    </button>
+  </div>
+</div>
+
+<!-- Row 3: Categories -->
+<div
+  class="col-span-3 mt-2 px-4 pb-1 flex justify-center items-center space-x-2"
+>
+      
+<!-- Household -->
+<button
+  title="household"
+  class="relative flex flex-col items-center p-0 m-0 space-y-0 group"
+>
+  <!-- Icon -->
+  <img
+    src="./media/icons/house.png"
+    alt="Household Icon"
+    class="h-36 w-24 group-hover:blur-sm transition-all duration-500"
+  />
+<!-- Text -->
+<span
+  class="absolute top-1/2 transform -translate-y-1/2 text-m font-light text-secondary-dark tracking-min opacity-0 group-hover:opacity-100 transition-all duration-500"
+>
+  HOUSEHOLD
+</span>
+</button>
+
+
+        <!-- Homemade -->
+<button
+  title="homemade"
+  class="relative flex flex-col items-center p-0 m-0 space-y-0 group"
+>
+  <img
+    src="./media/icons/homemade.png"
+    alt="Household Icon"
+    class="h-36 w-24 group-hover:blur-sm transition-all duration-500"
+  />
+<!-- Text -->
+<span
+  class="absolute top-1/2 transform -translate-y-1/2 text-m font-light text-secondary-dark tracking-min opacity-0 group-hover:opacity-100 transition-all duration-500"
+>
+  COOKING
+</span>
+</button>
+
+        <!-- Handcraft -->
+<button
+  title="household"
+  class="relative flex flex-col items-center p-0 m-0 space-y-0 group"
+>
+  <img
+    src="./media/icons/needle.png"
+    alt="Handcraft Icon"
+    class="h-36 w-24 group-hover:blur-sm transition-all duration-500"
+  />
+<!-- Text -->
+<span
+  class="absolute top-1/2 transform -translate-y-1/2 text-m font-light text-secondary-dark tracking-min opacity-0 group-hover:opacity-100 transition-all duration-500"
+>
+  HANDCRAFT
+</span>
+</button>
+
+        <!-- Sports -->
+<button
+  title="sports"
+  class="relative flex flex-col items-center p-0 m-0 space-y-0 group"
+>
+  <img
+    src="./media/icons/sports.png"
+    alt="Sports Icon"
+     class="h-36 w-24 group-hover:blur-sm transition-all duration-500"
+  />
+<!-- Text -->
+<span
+  class="absolute top-1/2 transform -translate-y-1/2 text-m font-light text-secondary-dark tracking-min opacity-0 group-hover:opacity-100 transition-all duration-500"
+>
+  SPORTS
+</span>
+</button>
+
+        <!-- Proffesional -->
+<button
+  title="proffesional"
+  class="relative flex flex-col items-center p-0 m-0 space-y-0 group"
+>
+  <img
+    src="./media/icons/star.png"
+    alt="Proffesional Icon"
+     class="h-36 w-24 group-hover:blur-sm transition-all duration-500"
+  />
+<!-- Text -->
+<span
+  class="absolute top-1/2 transform -translate-y-1/2 text-m font-light text-secondary-dark tracking-min opacity-0 group-hover:opacity-100 transition-all duration-500"
+>
+  EXPERT
+</span>
+</button>
+        <!-- Children & Family -->
+<button
+  title="toys"
+  class="relative flex flex-col items-center p-0 m-0 space-y-0 group"
+>
+  <img
+    src="./media/icons/toys.png"
+    alt="Toys Icon"
+     class="h-36 w-24 group-hover:blur-sm transition-all duration-500"
+  />
+<!-- Text -->
+<span
+  class="absolute top-1/2 transform -translate-y-1/2 text-m font-light text-secondary-dark tracking-min opacity-0 group-hover:opacity-100 transition-all duration-500"
+>
+  CHILDREN
+</span>
+</button>
+        <!-- Pets -->
+<button
+  title="pets"
+  class="relative flex flex-col items-center p-0 m-0 space-y-0 group"
+>
+  <img
+    src="./media/icons/paw.png"
+    alt="Pets Icon"
+     class="h-36 w-24 group-hover:blur-sm transition-all duration-500"
+  />
+<!-- Text -->
+<span
+  class="absolute top-1/2 transform -translate-y-1/2 text-m font-light text-secondary-dark tracking-min opacity-0 group-hover:opacity-100 transition-all duration-500"
+>
+PETS 
+</span>
+</button>
+        <!-- Eco swap -->
+<button
+  title="eco"
+  class="relative flex flex-col items-center p-0 m-0 space-y-0 group"
+>
+  <img
+    src="./media/icons/leaf.png"
+    alt="Leaf Icon"
+     class="h-36 w-24 group-hover:blur-sm transition-all duration-500"
+  />
+<!-- Text -->
+<span
+  class="absolute top-1/2 transform -translate-y-1/2 text-m font-light text-secondary-dark tracking-min opacity-0 group-hover:opacity-100 transition-all duration-500"
+>
+SECONHAND
+</span>
+</button>
+
+        <!-- Event -->
+<button
+  title="event"
+  class="relative flex flex-col items-center p-0 m-0 space-y-0 group"
+>
+  <img
+    src="./media/icons/event.png"
+    alt="calendar Icon"
+     class="h-36 w-24 group-hover:blur-sm transition-all duration-500"
+  />
+<!-- Text -->
+<span
+  class="absolute top-1/2 transform -translate-y-1/2 text-m font-light text-secondary-dark tracking-min opacity-0 group-hover:opacity-100 transition-all duration-500"
+>
+EVENT 
+</span>
+</button>
+
+        <!-- Urgent -->
+<button
+  title="urgent"
+  class="relative flex flex-col items-center p-0 m-0 space-y-0 group"
+>
+  <img
+    src="./media/icons/fire.png"
+    alt="fire Icon"
+     class="h-36 w-24 group-hover:blur-sm transition-all duration-500"
+  />
+<!-- Text -->
+<span
+  class="absolute top-1/2 transform -translate-y-1/2 text-m font-light text-secondary-dark tracking-min opacity-0 group-hover:opacity-100 transition-all duration-500"
+>
+URGENT 
+</span>
+</button>
+</div>
+    </header>
+    <!-- Footer -->
+    <footer class="bg-primary text-white py-4">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div
+          class="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0"
+        >
+          <!-- Left Section -->
+          <div class="text-sm sm:text-base">
+            © 2024 Village. All rights reserved.
+          </div>
+
+          <!-- Center Section -->
+          <div class="flex space-x-4">
+            <a href="#" class="hover:underline text-sm sm:text-base"
+              >About Us</a
+            >
+            <a href="#" class="hover:underline text-sm sm:text-base"
+              >Privacy Policy</a
+            >
+            <a href="#" class="hover:underline text-sm sm:text-base"
+              >Terms of Service</a
+            >
+          </div>
+
+          <!-- Right Section -->
+          <div class="flex space-x-3">
+            <a href="#" title="Facebook" class="text-white hover:text-gray-300">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.437 9.878v-6.987H7.897v-2.891h2.54V9.845c0-2.507 1.493-3.89 3.777-3.89 1.096 0 2.238.194 2.238.194v2.46h-1.26c-1.242 0-1.63.771-1.63 1.562v1.875h2.773l-.443 2.891h-2.33v6.987C18.343 21.128 22 16.991 22 12z"
+                />
+              </svg>
+            </a>
+            <!-- Add other icons -->
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -4,8 +4,9 @@
   "description": "This is the repo for my semesterproject 2 in frontend development",
   "main": "index.js",
   "scripts": {
+    "start": "live-server",
     "test": "echo \"Error: no test specified\" && exit 1",
-      "build-css": "tailwindcss -i ./src/css/tailwind.css -o ./dist/css/styles.css --watch"
+    "build-css": "tailwindcss -i ./src/css/tailwind.css -o ./dist/css/styles.css --watch"
   },
   "keywords": [],
   "author": "",
@@ -14,5 +15,11 @@
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.15"
+  },
+  "dependencies": {
+    "@heroicons/react": "^2.2.0",
+    "@heroicons/vue": "^2.2.0",
+    "cloudinary": "^2.5.1",
+    "dotenv": "^16.4.5"
   }
 }
