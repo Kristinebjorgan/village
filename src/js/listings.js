@@ -2,7 +2,19 @@ import { API_BASE_URL } from "./config.js";
 
 let listings = []; // Global variable to store fetched listings
 
-// Fetch all listings from the API
+// Initialize the listings module
+export function initListings() {
+  const container = document.getElementById("listings-container");
+  if (!container) {
+    console.warn("Listings container not found. Skipping initialization.");
+    return;
+  }
+
+  fetchListings(); // Fetch all listings by default
+  initCategoryFiltering(); // Initialize category filtering
+}
+
+//Fetch listings
 export async function fetchListings() {
   const container = document.getElementById("listings-container");
   if (!container) {
@@ -11,15 +23,27 @@ export async function fetchListings() {
   }
 
   try {
-    const response = await fetch(`${API_BASE_URL}/listings`);
-    listings = await response.json();
-    displayListings(listings); // Display all listings
+    console.log("Fetching listings with 'villageWebsite' tag...");
+
+    // Fetch listings with the specific unique tag and only active ones
+    const response = await fetch(
+      `${API_BASE_URL}/auction/listings?_tag=villageWebsite&_active=true`
+    );
+    console.log("API Response Status:", response.status);
+
+    const result = await response.json();
+    console.log("Filtered listings fetched from API:", result.data);
+
+    // Update global listings variable and display filtered listings
+    listings = result.data || [];
+    displayListings(listings);
   } catch (error) {
     console.error("Failed to fetch listings:", error);
   }
 }
 
-// Fetch and filter listings by category
+
+// Filter listings by category
 export function fetchListingsByCategory(category) {
   if (!listings.length) {
     console.warn("Listings not yet fetched. Fetching all listings first.");
@@ -47,6 +71,7 @@ export function displayListings(listingsToRender) {
     return;
   }
 
+  console.log("Rendering listings:", listingsToRender); // Debug listings to render
   container.innerHTML = ""; // Clear container before rendering
   listingsToRender.forEach((listing) => displayListing(listing));
 }
@@ -60,42 +85,41 @@ export function displayListing(listing) {
     return;
   }
 
+  console.log("Rendering single listing:", listing); // Debug each listing
+  const highestBid =
+    listing.bids?.length > 0
+      ? Math.max(...listing.bids.map((bid) => bid.amount))
+      : "No bids yet";
+
   const listingCard = `
-    <div class="bg-white shadow-lg rounded-lg p-4">
+    <div class="bg-white shadow rounded-lg overflow-hidden border border-gray-200">
       <img
-        src="${listing.media[0] || "./media/placeholders/item-placeholder.png"}"
-        alt="${listing.title}"
-        class="h-32 w-full object-cover rounded-md mb-3"
+        src="${
+          listing.media[0]?.url || "./media/placeholders/item-placeholder.png"
+        }"
+        alt="${listing.media[0]?.alt || "Listing Image"}"
+        class="h-40 w-full object-cover"
       />
-      <h3 class="text-lg font-semibold text-gray-800">${listing.title}</h3>
-      <p class="text-sm text-gray-600">${listing.description}</p>
-      <p class="text-sm text-gray-600">Ends: ${new Date(
-        listing.endsAt
-      ).toLocaleDateString()}</p>
-      <button class="mt-3 w-full bg-primary hover:bg-primary-light text-white py-2 rounded-md text-sm transition-colors">
-        Place Bid
-      </button>
+      <div class="p-4">
+        <h3 class="text-lg font-bold text-gray-800 truncate">${
+          listing.title
+        }</h3>
+        <p class="text-sm text-gray-600 truncate">${listing.description}</p>
+        <p class="text-sm text-gray-600 mt-2">Ends: ${new Date(
+          listing.endsAt
+        ).toLocaleDateString()}</p>
+        <p class="text-sm font-bold text-primary mt-1">Highest Bid: ${highestBid}</p>
+        <button
+          class="mt-4 w-full bg-primary text-white py-2 px-4 rounded hover:bg-primary-dark transition place-bid-btn"
+          data-id="${listing.id}"
+        >
+          Place Bid
+        </button>
+      </div>
     </div>
   `;
+
   container.innerHTML += listingCard;
-}
-
-// Get query parameters from the URL
-function getQueryParam(param) {
-  const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get(param);
-}
-
-// Initialize the auction page
-export function initAuctionPage() {
-  const category = getQueryParam("category");
-  console.log(`Category from query string: ${category}`);
-
-  if (category) {
-    fetchListingsByCategory(category); // Fetch listings for a specific category
-  } else {
-    fetchListings(); // Fetch all listings if no category is specified
-  }
 }
 
 // Initialize category filtering
@@ -118,18 +142,4 @@ export function initCategoryFiltering() {
       }
     });
   });
-}
-
-// Initialize listings module
-export function initListings() {
-  const container = document.getElementById("listings-container");
-  if (!container) {
-    console.log(
-      "Listings container not found. Skipping listings module initialization."
-    );
-    return;
-  }
-
-  fetchListings(); // Fetch all listings by default
-  initCategoryFiltering(); // Initialize category filtering
 }

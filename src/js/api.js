@@ -19,13 +19,12 @@ export async function sendApiRequest(url, method, body = null) {
   };
 
   try {
-    console.log("Sending API Request:", {
-      url: `${API_BASE_URL}${url}`,
-      method,
-      headers,
-      body: body || null,
-    });
-    const response = await fetch(`${API_BASE_URL}${url}`, options);
+console.log("API Request Details:", {
+  url: `${API_BASE_URL}${url}`,
+  options,
+});
+
+const response = await fetch(`${API_BASE_URL}${url}`, options);
 
     if (!response.ok) {
       const errorData = await response.json();

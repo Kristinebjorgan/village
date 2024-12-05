@@ -1,3 +1,5 @@
+import { sendApiRequest } from "./api.js";
+
 export function getAddListingModalHTML() {
   return `
     <div id="addListingModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
@@ -42,7 +44,7 @@ export function attachModalToButton(buttonId) {
   }
 
   addListingBtn.addEventListener("click", () => {
-    console.log("Add Listing button clicked!"); // Debug log
+    console.log("Add Listing button clicked!");
     const modal = document.getElementById("addListingModal");
     if (modal) {
       modal.classList.remove("hidden");
@@ -51,7 +53,6 @@ export function attachModalToButton(buttonId) {
     }
   });
 }
-
 
 export function initializeModal() {
   const modal = document.getElementById("addListingModal");
@@ -74,14 +75,76 @@ export function initializeModal() {
     }
   });
 
-  // Add submit listener to form (if needed)
+  // Add submit listener to form
   const addListingForm = document.getElementById("addListingForm");
   if (addListingForm) {
-    addListingForm.addEventListener("submit", (event) => {
+    addListingForm.addEventListener("submit", async (event) => {
       event.preventDefault();
-      // Handle form submission logic here
       console.log("Add Listing Form submitted.");
-      modal.classList.add("hidden"); // Hide modal after submission
+
+      // Gather form data
+      const title = document.getElementById("title").value;
+      const description = document.getElementById("description").value;
+      const media = document.getElementById("media").value
+        ? [document.getElementById("media").value]
+        : [];
+      const tags = document
+        .getElementById("tags")
+        .value.split(",")
+        .map((tag) => tag.trim());
+      const deadline = document.getElementById("deadline").value;
+
+      // Validate required fields
+      if (!title || !deadline) {
+        alert("Please fill in all required fields.");
+        return;
+      }
+
+      // Prepare the payload for the API
+      const payload = {
+        title,
+        description,
+        media: media.map((url) => ({ url })),
+        tags: [...tags, "villageWebsite"],
+        endsAt: new Date(deadline).toISOString(),
+      };
+
+      // Debug the token and payload
+      const token = localStorage.getItem("jwtToken");
+      console.log("Token Retrieved:", token);
+      console.log("Payload for API:", payload);
+
+      try {
+        console.log("Sending request to create a new listing...");
+        const data = await sendApiRequest("/auction/listings", "POST", payload);
+
+        // Log the entire response for debugging
+        console.log(
+          "API Response after adding the listing:",
+          JSON.stringify(data, null, 2)
+        );
+
+        if (data && data.data) {
+          console.log("Listing added successfully:", data.data);
+          alert(
+            `Listing added successfully! ID: ${data.data.id}, Title: ${data.data.title}`
+          );
+          modal.classList.add("hidden");
+          location.reload();
+        } else {
+          console.warn("Unexpected server response:", data);
+          alert(
+            "Listing may have been added, but response format was unexpected. Please verify."
+          );
+        }
+      } catch (error) {
+        console.error("Error occurred while adding the listing:", error);
+        alert(
+          `Error: ${
+            error.message || "Failed to add listing. Please try again."
+          }`
+        );
+      }
     });
   }
 }
