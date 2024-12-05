@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -162,7 +162,6 @@
 <button
   title="household"
   class="relative flex flex-col items-center p-0 m-0 space-y-0 group category-btn"
-  data-category="household"
 >
   <!-- Icon -->
   <img
@@ -183,8 +182,6 @@
 <button
   title="homemade"
   class="relative flex flex-col items-center p-0 m-0 space-y-0 group category-btn"
-    data-category="homemade"
-
 >
   <img
     src="./media/icons/homemade.png"
@@ -201,11 +198,8 @@
 
         <!-- Handcraft -->
 <button
-  title="handcraft"
+  title="household"
   class="relative flex flex-col items-center p-0 m-0 space-y-0 group category-btn"
-    data-category="handcraft"
-
-  
 >
   <img
     src="./media/icons/needle.png"
@@ -224,8 +218,6 @@
 <button
   title="sports"
   class="relative flex flex-col items-center p-0 m-0 space-y-0 group category-btn"
-    data-category="sports"
-
 >
   <img
     src="./media/icons/sports.png"
@@ -244,8 +236,6 @@
 <button
   title="proffesional"
   class="relative flex flex-col items-center p-0 m-0 space-y-0 group category-btn"
-    data-category="proffesional"
-
 >
   <img
     src="./media/icons/star.png"
@@ -259,12 +249,10 @@
   EXPERT
 </span>
 </button>
-        <!-- Kids -->
+        <!-- Children & Family -->
 <button
   title="toys"
   class="relative flex flex-col items-center p-0 m-0 space-y-0 group category-btn"
-    data-category="kids"
-
 >
   <img
     src="./media/icons/toys.png"
@@ -282,8 +270,6 @@
 <button
   title="pets"
   class="relative flex flex-col items-center p-0 m-0 space-y-0 group category-btn"
-    data-category="pets"
-
 >
   <img
     src="./media/icons/paw.png"
@@ -301,8 +287,6 @@ PETS
 <button
   title="eco"
   class="relative flex flex-col items-center p-0 m-0 space-y-0 group category-btn"
-    data-category="secondhand"
-
 >
   <img
     src="./media/icons/leaf.png"
@@ -321,8 +305,6 @@ SECONHAND
 <button
   title="event"
   class="relative flex flex-col items-center p-0 m-0 space-y-0 group category-btn"
-    data-category="event"
-
 >
   <img
     src="./media/icons/event.png"
@@ -341,8 +323,6 @@ EVENT
 <button
   title="urgent"
   class="relative flex flex-col items-center p-0 m-0 space-y-0 group category-btn"
-    data-category="urgent"
-
 >
   <img
     src="./media/icons/fire.png"
@@ -358,15 +338,37 @@ URGENT
 </button>
 </div>
     </header>
- <main>
+     <main>
+      <!-- Listing container -->
+<div id="listings-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
 
-    <!-- Add Listing Button -->
-<button id="addListingBtn" class="fixed bottom-8 right-8 bg-primary border-2 border-secondary-dark text-secondary-dark p-4 rounded-full shadow-lg hover:bg-primary-dark transition duration-300">
-  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-  </svg>
-</button>
- </main>
+      <!-- Add Listing Button -->
+    <button
+      id="addListingBtn"
+      class="fixed bottom-8 right-8 bg-primary border-2 border-secondary-dark text-secondary-dark p-4 rounded-full shadow-lg hover:bg-primary-dark transition duration-300"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-6 w-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+      </svg>
+    </button>
+
+
+
+  <!-- Load More Button -->
+  <div class="text-center py-4">
+    <button class="bg-secondart text-white px-6 py-2 rounded-lg text-sm hover:bg-primary-light transition-colors">
+      Load More
+    </button>
+  </div>
+     </main>
+
     <!-- Footer -->
     <footer class="bg-primary text-white py-4">
       <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -405,7 +407,6 @@ URGENT
                 />
               </svg>
             </a>
-            <!-- Add other icons -->
           </div>
         </div>
       </div>

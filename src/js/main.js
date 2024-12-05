@@ -1,74 +1,57 @@
-import { API_BASE_URL, API_KEY } from "./config.js"; // Configurations for API
-import "./forms.js"; // Handles form-related interactions
-import "./utils.js"; // Utilities for common functionality
-import "./auth.js"; // Authentication logic
-import "./cloudinary.js"; //Avatar upload logic from users own computer
+import "./cloudinary.js"; // Import if necessary for forms or modals
+import { getCategoryButtons } from "./utils.js";
+import { initForms } from "./forms.js";
+import * as listings from "./listings.js";
+import * as modal from "./modal.js"; // Import everything from modal.js
 
-/**
- * Logs the application initialization details.
- *
- * This ensures the application is correctly set up and ready to handle user actions.
- */
-console.log("Application initialized!");
-
-/**
- * DOMContentLoaded Event Listener
- *
- * Ensures that all DOM-related interactions are executed only after the document is fully loaded.
- */
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("DOM fully loaded and parsed.");
-
-  // Global event listeners or app-wide initialization logic can go here.
-  initializeGlobalFeatures();
-
-  // Optional: Fetch any required data on app initialization
-  // Example:
-  // fetchInitialData();
+  try {
+    console.log("Initializing application...");
+    initializeApplication(); // Initialize all application modules
+    getCategoryButtons(); // Attach functionality to category buttons
+  } catch (error) {
+    console.error("Initialization Error:", error);
+  }
 });
 
-/**
- * Global Feature Initialization
- *
- * Add any global functionality or listeners here. This might include handling
- * user sessions, fetching essential data, or setting up third-party integrations.
- */
-function initializeGlobalFeatures() {
-  console.log("Initializing global features...");
+function initializeApplication() {
+  console.log("Initializing application modules...");
 
-  // Check for user session
-  const authToken = localStorage.getItem("authToken");
-  if (authToken) {
-    console.log("User is logged in. Token found:", authToken);
-  } else {
-    console.log("No user session found. User is not logged in.");
-  }
+  // Initialize listings and form-related modules
+  listings.initListings();
+  initForms();
+  initializeGlobalFeatures();
 
-  // Additional features can be initialized here if required.
+  // Dynamically load the modal HTML if it doesn't already exist
+  ensureModalLoaded();
+
+  // Attach modal functionality to the Add Listing button
+  console.log("Attaching modal to Add Listing button...");
+  modal.attachModalToButton("addListingBtn");
 }
 
-/**
- * Fetch Initial Data
- *
- * Example function to fetch data that the app might need on load.
- * Uncomment and implement as needed.
- */
-// async function fetchInitialData() {
-//   try {
-//     const response = await fetch(`${API_BASE_URL}/some-endpoint`, {
-//       headers: {
-//         "Content-Type": "application/json",
-//         "X-Noroff-API-Key": API_KEY,
-//       },
-//     });
+// Ensure the Add Listing Modal is loaded into the DOM
+function ensureModalLoaded() {
+  if (!document.getElementById("addListingModal")) {
+    console.log("Modal not found. Adding it to the DOM...");
+    const modalHTML = modal.getAddListingModalHTML();
+    const modalContainer = document.createElement("div");
+    modalContainer.innerHTML = modalHTML;
+    document.body.appendChild(modalContainer);
 
-//     if (!response.ok) {
-//       throw new Error("Failed to fetch initial data.");
-//     }
+    // Initialize modal functionality after appending to the DOM
+    modal.initializeModal();
+  } else {
+    console.log("Modal already present in the DOM.");
+  }
+}
 
-//     const data = await response.json();
-//     console.log("Initial data fetched successfully:", data);
-//   } catch (error) {
-//     console.error("Error fetching initial data:", error.message);
-//   }
-// }
+// Initialize global features (e.g., user authentication checks)
+function initializeGlobalFeatures() {
+  const authToken = localStorage.getItem("authToken");
+  if (authToken) {
+    console.log("User session active.");
+  } else {
+    console.log("No user session found.");
+  }
+}

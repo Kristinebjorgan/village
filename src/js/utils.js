@@ -1,32 +1,19 @@
- // api.js
-import { API_BASE_URL, API_KEY, getToken } from "./config.js";
-
-export async function sendApiRequest(url, method, body = null) {
-  const headers = {
-    "Content-Type": "application/json",
-    "X-Noroff-API-Key": API_KEY,
-  };
-
-  const token = getToken();
-  if (token) {
-    headers.Authorization = `Bearer ${token}`;
+export function getCategoryButtons() {
+  const categoryButtons = document.querySelectorAll(".category-btn");
+  if (!categoryButtons.length) {
+    console.warn("No category buttons found.");
+    return;
   }
 
-  const options = {
-    method,
-    headers,
-  };
-
-  if (body) {
-    options.body = JSON.stringify(body);
-  }
-
-  const response = await fetch(`${API_BASE_URL}${url}`, options);
-
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || "An error occurred");
-  }
-
-  return response.json();
+  categoryButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const category = button.dataset.category;
+      if (category) {
+        console.log(`Redirecting to auction.html with category: ${category}`);
+        window.location.href = `auction.html?category=${category}`;
+      } else {
+        console.warn("Category data missing for button:", button);
+      }
+    });
+  });
 }
