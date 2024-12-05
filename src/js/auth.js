@@ -19,12 +19,17 @@ export const loginUser = async (email, password) => {
     const payload = { email, password };
     const response = await fetch(`${API_BASE_URL}/auth/login`, {
       method: "POST",
-      headers: { ...headers },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
-    const data = await handleError(response);
-    localStorage.setItem("authToken", data.accessToken);
-    return data;
+    const data = await response.json();
+    if (response.ok) {
+      localStorage.setItem("jwtToken", data.accessToken);
+      localStorage.setItem("username", data.name); // Save username
+      return data;
+    } else {
+      throw new Error(data.message);
+    }
   } catch (error) {
     console.error("Login Error:", error.message);
     throw error;
@@ -36,12 +41,20 @@ export const registerUser = async (userData) => {
   try {
     const response = await fetch(`${API_BASE_URL}/auth/register`, {
       method: "POST",
-      headers: { ...headers },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(userData),
     });
-    return await handleError(response);
+    const data = await response.json();
+    if (response.ok) {
+      localStorage.setItem("jwtToken", data.accessToken);
+      localStorage.setItem("username", data.name); // Save username
+      return data;
+    } else {
+      throw new Error(data.message);
+    }
   } catch (error) {
     console.error("Registration Error:", error.message);
     throw error;
   }
 };
+

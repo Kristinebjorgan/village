@@ -62,12 +62,12 @@
           </svg>
         </button>
         <!-- Coin -->
-        <button title="Credit">
-   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6 text-primary hover:text-primary-dark transition-colors duration-300">
-  <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125" />
-</svg>
-          </svg>
-        </button>
+<button id="creditButton" title="Credits" class="flex items-center space-x-2">
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6 text-primary">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125" />
+  </svg>
+  <span id="creditBalance" class="text-sm font-semibold text-primary"></span>
+</button>
         <!-- Profile -->
         <button title="Profile">
           <svg
@@ -360,52 +360,49 @@ URGENT
 </button>
 </div>
     </header>
-
-<main class="bg-gray-50 min-h-screen p-4">
-  <!-- Sorting and Filtering -->
-  <div class="flex justify-between items-center mb-4">
-    <h2 class="text-xl font-semibold text-gray-800">Auction Listings</h2>
-    <div>
-      <label for="sort-dropdown" class="sr-only">Sort By</label>
-      <select
-        id="sort-dropdown"
-        class="border border-gray-300 rounded p-2 bg-white text-gray-700"
+    <main class="p-4">
+    <!-- Profile Overview Section -->
+    <section id="profile-overview" class="mb-8">
+      <div class="flex items-center space-x-4">
+        <img
+          id="avatar"
+          src="default-avatar.png"
+          alt="User Avatar"
+          class="w-16 h-16 rounded-full border"
+        />
+        <div>
+          <h1 id="username" class="text-xl font-bold">Username</h1>
+          <p id="email" class="text-sm text-gray-600">Email: user@example.com</p>
+          <p id="credits" class="text-sm text-green-600">0 Credits</p>
+        </div>
+      </div>
+      <p id="bio" class="mt-4 text-gray-800">
+        This is the user's bio. They can update this section!
+      </p>
+      <button
+        id="edit-bio-btn"
+        class="mt-2 px-4 py-2 bg-primary text-white rounded"
       >
-        <option value="default">Sort By</option>
-        <option value="highest-bid">Highest Bid</option>
-        <option value="closest-deadline">Closest Deadline</option>
-      </select>
-    </div>
-  </div>
+        Edit Bio
+      </button>
+    </section>
 
-  <!-- Listings Container -->
-  <div
-    id="listings-container"
-    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-  >
-    <!-- Loader -->
-    <div id="loader" class="col-span-full flex justify-center items-center">
-      <div class="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full"></div>
-    </div>
-  </div>
+    <!-- Listings/Bids Section -->
+    <section id="profile-activity">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg font-bold">My Activity</h2>
+        <div class="space-x-2">
+          <button id="view-listings" class="px-4 py-2 bg-primary text-white rounded active">Listings</button>
+          <button id="view-bids" class="px-4 py-2 bg-gray-300 text-gray-700 rounded">Bids</button>
+        </div>
+      </div>
 
-      <!-- Add Listing Button -->
-<button id="addListingBtn" class="fixed bottom-8 right-8 bg-primary border-2 border-secondary-dark text-secondary-dark p-4 rounded-full shadow-lg hover:bg-primary-dark transition duration-300">
-  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-  </svg>
-</button>
-
-  <!-- Load More Button -->
-  <div class="text-center mt-6">
-    <button
-      class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary-dark transition"
-    >
-      Load More
-    </button>
-  </div>
-</main>
-
+      <!-- Grid Container -->
+      <div id="activity-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Cards will be dynamically injected here -->
+      </div>
+    </section>
+  </main>
     <!-- Footer -->
     <footer class="bg-primary text-white py-4">
       <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -444,6 +441,7 @@ URGENT
                 />
               </svg>
             </a>
+            <!-- Add other icons -->
           </div>
         </div>
       </div>

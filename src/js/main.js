@@ -1,14 +1,14 @@
 import "./cloudinary.js"; // Import if necessary for forms or modals
-import { getCategoryButtons } from "./utils.js";
+import * as utils from "./utils.js"; // Import all functions from utils
 import { initForms } from "./forms.js";
-import * as listings from "./listings.js";
+import * as listings from "./listings.js"; // Import all functions from listings
 import * as modal from "./modal.js"; // Import everything from modal.js
 
 document.addEventListener("DOMContentLoaded", () => {
   try {
     console.log("Initializing application...");
     initializeApplication(); // Initialize all application modules
-    getCategoryButtons(); // Attach functionality to category buttons
+    utils.getCategoryButtons(); // Attach functionality to category buttons
   } catch (error) {
     console.error("Initialization Error:", error);
   }
@@ -48,9 +48,11 @@ function ensureModalLoaded() {
 
 // Initialize global features (e.g., user authentication checks)
 function initializeGlobalFeatures() {
-  const authToken = localStorage.getItem("authToken");
-  if (authToken) {
+  const token = localStorage.getItem("jwtToken");
+
+  if (token) {
     console.log("User session active.");
+    utils.fetchUserCredits(); // Fetch and display credits dynamically
   } else {
     console.log("No user session found.");
   }
