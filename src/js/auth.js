@@ -1,4 +1,5 @@
 import { API_BASE_URL, API_KEY } from "./config.js";
+import { clearUserData } from "./config.js";
 
 const headers = {
   "Content-Type": "application/json",
@@ -35,6 +36,18 @@ export const loginUser = async (email, password) => {
     throw error;
   }
 };
+
+// Logout user
+export function logoutUser() {
+  console.log("Logging out the user...");
+
+  // Clear user data and localStorage
+  clearUserData();
+
+  // Redirect to the login page
+  window.location.href = "/auth.html"; // Adjust the path as needed
+}
+
 
 // Register user
 export const registerUser = async (userData) => {

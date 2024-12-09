@@ -3,17 +3,35 @@ import * as utils from "./utils.js"; // Import all functions from utils
 import { initForms } from "./forms.js";
 import * as listings from "./listings.js"; // Import all functions from listings
 import * as modal from "./modal.js"; // Import everything from modal.js
+import { logoutUser } from "./auth.js"; //
 
 document.addEventListener("DOMContentLoaded", () => {
   try {
     console.log("Initializing application...");
-    initializeApplication(); // Initialize all application modules
+    initializeApplication();
+    attachLogoutFunctionality();  // Initialize all application modules
     utils.getCategoryButtons(); // Attach functionality to category buttons
   } catch (error) {
     console.error("Initialization Error:", error);
   }
 });
 
+ // Attach logout functionality to the logout button
+function attachLogoutFunctionality() {
+  const logoutBtn = document.getElementById("logoutBtn");
+
+  if (logoutBtn) {
+    console.log("Attaching logout functionality...");
+    logoutBtn.addEventListener("click", () => {
+      console.log("Logout button clicked.");
+      logoutUser();
+    });
+  } else {
+    console.warn("Logout button not found in the DOM.");
+  }
+}
+
+//initialize full app
 function initializeApplication() {
   console.log("Initializing application modules...");
 
