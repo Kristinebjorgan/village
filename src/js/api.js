@@ -6,9 +6,14 @@ export async function sendApiRequest(url, method, body = null) {
     "Content-Type": "application/json",
     "X-Noroff-API-Key": API_KEY,
   };
+  
+  // Add Authorization header if token exists
   const token = getToken();
   if (token) {
     headers.Authorization = `Bearer ${token}`;
+    console.log("Authorization header added:", headers.Authorization); // Debug
+  } else {
+    console.warn("No token found. Authorization header not added.");
   }
 
   const options = {
@@ -18,12 +23,12 @@ export async function sendApiRequest(url, method, body = null) {
   };
 
   try {
-console.log("API Request Details:", {
-  url: `${API_BASE_URL}${url}`,
-  options,
-});
+    console.log("API Request Details:", {
+      url: `${API_BASE_URL}${url}`,
+      options,
+    });
 
-const response = await fetch(`${API_BASE_URL}${url}`, options);
+    const response = await fetch(`${API_BASE_URL}${url}`, options);
 
     if (!response.ok) {
       const errorData = await response.json();

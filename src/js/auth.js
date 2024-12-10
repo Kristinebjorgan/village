@@ -5,6 +5,8 @@ import {
   clearUsername,
   getToken,
   setToken,
+  setUsername,
+  getUsername,
 } from "./config.js";
 import { sendApiRequest } from "./api.js";
 
@@ -16,33 +18,34 @@ function handleError(response) {
   return response.json();
 }
 
-export const loginUser = async (email, password) => {
-  try {
-    const payload = { email, password };
-    const response = await fetch(`${API_BASE_URL}/auth/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
+//Login user
+ export const loginUser = async (email, password) => {
+   try {
+     const payload = { email, password };
+     const response = await fetch(`https://v2.api.noroff.dev/auth/login`, {
+       // Full API URL
+       method: "POST",
+       headers: { "Content-Type": "application/json" },
+       body: JSON.stringify(payload),
+     });
 
-    const data = await response.json();
-    console.log("API Response for Login:", data);
+     const data = await response.json();
+     console.log("API Response for Login:", data);
 
-    if (response.ok) {
-      console.log("Setting accessToken in localStorage:", data.accessToken);
-      setToken(data.accessToken); // Use the correct function
-      setUsername(data.name); // Set the username
-      return data;
-    } else {
-      throw new Error(data.message);
-    }
-  } catch (error) {
-    console.error("Login Error:", error.message);
-    throw error;
-  }
-};
-
-
+     if (response.ok) {
+       console.log("Setting accessToken in localStorage:", data.accessToken);
+       setToken(data.accessToken); // Use the correct function
+       setUsername(data.name); // Set the username
+       return data;
+     } else {
+       console.error("Login failed with message:", data.message);
+       throw new Error(data.message || "Login failed.");
+     }
+   } catch (error) {
+     console.error("Login Error:", error.message);
+     throw error;
+   }
+ };
 
 // Logout user
 export function logoutUser() {
@@ -60,7 +63,10 @@ export async function registerUser(userData) {
   const apiUrl = "https://v2.api.noroff.dev/auth/register";
 
   try {
-    console.log("Sending registration data to API:", userData);
+    console.log(
+      "Sending registration data to API:",
+      JSON.stringify(userData, null, 2)
+    );
 
     const response = await fetch(apiUrl, {
       method: "POST",
@@ -68,10 +74,16 @@ export async function registerUser(userData) {
       body: JSON.stringify(userData),
     });
 
+    console.log("Response Status:", response.status);
+    console.log("Response Headers:", response.headers);
+
     if (!response.ok) {
       const errorData = await response.json();
-      console.error("Registration error details:", errorData);
-      throw new Error(errorData.errors?.[0] || "Registration failed.");
+      console.error(
+        "Full API Error Details:",
+        JSON.stringify(errorData, null, 2)
+      );
+      throw new Error(errorData.errors?.[0]?.message || "Registration failed.");
     }
 
     const data = await response.json();
@@ -82,4 +94,3 @@ export async function registerUser(userData) {
     throw error;
   }
 }
-

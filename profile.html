@@ -360,48 +360,37 @@ URGENT
 </button>
 </div>
     </header>
-    <main class="p-4">
-    <!-- Profile Overview Section -->
-    <section id="profile-overview" class="mb-8">
-      <div class="flex items-center space-x-4">
-        <img
-          id="avatar"
-          src="default-avatar.png"
-          alt="User Avatar"
-          class="w-16 h-16 rounded-full border"
-        />
-        <div>
-          <h1 id="username" class="text-xl font-bold">Username</h1>
-          <p id="email" class="text-sm text-gray-600">Email: user@example.com</p>
-          <p id="credits" class="text-sm text-green-600">0 Credits</p>
+     <main class="p-4 max-w-6xl mx-auto">
+      <!-- User Info -->
+      <section id="userInfo" class="p-4 bg-white rounded-lg shadow-md mb-6">
+        <div class="flex items-center space-x-4">
+          <img
+            id="userAvatar"
+            class="w-16 h-16 rounded-full"
+            src=""
+            alt="User Avatar"
+          />
+          <div>
+            <h2 id="userName" class="text-xl font-semibold"></h2>
+            <p id="userBio" class="text-sm text-gray-600"></p>
+            <p id="userCredits" class="text-sm text-primary-dark font-medium"></p>
+          </div>
         </div>
-      </div>
-      <p id="bio" class="mt-4 text-gray-800">
-        This is the user's bio. They can update this section!
-      </p>
-      <button
-        id="edit-bio-btn"
-        class="mt-2 px-4 py-2 bg-primary text-white rounded"
-      >
-        Edit Bio
-      </button>
-    </section>
+      </section>
 
-    <!-- Listings/Bids Section -->
-    <section id="profile-activity">
-      <div class="flex justify-between items-center mb-4">
-        <h2 class="text-lg font-bold">My Activity</h2>
-        <div class="space-x-2">
-          <button id="view-listings" class="px-4 py-2 bg-primary text-white rounded active">Listings</button>
-          <button id="view-bids" class="px-4 py-2 bg-gray-300 text-gray-700 rounded">Bids</button>
-        </div>
-      </div>
+      <!-- Listings -->
+      <section id="userListings" class="p-4 bg-white rounded-lg shadow-md mb-6">
+        <h2 class="text-lg font-semibold mb-2">My Listings</h2>
+        <div id="listingsContainer" class="space-y-4"></div>
+      </section>
 
-      <!-- Grid Container -->
-      <div id="activity-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <!-- Cards will be dynamically injected here -->
-      </div>
-    </section>
+      <!-- Bids -->
+      <section id="userBids" class="p-4 bg-white rounded-lg shadow-md">
+        <h2 class="text-lg font-semibold mb-2">My Bids</h2>
+        <div id="bidsContainer" class="space-y-4"></div>
+      </section>
+    </main>
+   
   </main>
     <!-- Footer -->
     <footer class="bg-primary text-white py-4">

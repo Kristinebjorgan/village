@@ -1,5 +1,5 @@
 // Constants
-export const API_BASE_URL = "https://v2.api.noroff.dev/auction/";
+export const API_BASE_URL = "https://v2.api.noroff.dev";
 export const API_KEY = "36955f43-828f-4a15-b535-932e5b6484db";
 
 // Token Management
@@ -11,7 +11,7 @@ export function setToken(token) {
 
 export function getToken() {
   const token = localStorage.getItem("jwtToken");
-  console.log("Retrieved token:", token); // Debugging
+  console.log("Retrieved token from localStorage:", token);
   return token;
 }
 

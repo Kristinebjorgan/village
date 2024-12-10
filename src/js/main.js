@@ -4,56 +4,57 @@ import { initForms } from "./forms.js";
 import * as listings from "./listings.js"; // Import all functions from listings
 import * as modal from "./modal.js"; // Import everything from modal.js
 import { logoutUser } from "./auth.js"; // Import logout functionality
-import { getToken, getUsername, clearUserData } from "./config.js";
-import { fetchUserCredits, initProfilePage } from "./profile.js";
+import { renderProfilePage } from "./profile.js"; // Updated import
+import { getToken, getUsername } from "./config.js";
+
 
 document.addEventListener("DOMContentLoaded", () => {
   try {
     console.log("Initializing application...");
 
-    // Check if we are on the profile page
-    const isProfilePage = window.location.pathname.includes("profile.html");
+    // Initialize the correct page-specific functionality
+    initializePage();
 
-    if (isProfilePage) {
-      console.log("Profile page detected. Initializing profile features...");
-      initProfilePage(); // Initialize profile page-specific modules
-    }
-
-    // Initialize global features and modules
-    initializeApplication();
-
-    // Attach logout functionality globally
-    attachLogoutFunctionality();
-
-    // Additional utilities (if needed globally)
-    utils.getCategoryButtons();
+    // Attach global functionalities
+    initializeGlobalFeatures();
   } catch (error) {
     console.error("Initialization Error:", error);
   }
 });
 
 /**
- * Main application initializer
+ * Initialize the appropriate page-specific functionality
  */
-function initializeApplication() {
-  console.log("Initializing application modules...");
+function initializePage() {
+  const currentPath = window.location.pathname;
 
-  // Initialize forms and other features
+  if (currentPath.includes("profile.html")) {
+    console.log("Profile page detected. Rendering profile page...");
+    renderProfilePage();
+  } else {
+    console.log("No specific page detected, initializing default features...");
+  }
+}
+
+/**
+ * Initialize global features shared across all pages
+ */
+function initializeGlobalFeatures() {
+  console.log("Initializing global application features...");
+
+  // Initialize forms
   initForms();
-  console.log("Forms initialized successfully.");
 
-  // Initialize listings and forms (common to all pages)
+  // Initialize listings if present
   listings.initListings();
 
-  // Initialize global features (like user authentication checks)
-  //   initializeGlobalFeatures();
+  // Attach logout functionality
+  attachLogoutFunctionality();
 
-  // Ensure modal is dynamically loaded and attached
-  ensureModalLoaded();
-
-  // Attach modal functionality to the Add Listing button
-  console.log("Attaching modal to Add Listing button...");
+  // Attach modal to the Add Listing button
   modal.attachModalToButton("addListingBtn");
+
+  console.log("Global features initialized successfully.");
 }
 
 /**
@@ -63,7 +64,6 @@ function attachLogoutFunctionality() {
   const logoutBtn = document.getElementById("logoutBtn");
 
   if (logoutBtn) {
-    console.log("Attaching logout functionality...");
     logoutBtn.addEventListener("click", () => {
       console.log("Logout button clicked.");
       logoutUser();
@@ -72,50 +72,3 @@ function attachLogoutFunctionality() {
     console.warn("Logout button not found in the DOM.");
   }
 }
-
-/**
- * Dynamically load and initialize the modal if not present
- */
-function ensureModalLoaded() {
-  if (!document.getElementById("addListingModal")) {
-    console.log("Modal not found. Adding it to the DOM...");
-    const modalHTML = modal.getAddListingModalHTML();
-    const modalContainer = document.createElement("div");
-    modalContainer.innerHTML = modalHTML;
-    document.body.appendChild(modalContainer);
-
-    // Initialize modal functionality after appending to the DOM
-    modal.initializeModal();
-  } else {
-    console.log("Modal already present in the DOM.");
-  }
-}
-
-/**
- * Initialize global features (e.g., user authentication checks)
- */
-// function initializeGlobalFeatures() {
-//   const token = getToken();
-//   const username = getUsername();
-
-//   // Check if the current page is the authentication page
-//   const isAuthPage = window.location.pathname.includes("auth.html");
-
-//   console.log("Checking user authentication...");
-//   if (isAuthPage) {
-//     console.log("Authentication not required on this page.");
-//     return; // Skip authentication checks on the login page
-//   }
-
-//   // Debugging token and username
-//   console.log("Token:", token);
-//   console.log("Username:", username);
-
-//   if (token && username) {
-//     console.log("User session active:", { username });
-//   } else {
-//     console.warn("No user session found. Clearing user data and redirecting...");
-//     clearUserData();
-//     window.location.href = "/auth.html"; // Redirect to login page
-//   }
-// }
