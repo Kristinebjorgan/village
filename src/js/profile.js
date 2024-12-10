@@ -1,30 +1,71 @@
 import { sendApiRequest } from "./api.js";
-import { getUsername } from "./config.js";
+import { getUsername, clearUserData } from "./config.js";
 
-/**
- * Fetch and display user profile details.
- */
-export async function initProfilePage() {
+// Fetch and display user credits
+export async function fetchUserCredits() {
+  const creditSpan = document.getElementById("creditBalance");
+  if (!creditSpan) {
+    console.error("Credit span element not found in the DOM.");
+    return;
+  }
+
   const username = getUsername();
-  if (!username) {
-    console.error("Username not found in localStorage.");
+  const token = getToken();
+
+  if (!username || !token) {
+    console.error("Username or token missing. Redirecting to login.");
+    creditSpan.textContent = "Login required";
+    clearUserData(); // Clear data and redirect
+    window.location.href = "/auth.html";
     return;
   }
 
   try {
-    console.log("Fetching profile for user:", username);
+    console.log("Fetching profile data for user:", username);
 
-    // Fetch profile data
+    // Fetch profile data, including optional query parameters
     const profile = await sendApiRequest(
-      `/auction/profiles/${username}?_listings=true`,
+      `/auction/profiles/${username}?_listings=true&_wins=true`,
       "GET"
     );
 
-    // Display profile overview
-    renderProfileOverview(profile.data);
+    // Extract credits
+    const credits = profile.credits || 0;
+    creditSpan.textContent = `${credits} Credits`;
+    console.log("Credits fetched successfully:", credits);
 
-    // Display user listings
+    return credits; // Return the fetched credits if needed elsewhere
+  } catch (error) {
+    console.error("Error fetching user credits:", error.message);
+    creditSpan.textContent = "Error";
+    if (error.message.includes("Unauthorized")) {
+      clearUserData();
+      window.location.href = "/auth.html"; // Redirect user to login
+    }
+  }
+}
+
+/**
+ * Initialize the profile page
+ */
+export async function initProfilePage() {
+  try {
+    console.log("Initializing Profile Page...");
+
+    const username = getUsername();
+    if (!username) {
+      throw new Error("User not logged in.");
+    }
+
+    const profile = await sendApiRequest(
+      `/auction/profiles/${username}?_listings=true&_wins=true`,
+      "GET"
+    );
+
+    renderProfileOverview(profile.data);
     renderListings(profile.data.listings);
+    fetchUserCredits();
+    setupActivityToggle(profile.data);
   } catch (error) {
     console.error("Error initializing profile page:", error.message);
     document.getElementById("profile-overview").innerHTML =
@@ -33,29 +74,7 @@ export async function initProfilePage() {
 }
 
 /**
- * Fetch user credits independently.
- * @returns {Promise<number>} - Returns the user's credits.
- */
-export async function fetchCredits() {
-  const username = getUsername();
-  if (!username) {
-    console.error("Username not found in localStorage.");
-    return 0; // Default to 0 if no username
-  }
-
-  try {
-    const profile = await sendApiRequest(`/auction/profiles/${username}`, "GET");
-    return profile.data.credits || 0;
-  } catch (error) {
-    console.error("Error fetching user credits:", error.message);
-    return 0; // Return 0 on error
-  }
-}
-
-
-/**
- * Render profile overview section.
- * @param {Object} profile - Profile data from the API.
+ * Render profile overview section
  */
 function renderProfileOverview(profile) {
   const avatar = document.getElementById("avatar");
@@ -73,29 +92,26 @@ function renderProfileOverview(profile) {
 }
 
 /**
- * Render user listings in the activity grid.
- * @param {Array} listings - Array of listing objects from the API.
+ * Render listings or bids
  */
-function renderListings(listings) {
+function renderListings(activity) {
   const grid = document.getElementById("activity-grid");
   grid.innerHTML = ""; // Clear existing content
 
-  if (!listings || listings.length === 0) {
-    grid.innerHTML = "<p>No listings to display.</p>";
+  if (!activity || activity.length === 0) {
+    grid.innerHTML = "<p>No listings or bids to display.</p>";
     return;
   }
 
-  listings.forEach((listing) => {
+  activity.forEach((item) => {
     const card = document.createElement("div");
     card.className = "listing-card border p-4 rounded shadow";
 
     card.innerHTML = `
-      <h2 class="text-lg font-bold">${listing.title}</h2>
-      <p class="text-sm text-gray-600">${listing.description}</p>
-      <p class="text-sm font-semibold">Bids: ${listing._count?.bids || 0}</p>
-      <p class="text-sm">Ends: ${new Date(
-        listing.endsAt
-      ).toLocaleDateString()}</p>
+      <h2 class="text-lg font-bold">${item.title}</h2>
+      <p class="text-sm text-gray-600">${item.description}</p>
+      <p class="text-sm font-semibold">Bids: ${item._count?.bids || 0}</p>
+      <p class="text-sm">Ends: ${new Date(item.endsAt).toLocaleDateString()}</p>
     `;
 
     grid.appendChild(card);
@@ -103,28 +119,21 @@ function renderListings(listings) {
 }
 
 /**
- * Enable bio editing functionality.
+ * Setup activity toggle functionality
  */
-export function enableBioEditing() {
-  const editBioButton = document.getElementById("edit-bio-btn");
-  const bio = document.getElementById("bio");
+function setupActivityToggle(profile) {
+  const listingsButton = document.getElementById("view-listings");
+  const bidsButton = document.getElementById("view-bids");
 
-  editBioButton.addEventListener("click", async () => {
-    const newBio = prompt("Update your bio:", bio.textContent);
-    if (!newBio) return;
+  listingsButton.addEventListener("click", () => {
+    renderListings(profile.listings);
+    listingsButton.classList.add("bg-primary", "text-white");
+    bidsButton.classList.remove("bg-primary", "text-white");
+  });
 
-    const username = getUsername();
-    try {
-      const response = await sendApiRequest(
-        `/auction/profiles/${username}`,
-        "PUT",
-        { bio: newBio }
-      );
-      bio.textContent = response.data.bio || "No bio available.";
-      alert("Bio updated successfully!");
-    } catch (error) {
-      console.error("Error updating bio:", error.message);
-      alert("Failed to update bio. Please try again.");
-    }
+  bidsButton.addEventListener("click", () => {
+    renderListings(profile.wins);
+    bidsButton.classList.add("bg-primary", "text-white");
+    listingsButton.classList.remove("bg-primary", "text-white");
   });
 }

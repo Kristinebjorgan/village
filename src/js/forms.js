@@ -109,34 +109,46 @@ async function handleRegister(event) {
     return;
   }
 
+  if (!email.endsWith("@stud.noroff.no")) {
+    displayError("Email must end with @stud.noroff.no");
+    return;
+  }
+
+  if (bio && bio.length > 160) {
+    displayError("Bio must be less than 160 characters.");
+    return;
+  }
+
   if (!avatarURL) {
     displayError("Please upload an avatar.");
     return;
   }
 
   // Build the userData payload
-  const userData = {
-    name: username,
-    email,
-    password,
-    bio: bio || "",
-    avatar: {
-      url: avatarURL,
-      alt: `${username}'s avatar`,
-    },
-  };
+const userData = {
+  name: username,
+  email,
+  password,
+  bio: bio || "",
+  avatar: {
+    url: avatarURL || "https://default-avatar-url.com/avatar.png", 
+    alt: `${username}'s avatar`,
+  }
+};
+
 
   try {
-    console.log("Registering user:", userData);
+    console.log("Registering user:", JSON.stringify(userData, null, 2));
     const registeredUser = await registerUser(userData);
     console.log("User registered successfully:", registeredUser);
-    alert("Registration successful! Redirecting to index");
+    alert("Registration successful! Redirecting to index...");
     window.location.href = "index.html";
   } catch (error) {
-    console.error("Registration failed:", error.message);
+    console.error("Registration failed:", error);
     displayError(error.message || "Registration failed.");
   }
 }
+
 
 /**
  * Handle avatar upload
@@ -153,16 +165,20 @@ async function handleAvatarUpload(event) {
   const avatarLabel = document.getElementById("avatarLabel"); // Reference the label directly
 
   try {
-    avatarURL = await uploadFileToCloudinary(file); // Upload to Cloudinary
+    console.log("Uploading file to Cloudinary...");
+    avatarURL = await uploadFileToCloudinary(file); 
     console.log("File uploaded successfully. URL:", avatarURL);
+
+    // Validate the uploaded URL
+    if (!isValidUrl(avatarURL)) {
+      throw new Error("Invalid Avatar URL.");
+    }
 
     // Update the avatar preview image
     if (avatarPreview) {
       avatarPreview.src = avatarURL;
       avatarPreview.classList.remove("hidden"); // Show the preview image
       console.log("Avatar preview updated.");
-    } else {
-      console.error("Avatar preview element not found.");
     }
 
     // Hide the upload label
@@ -173,7 +189,21 @@ async function handleAvatarUpload(event) {
   } catch (error) {
     console.error("Avatar upload failed:", error.message);
     displayError("Failed to upload avatar. Please try again.");
+
+    // Reset the avatar preview and label visibility in case of error
+    if (avatarPreview) {
+      avatarPreview.src = ""; // Clear preview image
+      avatarPreview.classList.add("hidden"); // Hide the preview
+    }
+    if (avatarLabel) {
+      avatarLabel.classList.remove("hidden"); // Show the upload label again
+    }
   }
+}
+
+function isValidUrl(url) {
+  const regex = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
+  return regex.test(url);
 }
 
 /**

@@ -5,7 +5,7 @@ import * as listings from "./listings.js"; // Import all functions from listings
 import * as modal from "./modal.js"; // Import everything from modal.js
 import { logoutUser } from "./auth.js"; // Import logout functionality
 import { getToken, getUsername, clearUserData } from "./config.js";
-import { fetchCredits, initProfilePage, enableBioEditing } from "./profile.js";
+import { fetchUserCredits, initProfilePage } from "./profile.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   try {
@@ -17,7 +17,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (isProfilePage) {
       console.log("Profile page detected. Initializing profile features...");
       initProfilePage(); // Initialize profile page-specific modules
-      enableBioEditing(); // Enable bio editing functionality
     }
 
     // Initialize global features and modules
@@ -47,7 +46,7 @@ function initializeApplication() {
   listings.initListings();
 
   // Initialize global features (like user authentication checks)
-//   initializeGlobalFeatures();
+  //   initializeGlobalFeatures();
 
   // Ensure modal is dynamically loaded and attached
   ensureModalLoaded();

@@ -4,6 +4,7 @@ import {
   clearUserData,
   clearUsername,
   getToken,
+  setToken,
 } from "./config.js";
 import { sendApiRequest } from "./api.js";
 
@@ -15,7 +16,6 @@ function handleError(response) {
   return response.json();
 }
 
-// Login user
 export const loginUser = async (email, password) => {
   try {
     const payload = { email, password };
@@ -24,10 +24,14 @@ export const loginUser = async (email, password) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
+
     const data = await response.json();
+    console.log("API Response for Login:", data);
+
     if (response.ok) {
-      localStorage.setItem("jwtToken", data.accessToken);
-      localStorage.setItem("username", data.name); // Save username
+      console.log("Setting accessToken in localStorage:", data.accessToken);
+      setToken(data.accessToken); // Use the correct function
+      setUsername(data.name); // Set the username
       return data;
     } else {
       throw new Error(data.message);
@@ -37,6 +41,8 @@ export const loginUser = async (email, password) => {
     throw error;
   }
 };
+
+
 
 // Logout user
 export function logoutUser() {
@@ -53,41 +59,27 @@ export function logoutUser() {
 export async function registerUser(userData) {
   const apiUrl = "https://v2.api.noroff.dev/auth/register";
 
-  // Dynamically get token
-  const accessToken = getToken();
-
-  // Define headers locally
-  const headers = {
-    "Content-Type": "application/json",
-    "X-Noroff-API-Key": API_KEY, // Use API key
-  };
-
-  // Add Authorization header only if accessToken is available
-  if (accessToken) {
-    headers.Authorization = `Bearer ${accessToken}`;
-  }
-
   try {
     console.log("Sending registration data to API:", userData);
 
     const response = await fetch(apiUrl, {
       method: "POST",
-      headers,
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(userData),
     });
 
     if (!response.ok) {
       const errorData = await response.json();
-      console.error("API Registration Error:", errorData);
-      throw new Error(errorData.message || "Failed to register user.");
+      console.error("Registration error details:", errorData);
+      throw new Error(errorData.errors?.[0] || "Registration failed.");
     }
 
     const data = await response.json();
-    console.log("User registered successfully:", data);
-
+    console.log("Registration successful:", data);
     return data;
   } catch (error) {
     console.error("Registration Error:", error.message);
     throw error;
   }
 }
+
