@@ -1,6 +1,5 @@
 // api.js
-import { API_BASE_URL, API_KEY } from "./config.js";
-import { getToken } from "./config.js";
+import { API_BASE_URL, API_KEY, getToken } from "./config.js";
 
 export async function sendApiRequest(url, method, body = null) {
   const headers = {

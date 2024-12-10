@@ -47,7 +47,7 @@ function initializeApplication() {
   listings.initListings();
 
   // Initialize global features (like user authentication checks)
-  initializeGlobalFeatures();
+//   initializeGlobalFeatures();
 
   // Ensure modal is dynamically loaded and attached
   ensureModalLoaded();
@@ -95,26 +95,28 @@ function ensureModalLoaded() {
 /**
  * Initialize global features (e.g., user authentication checks)
  */
-function initializeGlobalFeatures() {
-  const token = getToken();
-  const username = getUsername();
+// function initializeGlobalFeatures() {
+//   const token = getToken();
+//   const username = getUsername();
 
-  // Check if the current page is the authentication page
-  const isAuthPage = window.location.pathname.includes("auth.html");
+//   // Check if the current page is the authentication page
+//   const isAuthPage = window.location.pathname.includes("auth.html");
 
-  console.log("Checking user authentication...");
-  if (isAuthPage) {
-    console.log("Authentication not required on this page.");
-    return; // Skip authentication checks on the login page
-  }
+//   console.log("Checking user authentication...");
+//   if (isAuthPage) {
+//     console.log("Authentication not required on this page.");
+//     return; // Skip authentication checks on the login page
+//   }
 
-  if (token && username) {
-    console.log("User session active:", { username });
-  } else {
-    console.warn(
-      "No user session found. Clearing user data and redirecting..."
-    );
-    clearUserData();
-    window.location.href = "/auth.html"; // Redirect to login page
-  }
-}
+//   // Debugging token and username
+//   console.log("Token:", token);
+//   console.log("Username:", username);
+
+//   if (token && username) {
+//     console.log("User session active:", { username });
+//   } else {
+//     console.warn("No user session found. Clearing user data and redirecting...");
+//     clearUserData();
+//     window.location.href = "/auth.html"; // Redirect to login page
+//   }
+// }

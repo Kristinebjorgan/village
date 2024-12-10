@@ -1,10 +1,11 @@
-import { API_BASE_URL, API_KEY } from "./config.js";
-import { clearUserData } from "./config.js";
-
-const headers = {
-  "Content-Type": "application/json",
-  "X-Noroff-API-Key": API_KEY,
-};
+import {
+  API_BASE_URL,
+  API_KEY,
+  clearUserData,
+  clearUsername,
+  getToken,
+} from "./config.js";
+import { sendApiRequest } from "./api.js";
 
 // Centralized error handler
 function handleError(response) {
@@ -48,26 +49,45 @@ export function logoutUser() {
   window.location.href = "/auth.html"; // Adjust the path as needed
 }
 
-
 // Register user
-export const registerUser = async (userData) => {
+export async function registerUser(userData) {
+  const apiUrl = "https://v2.api.noroff.dev/auth/register";
+
+  // Dynamically get token
+  const accessToken = getToken();
+
+  // Define headers locally
+  const headers = {
+    "Content-Type": "application/json",
+    "X-Noroff-API-Key": API_KEY, // Use API key
+  };
+
+  // Add Authorization header only if accessToken is available
+  if (accessToken) {
+    headers.Authorization = `Bearer ${accessToken}`;
+  }
+
   try {
-    const response = await fetch(`${API_BASE_URL}/auth/register`, {
+    console.log("Sending registration data to API:", userData);
+
+    const response = await fetch(apiUrl, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers,
       body: JSON.stringify(userData),
     });
-    const data = await response.json();
-    if (response.ok) {
-      localStorage.setItem("jwtToken", data.accessToken);
-      localStorage.setItem("username", data.name); // Save username
-      return data;
-    } else {
-      throw new Error(data.message);
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error("API Registration Error:", errorData);
+      throw new Error(errorData.message || "Failed to register user.");
     }
+
+    const data = await response.json();
+    console.log("User registered successfully:", data);
+
+    return data;
   } catch (error) {
     console.error("Registration Error:", error.message);
     throw error;
   }
-};
-
+}

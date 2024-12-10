@@ -29,6 +29,7 @@ export function initForms() {
   signupForm?.addEventListener("submit", handleRegister);
   avatarUpload?.addEventListener("change", handleAvatarUpload);
   loginForm?.addEventListener("submit", handleLogin);
+
   console.log("Form listeners attached successfully.");
 }
 
@@ -92,6 +93,7 @@ async function handleRegister(event) {
     ?.value.trim();
   const bio = document.getElementById("biography")?.value.trim();
 
+  // Validate form fields
   if (!username || !email || !password || !repeatPassword) {
     displayError("All fields are required.");
     return;
@@ -112,6 +114,7 @@ async function handleRegister(event) {
     return;
   }
 
+  // Build the userData payload
   const userData = {
     name: username,
     email,
@@ -127,14 +130,17 @@ async function handleRegister(event) {
     console.log("Registering user:", userData);
     const registeredUser = await registerUser(userData);
     console.log("User registered successfully:", registeredUser);
-    alert("Registration successful! Redirecting to login...");
-    window.location.href = "login.html";
+    alert("Registration successful! Redirecting to index");
+    window.location.href = "index.html";
   } catch (error) {
     console.error("Registration failed:", error.message);
     displayError(error.message || "Registration failed.");
   }
 }
 
+/**
+ * Handle avatar upload
+ */
 async function handleAvatarUpload(event) {
   console.log("Avatar upload event triggered.");
   const file = event.target.files[0];
@@ -168,19 +174,6 @@ async function handleAvatarUpload(event) {
     console.error("Avatar upload failed:", error.message);
     displayError("Failed to upload avatar. Please try again.");
   }
-}
-// Submit the form
-try {
-  console.log("Registering user:", userData);
-  const registeredUser = await registerUser(userData);
-  console.log("User registered successfully:", registeredUser);
-
-  // Redirect on successful registration
-  alert("Registration successful! Redirecting to login...");
-  window.location.href = "login.html";
-} catch (error) {
-  console.error("Registration failed:", error.message);
-  displayError(error.message || "Registration failed.");
 }
 
 /**
