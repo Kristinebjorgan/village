@@ -1,22 +1,65 @@
-import "./cloudinary.js"; // Import if necessary for forms or modals
-import * as utils from "./utils.js"; // Import all functions from utils
+import "./cloudinary.js";
+import * as utils from "./utils.js"; // Import all utility functions
 import { initForms } from "./forms.js";
 import * as listings from "./listings.js"; // Import all functions from listings
 import * as modal from "./modal.js"; // Import everything from modal.js
-import { logoutUser } from "./auth.js"; //
+import { logoutUser } from "./auth.js"; // Import logout functionality
+import { getToken, getUsername, clearUserData } from "./config.js";
+import { fetchCredits, initProfilePage, enableBioEditing } from "./profile.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   try {
     console.log("Initializing application...");
+
+    // Check if we are on the profile page
+    const isProfilePage = window.location.pathname.includes("profile.html");
+
+    if (isProfilePage) {
+      console.log("Profile page detected. Initializing profile features...");
+      initProfilePage(); // Initialize profile page-specific modules
+      enableBioEditing(); // Enable bio editing functionality
+    }
+
+    // Initialize global features and modules
     initializeApplication();
-    attachLogoutFunctionality();  // Initialize all application modules
-    utils.getCategoryButtons(); // Attach functionality to category buttons
+
+    // Attach logout functionality globally
+    attachLogoutFunctionality();
+
+    // Additional utilities (if needed globally)
+    utils.getCategoryButtons();
   } catch (error) {
     console.error("Initialization Error:", error);
   }
 });
 
- // Attach logout functionality to the logout button
+/**
+ * Main application initializer
+ */
+function initializeApplication() {
+  console.log("Initializing application modules...");
+
+  // Initialize forms and other features
+  initForms();
+  console.log("Forms initialized successfully.");
+
+  // Initialize listings and forms (common to all pages)
+  listings.initListings();
+
+  // Initialize global features (like user authentication checks)
+  initializeGlobalFeatures();
+
+  // Ensure modal is dynamically loaded and attached
+  ensureModalLoaded();
+
+  // Attach modal functionality to the Add Listing button
+  console.log("Attaching modal to Add Listing button...");
+  modal.attachModalToButton("addListingBtn");
+}
+
+/**
+ * Attach logout functionality to the logout button
+ */
 function attachLogoutFunctionality() {
   const logoutBtn = document.getElementById("logoutBtn");
 
@@ -31,24 +74,9 @@ function attachLogoutFunctionality() {
   }
 }
 
-//initialize full app
-function initializeApplication() {
-  console.log("Initializing application modules...");
-
-  // Initialize listings and form-related modules
-  listings.initListings();
-  initForms();
-  initializeGlobalFeatures();
-
-  // Dynamically load the modal HTML if it doesn't already exist
-  ensureModalLoaded();
-
-  // Attach modal functionality to the Add Listing button
-  console.log("Attaching modal to Add Listing button...");
-  modal.attachModalToButton("addListingBtn");
-}
-
-// Ensure the Add Listing Modal is loaded into the DOM
+/**
+ * Dynamically load and initialize the modal if not present
+ */
 function ensureModalLoaded() {
   if (!document.getElementById("addListingModal")) {
     console.log("Modal not found. Adding it to the DOM...");
@@ -64,14 +92,29 @@ function ensureModalLoaded() {
   }
 }
 
-// Initialize global features (e.g., user authentication checks)
+/**
+ * Initialize global features (e.g., user authentication checks)
+ */
 function initializeGlobalFeatures() {
-  const token = localStorage.getItem("jwtToken");
+  const token = getToken();
+  const username = getUsername();
 
-  if (token) {
-    console.log("User session active.");
-    utils.fetchUserCredits(); // Fetch and display credits dynamically
+  // Check if the current page is the authentication page
+  const isAuthPage = window.location.pathname.includes("auth.html");
+
+  console.log("Checking user authentication...");
+  if (isAuthPage) {
+    console.log("Authentication not required on this page.");
+    return; // Skip authentication checks on the login page
+  }
+
+  if (token && username) {
+    console.log("User session active:", { username });
   } else {
-    console.log("No user session found.");
+    console.warn(
+      "No user session found. Clearing user data and redirecting..."
+    );
+    clearUserData();
+    window.location.href = "/auth.html"; // Redirect to login page
   }
 }
