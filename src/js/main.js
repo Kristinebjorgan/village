@@ -5,7 +5,28 @@ import * as listings from "./listings.js"; // Import all functions from listings
 import * as modal from "./modal.js"; // Import everything from modal.js
 import { loginUser, logoutUser, registerUser } from "./auth.js"; // Import auth functionality
 import { renderProfilePage } from "./profile.js"; // Import profile page functionality
-import { getToken, setToken, setUsername, isTokenValid } from "./api.js"; // Import authentication helpers
+import { fetchApi, getToken, setToken, setUsername, getUsername, isTokenValid } from "./api.js"; // Import authentication helpers
+import { updateCreditBalance } from "./utils.js";
+
+//credits
+async function initializeUserCredits() {
+  try {
+    const username = getUsername();
+    if (!username) {
+      console.warn("No username found. Cannot fetch credits.");
+      return;
+    }
+
+    const profileData = await fetchApi(`/auction/profiles/${username}`);
+    const userData = profileData.data;
+
+    // Update credit balance in the header
+    updateCreditBalance(userData.credits);
+  } catch (error) {
+    console.error("Failed to initialize user credits:", error.message);
+  }
+}
+
 
 document.addEventListener("DOMContentLoaded", () => {
   try {
@@ -79,6 +100,10 @@ function initializeGlobalFeatures() {
 
   // Attach modal to the Add Listing button
   ensureModalLoaded();
+
+  //Credits
+  initializeUserCredits();
+
 
   console.log("Global features initialized successfully.");
 }

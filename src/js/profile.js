@@ -1,5 +1,6 @@
 import { fetchApi, sendApiRequest, getUsername } from "./api.js";
 
+
 // Fetch user profile data
 async function fetchUserProfile() {
   const username = getUsername();

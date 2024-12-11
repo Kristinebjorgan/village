@@ -21,3 +21,13 @@ export function getCategoryButtons() {
   });
 }
 
+//Credit 
+export function updateCreditBalance(credits) {
+  const creditBalanceEl = document.getElementById("creditBalance");
+  if (creditBalanceEl) {
+    creditBalanceEl.textContent = `${credits || 0}`;
+  } else {
+    console.warn("Credit balance element not found in the DOM.");
+  }
+}
+
