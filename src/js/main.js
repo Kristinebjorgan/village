@@ -12,9 +12,9 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("Initializing application...");
 
     // Validate token
-    const token = getToken(); 
+    const token = getToken();
     if (!isTokenValid(token)) {
-      console.warn("Token is invalid or missing."); 
+      console.warn("Token is invalid or missing.");
     } else {
       console.log("Token is valid. Proceeding with initialization...");
     }
