@@ -104,7 +104,6 @@ function initializeGlobalFeatures() {
   //Credits
   initializeUserCredits();
 
-
   console.log("Global features initialized successfully.");
 }
 
@@ -124,21 +123,54 @@ function attachLogoutFunctionality() {
   }
 }
 
+//add listings Modal
+export function initializeModal() {
+  const modal = document.getElementById("addListingModal");
+  const closeModalBtn = document.getElementById("closeModalBtn");
+
+  if (!modal || !closeModalBtn) {
+    console.error("Modal or Close button not found.");
+    return;
+  }
+
+  // Close modal on button click
+  closeModalBtn.addEventListener("click", () => {
+    modal.classList.add("hidden");
+  });
+
+  // Close modal when clicking outside the modal content
+  modal.addEventListener("click", (event) => {
+    if (event.target === modal) {
+      modal.classList.add("hidden");
+    }
+  });
+
+  // Add other modal-specific behavior here, like form submission
+}
+
+
 /**
  * Dynamically load and initialize the modal if not present
  */
 function ensureModalLoaded() {
-  if (!document.getElementById("addListingModal")) {
-    console.log("Modal not found. Adding it to the DOM...");
+  const modalElement = document.getElementById("addListingModal");
+  if (!modalElement) {
+    console.log("Adding modal to the DOM...");
     const modalHTML = modal.getAddListingModalHTML();
-    const modalContainer = document.createElement("div");
-    modalContainer.innerHTML = modalHTML;
-    document.body.appendChild(modalContainer);
+    const container = document.createElement("div");
+    container.innerHTML = modalHTML;
+    document.body.appendChild(container);
 
-    // Initialize modal functionality after appending to the DOM
+    // Initialize modal functionality after adding it to the DOM
     modal.initializeModal();
+
+    // Attach the button to the modal functionality 
+    modal.attachModalToButton("addListingBtn");
   } else {
     console.log("Modal already present in the DOM.");
+
+    // Reattach modal functionality to the button
+    modal.attachModalToButton("addListingBtn");
   }
 }
 
