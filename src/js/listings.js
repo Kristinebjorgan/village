@@ -1,8 +1,10 @@
-import { API_BASE_URL } from "./config.js";
+import { fetchApi } from "./api.js"; 
 
 let listings = []; // Global variable to store fetched listings
 
-// Initialize the listings module
+/**
+ * Initialize the listings module
+ */
 export function initListings() {
   const container = document.getElementById("listings-container");
   if (!container) {
@@ -14,7 +16,9 @@ export function initListings() {
   initCategoryFiltering(); // Initialize category filtering
 }
 
-//Fetch listings
+/**
+ * Fetch listings from the API
+ */
 export async function fetchListings() {
   const container = document.getElementById("listings-container");
   if (!container) {
@@ -25,13 +29,11 @@ export async function fetchListings() {
   try {
     console.log("Fetching listings with 'villageWebsite' tag...");
 
-    // Fetch listings with the specific unique tag and only active ones
-    const response = await fetch(
-      `${API_BASE_URL}/auction/listings?_tag=villageWebsite&_active=true`
+    // Use fetchApi to fetch listings with the specified tag
+    const result = await fetchApi(
+      `/auction/listings?_tag=villageWebsite&_active=true`
     );
-    console.log("API Response Status:", response.status);
 
-    const result = await response.json();
     console.log("Filtered listings fetched from API:", result.data);
 
     // Update global listings variable and display filtered listings
@@ -42,8 +44,9 @@ export async function fetchListings() {
   }
 }
 
-
-// Filter listings by category
+/**
+ * Fetch listings by category
+ */
 export function fetchListingsByCategory(category) {
   if (!listings.length) {
     console.warn("Listings not yet fetched. Fetching all listings first.");
@@ -54,7 +57,9 @@ export function fetchListingsByCategory(category) {
   filterListingsByCategory(category);
 }
 
-// Filter listings by category
+/**
+ * Filter listings by category
+ */
 export function filterListingsByCategory(category) {
   const filteredListings = listings.filter((listing) =>
     listing.tags.includes(category)
@@ -62,7 +67,9 @@ export function filterListingsByCategory(category) {
   displayListings(filteredListings);
 }
 
-// Render multiple listings
+/**
+ * Render multiple listings
+ */
 export function displayListings(listingsToRender) {
   const container = document.getElementById("listings-container");
 
@@ -76,7 +83,9 @@ export function displayListings(listingsToRender) {
   listingsToRender.forEach((listing) => displayListing(listing));
 }
 
-// Render a single listing
+/**
+ * Render a single listing
+ */
 export function displayListing(listing) {
   const container = document.getElementById("listings-container");
 
@@ -122,7 +131,9 @@ export function displayListing(listing) {
   container.innerHTML += listingCard;
 }
 
-// Initialize category filtering
+/**
+ * Initialize category filtering
+ */
 export function initCategoryFiltering() {
   const categoryButtons = document.querySelectorAll(".category-btn");
 

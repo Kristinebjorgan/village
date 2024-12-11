@@ -69,12 +69,10 @@ async function handleLogin(event) {
   }
 
   try {
-    const userData = await loginUser(email, password);
-    console.log("Login successful:", userData);
+    await loginUser(email, password);
     alert("Login successful!");
     window.location.href = "index.html";
   } catch (error) {
-    console.error("Login failed:", error.message);
     displayError(error.message || "Login failed.", loginError);
   }
 }
@@ -92,63 +90,84 @@ async function handleRegister(event) {
     .getElementById("repeatPassword")
     ?.value.trim();
   const bio = document.getElementById("biography")?.value.trim();
+  const avatarFile = document.getElementById("avatarUpload").files[0];
+  const signupError = document.getElementById("loginError");
+
+  signupError.textContent = "";
 
   // Validate form fields
   if (!username || !email || !password || !repeatPassword) {
-    displayError("All fields are required.");
+    displayError("All fields are required.", signupError);
     return;
   }
 
   if (password !== repeatPassword) {
-    displayError("Passwords do not match.");
+    displayError("Passwords do not match.", signupError);
     return;
   }
 
   if (password.length < 8) {
-    displayError("Password must be at least 8 characters.");
+    displayError("Password must be at least 8 characters.", signupError);
     return;
   }
 
   if (!email.endsWith("@stud.noroff.no")) {
-    displayError("Email must end with @stud.noroff.no");
+    displayError("Email must end with @stud.noroff.no", signupError);
     return;
   }
 
   if (bio && bio.length > 160) {
-    displayError("Bio must be less than 160 characters.");
+    displayError("Bio must be less than 160 characters.", signupError);
     return;
   }
 
-  if (!avatarURL) {
-    displayError("Please upload an avatar.");
-    return;
+  // Process avatar upload if a file is provided
+  let avatar = null;
+  if (avatarFile) {
+    try {
+      const avatarURL = await uploadFileToCloudinary(avatarFile);
+      avatar = {
+        url: avatarURL,
+        alt: `${username}'s avatar`, // Optional alt text
+      };
+    } catch (error) {
+      console.error("Avatar upload failed:", error.message);
+      displayError("Failed to upload avatar. Please try again.", signupError);
+      return;
+    }
   }
 
   // Build the userData payload
-const userData = {
-  name: username,
-  email,
-  password,
-  bio: bio || "",
-  avatar: {
-    url: avatarURL || "https://default-avatar-url.com/avatar.png", 
-    alt: `${username}'s avatar`,
-  }
-};
-
+  const userData = {
+    name: username,
+    email,
+    password,
+    bio: bio || "",
+    avatar: avatar,
+    banner: null, // Optional banner field
+    venueManager: false, // Default to false unless needed
+  };
 
   try {
-    console.log("Registering user:", JSON.stringify(userData, null, 2));
-    const registeredUser = await registerUser(userData);
-    console.log("User registered successfully:", registeredUser);
-    alert("Registration successful! Redirecting to index...");
-    window.location.href = "index.html";
+    // Register the user
+    await registerUser(userData);
+
+    // Automatically log the user in
+    try {
+      await loginUser(email, password); // Use the same credentials for login
+      alert("Registration and login successful!");
+      window.location.href = "index.html"; // Redirect to index
+    } catch (loginError) {
+      console.error("Login after registration failed:", loginError.message);
+      displayError(
+        "Registration successful, but login failed. Please log in manually.",
+        signupError
+      );
+    }
   } catch (error) {
-    console.error("Registration failed:", error);
-    displayError(error.message || "Registration failed.");
+    displayError(error.message || "Registration failed.", signupError);
   }
 }
-
 
 /**
  * Handle avatar upload
@@ -162,11 +181,11 @@ async function handleAvatarUpload(event) {
   }
 
   const avatarPreview = document.getElementById("avatarPreview");
-  const avatarLabel = document.getElementById("avatarLabel"); // Reference the label directly
+  const avatarLabel = document.getElementById("avatarLabel");
 
   try {
     console.log("Uploading file to Cloudinary...");
-    avatarURL = await uploadFileToCloudinary(file); 
+    avatarURL = await uploadFileToCloudinary(file);
     console.log("File uploaded successfully. URL:", avatarURL);
 
     // Validate the uploaded URL
@@ -207,7 +226,7 @@ function isValidUrl(url) {
 }
 
 /**
- * Utility: Display error messages on forms or as alerts.
+ * Display error messages on forms or as alerts.
  */
 export function displayError(message, errorElement = null) {
   if (errorElement) {

@@ -25,7 +25,7 @@ module.exports = {
       },
       letterSpacing: {
         max: "0.5em",
-        medio: "0.3em",
+        medio: "0.54em",
         min: "0.2em",
       },
       spacing: {

@@ -1,96 +1,73 @@
-import {
-  API_BASE_URL,
-  API_KEY,
-  clearUserData,
-  clearUsername,
-  getToken,
-  setToken,
-  setUsername,
-  getUsername,
-} from "./config.js";
+import { setToken, setUsername, clearUserData } from "./api.js";
 import { sendApiRequest } from "./api.js";
 
-// Centralized error handler
-function handleError(response) {
-  if (!response.ok) {
-    throw new Error(response.statusText || "An error occurred");
-  }
-  return response.json();
-}
-
-//Login user
- export const loginUser = async (email, password) => {
-   try {
-     const payload = { email, password };
-     const response = await fetch(`https://v2.api.noroff.dev/auth/login`, {
-       // Full API URL
-       method: "POST",
-       headers: { "Content-Type": "application/json" },
-       body: JSON.stringify(payload),
-     });
-
-     const data = await response.json();
-     console.log("API Response for Login:", data);
-
-     if (response.ok) {
-       console.log("Setting accessToken in localStorage:", data.accessToken);
-       setToken(data.accessToken); // Use the correct function
-       setUsername(data.name); // Set the username
-       return data;
-     } else {
-       console.error("Login failed with message:", data.message);
-       throw new Error(data.message || "Login failed.");
-     }
-   } catch (error) {
-     console.error("Login Error:", error.message);
-     throw error;
-   }
- };
-
-// Logout user
-export function logoutUser() {
-  console.log("Logging out the user...");
-
-  // Clear user data and localStorage
-  clearUserData();
-
-  // Redirect to the login page
-  window.location.href = "/auth.html"; // Adjust the path as needed
-}
-
-// Register user
-export async function registerUser(userData) {
-  const apiUrl = "https://v2.api.noroff.dev/auth/register";
+/**
+ * Login User
+ */
+export const loginUser = async (email, password) => {
+  const payload = { email, password }; // Define the payload
 
   try {
-    console.log(
-      "Sending registration data to API:",
-      JSON.stringify(userData, null, 2)
-    );
+    const data = await sendApiRequest("/auth/login", "POST", payload);
 
-    const response = await fetch(apiUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(userData),
-    });
+    console.log("API Response for Login:", data);
 
-    console.log("Response Status:", response.status);
-    console.log("Response Headers:", response.headers);
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error(
-        "Full API Error Details:",
-        JSON.stringify(errorData, null, 2)
-      );
-      throw new Error(errorData.errors?.[0]?.message || "Registration failed.");
+    // Correctly extract the accessToken from the nested structure
+    const accessToken = data?.data?.accessToken;
+    if (!accessToken) {
+      throw new Error("Login failed: Missing accessToken in response.");
     }
 
-    const data = await response.json();
-    console.log("Registration successful:", data);
+    // Save token and username to localStorage
+    setToken(accessToken);
+    setUsername(data.data.name);
+
     return data;
+  } catch (error) {
+    console.error("Login Error:", error.message);
+    throw error;
+  }
+};
+
+
+//logout user
+export function logoutUser() { 
+  console.log("Logging out the user...");
+
+  // Clear user data and ensure token is removed
+  localStorage.removeItem("jwtToken"); 
+  clearUserData();
+
+  // Redirect after a slight delay to ensure cleanup
+  setTimeout(() => {
+    window.location.href = "/auth.html";
+  }, 100); // 100ms delay
+}
+
+//Register User
+export const registerUser = async (userData) => {
+  const payload = {
+    name: userData.name,
+    email: userData.email,
+    password: userData.password,
+    bio: userData.bio || "",
+    avatar: userData.avatar
+      ? {
+          url: userData.avatar.url,
+          alt: userData.avatar.alt || "",
+        }
+      : null,
+  };
+
+  try {
+    const data = await sendApiRequest("/auth/register", "POST", payload);
+
+    console.log("Registration successful!");
+    alert("Registration successful! Redirecting to homepage...");
+    window.location.href = "index.html"; // Redirect to index.html after successful registration
+    return data; // Return registration response for further handling if needed
   } catch (error) {
     console.error("Registration Error:", error.message);
     throw error;
   }
-}
+};
