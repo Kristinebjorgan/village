@@ -44,11 +44,11 @@ function renderUserProfile(profileData) {
 }
 
 function renderUserListings(listings) {
-  const listingsData = listings.data; // Extract the data property
+  const listingsData = listings.data || []; // Safely extract data property
   const listingsContainer = document.getElementById("listingsContainer");
   listingsContainer.innerHTML = "";
 
-  if (!listingsData || !listingsData.length) {
+  if (!listingsData.length) {
     listingsContainer.innerHTML = "<p>No listings found.</p>";
     return;
   }
@@ -60,31 +60,32 @@ function renderUserListings(listings) {
     }`;
     card.innerHTML = `
       <h3 class="font-semibold">${listing.title}</h3>
-      <p>${listing.description}</p>
+      <p>${listing.description || "No description available."}</p>
       <p>Ends at: ${new Date(listing.endsAt).toLocaleString()}</p>`;
     listingsContainer.appendChild(card);
   });
 }
 
-
 function renderUserWins(wins) {
+  const winsData = wins.data || []; // Safely extract data property
   const winsContainer = document.getElementById("winsContainer");
   winsContainer.innerHTML = "";
 
-  if (!wins.length) {
+  if (!winsData.length) {
     winsContainer.innerHTML = "<p>No wins found.</p>";
     return;
   }
 
-  wins.forEach((win) => {
+  winsData.forEach((win) => {
     const card = document.createElement("div");
     card.className = `p-4 border rounded-lg`;
     card.innerHTML = `
       <h3 class="font-semibold">${win.title}</h3>
-      <p>${win.description}</p>`;
+      <p>${win.description || "No description available."}</p>`;
     winsContainer.appendChild(card);
   });
 }
+
 
 // Edit and Update Bio
 async function handleEditBio() {
