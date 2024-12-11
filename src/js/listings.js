@@ -1,66 +1,55 @@
-import { fetchApi } from "./api.js"; 
+import { fetchApi, sendApiRequest } from "./api.js";
 
 let listings = []; // Global variable to store fetched listings
 
 /**
  * Initialize the listings module
  */
-export function initListings() {
+export async function initListings() {
   const container = document.getElementById("listings-container");
   if (!container) {
     console.warn("Listings container not found. Skipping initialization.");
     return;
   }
 
-  fetchListings(); // Fetch all listings by default
+  await fetchListingsAndDisplay(); // Fetch and display all listings by default
   initCategoryFiltering(); // Initialize category filtering
 }
 
 /**
- * Fetch listings from the API
+ * Fetch listings from the API and update the global listings variable
  */
-export async function fetchListings() {
-  const container = document.getElementById("listings-container");
-  if (!container) {
-    console.warn("Skipping listings fetch: listings-container not found.");
-    return;
-  }
-
+async function fetchListings() {
   try {
     console.log("Fetching listings with 'villageWebsite' tag...");
-
-    // Use fetchApi to fetch listings with the specified tag
     const result = await fetchApi(
       `/auction/listings?_tag=villageWebsite&_active=true`
     );
-
     console.log("Filtered listings fetched from API:", result.data);
-
-    // Update global listings variable and display filtered listings
     listings = result.data || [];
-    displayListings(listings);
   } catch (error) {
     console.error("Failed to fetch listings:", error);
   }
 }
 
 /**
- * Fetch listings by category
+ * Fetch and display listings in one function
  */
-export function fetchListingsByCategory(category) {
-  if (!listings.length) {
-    console.warn("Listings not yet fetched. Fetching all listings first.");
-    fetchListings().then(() => filterListingsByCategory(category));
-    return;
-  }
-
-  filterListingsByCategory(category);
+async function fetchListingsAndDisplay() {
+  await fetchListings();
+  displayListings(listings);
 }
 
 /**
  * Filter listings by category
  */
-export function filterListingsByCategory(category) {
+function filterListingsByCategory(category) {
+  if (!listings.length) {
+    console.warn("Listings not yet fetched. Fetching all listings first...");
+    fetchListingsAndDisplay();
+    return;
+  }
+
   const filteredListings = listings.filter((listing) =>
     listing.tags.includes(category)
   );
@@ -70,7 +59,7 @@ export function filterListingsByCategory(category) {
 /**
  * Render multiple listings
  */
-export function displayListings(listingsToRender) {
+function displayListings(listingsToRender) {
   const container = document.getElementById("listings-container");
 
   if (!container) {
@@ -78,7 +67,6 @@ export function displayListings(listingsToRender) {
     return;
   }
 
-  console.log("Rendering listings:", listingsToRender); // Debug listings to render
   container.innerHTML = ""; // Clear container before rendering
   listingsToRender.forEach((listing) => displayListing(listing));
 }
@@ -86,7 +74,7 @@ export function displayListings(listingsToRender) {
 /**
  * Render a single listing
  */
-export function displayListing(listing) {
+function displayListing(listing) {
   const container = document.getElementById("listings-container");
 
   if (!container) {
@@ -94,7 +82,8 @@ export function displayListing(listing) {
     return;
   }
 
-  console.log("Rendering single listing:", listing); // Debug each listing
+  console.log("Rendering single listing:", listing);
+
   const highestBid =
     listing.bids?.length > 0
       ? Math.max(...listing.bids.map((bid) => bid.amount))
@@ -118,23 +107,76 @@ export function displayListing(listing) {
           listing.endsAt
         ).toLocaleDateString()}</p>
         <p class="text-sm font-bold text-primary mt-1">Highest Bid: ${highestBid}</p>
-        <button
-          class="mt-4 w-full bg-primary text-white py-2 px-4 rounded hover:bg-primary-dark transition place-bid-btn"
-          data-id="${listing.id}"
-        >
-          Place Bid
-        </button>
+        <div class="mt-4">
+          <input
+            type="number"
+            id="bidAmount-${listing.id}"
+            class="w-full border rounded p-2 mb-2"
+            placeholder="Enter your bid amount"
+          />
+          <button
+            class="w-full bg-primary text-white py-2 px-4 rounded hover:bg-primary-dark transition bid-btn"
+            data-id="${listing.id}"
+          >
+            Bid
+          </button>
+        </div>
       </div>
     </div>
   `;
 
   container.innerHTML += listingCard;
+
+  // Attach bid button functionality
+  attachBidButton(listing.id);
+}
+
+/**
+ * Attach functionality to the Bid button
+ */
+function attachBidButton(listingId) {
+  const bidButton = document.querySelector(`.bid-btn[data-id="${listingId}"]`);
+
+  if (bidButton) {
+    bidButton.addEventListener("click", async () => {
+      const bidAmountInput = document.getElementById(`bidAmount-${listingId}`);
+      const bidAmount = parseFloat(bidAmountInput.value);
+
+      if (!bidAmount || bidAmount <= 0) {
+        alert("Please enter a valid bid amount.");
+        return;
+      }
+
+      try {
+        // Submit the bid to the API
+        const response = await sendApiRequest(
+          `/auction/listings/${listingId}/bids`,
+          "POST",
+          {
+            amount: bidAmount,
+          }
+        );
+
+        console.log("Bid successfully placed:", response);
+
+        // Provide feedback to the user
+        alert(`Your bid of ${bidAmount} has been placed successfully!`);
+        bidAmountInput.value = ""; // Clear the input field
+        fetchListingsAndDisplay(); // Refresh listings to show updated bids
+      } catch (error) {
+        console.error("Failed to place bid:", error);
+        alert("Failed to place bid. Please try again.");
+      }
+    });
+  } else {
+    console.warn(`Bid button for listing ${listingId} not found.`);
+  }
 }
 
 /**
  * Initialize category filtering
  */
-export function initCategoryFiltering() {
+function initCategoryFiltering() {
   const categoryButtons = document.querySelectorAll(".category-btn");
 
   if (!categoryButtons.length) {

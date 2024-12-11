@@ -83,15 +83,10 @@ export function initializeModal() {
       console.log("Add Listing Form submitted.");
 
       // Gather form data
-      const title = document.getElementById("title").value;
-      const description = document.getElementById("description").value;
-      const media = document.getElementById("media").value
-        ? [document.getElementById("media").value]
-        : [];
-      const tags = document
-        .getElementById("tags")
-        .value.split(",")
-        .map((tag) => tag.trim());
+      const title = document.getElementById("title").value.trim();
+      const description = document.getElementById("description").value.trim();
+      const mediaInput = document.getElementById("media").value.trim();
+      const tagsInput = document.getElementById("tags").value.trim();
       const deadline = document.getElementById("deadline").value;
 
       // Validate required fields
@@ -100,32 +95,35 @@ export function initializeModal() {
         return;
       }
 
-      // Prepare the payload for the API
+      // Prepare media array
+      const media = mediaInput
+        ? [{ url: mediaInput, alt: `${title} Image` }]
+        : [];
+
+      // Prepare tags array
+      const tags = tagsInput
+        ? tagsInput.split(",").map((tag) => tag.trim())
+        : [];
+
+      // Prepare the payload
       const payload = {
-        title,
-        description,
-        media: media.map((url) => ({ url })),
-        tags: [...tags, "villageWebsite"],
-        endsAt: new Date(deadline).toISOString(),
+        title, // Required
+        description: description || "No description provided.", // Optional
+        tags: [...tags, "villageWebsite"], // Optional (add default tag)
+        media, // Optional (array of objects)
+        endsAt: new Date(deadline).toISOString(), // Required
       };
 
-      // Debug the token and payload
-      const token = localStorage.getItem("jwtToken");
-      console.log("Token Retrieved:", token);
       console.log("Payload for API:", payload);
 
       try {
-        console.log("Sending request to create a new listing...");
+        // Send request to the API
         const data = await sendApiRequest("/auction/listings", "POST", payload);
 
-        // Log the entire response for debugging
-        console.log(
-          "API Response after adding the listing:",
-          JSON.stringify(data, null, 2)
-        );
+        // Log the response for debugging
+        console.log("API Response:", data);
 
         if (data && data.data) {
-          console.log("Listing added successfully:", data.data);
           alert(
             `Listing added successfully! ID: ${data.data.id}, Title: ${data.data.title}`
           );
@@ -133,9 +131,7 @@ export function initializeModal() {
           location.reload();
         } else {
           console.warn("Unexpected server response:", data);
-          alert(
-            "Listing may have been added, but response format was unexpected. Please verify."
-          );
+          alert("Please verify if the listing was successfully added.");
         }
       } catch (error) {
         console.error("Error occurred while adding the listing:", error);
@@ -148,3 +144,4 @@ export function initializeModal() {
     });
   }
 }
+
