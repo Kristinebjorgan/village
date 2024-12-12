@@ -6,7 +6,7 @@ import * as modal from "./modal.js"; // Import everything from modal.js
 import { loginUser, logoutUser, registerUser } from "./auth.js"; // Import auth functionality
 import { renderProfilePage } from "./profile.js"; // Import profile page functionality
 import { fetchApi, getToken, setToken, setUsername, getUsername, isTokenValid } from "./api.js"; // Import authentication helpers
-import { updateCreditBalance } from "./utils.js";
+import { updateCreditBalance, getCategoryButtons, initSearchBar } from "./utils.js";
 
 
 // Fetch and display user credits
@@ -43,6 +43,11 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       console.log("Token is valid. Proceeding with initialization...");
     }
+
+    // Fetch and display listings
+    listings.fetchListingsAndDisplay().then(() => {
+      console.log("Listings fetched and displayed successfully.");
+    });
 
     // Initialize authenticated pages
     initializePage();
@@ -119,6 +124,12 @@ function initializeGlobalFeatures() {
 
   //Credits
   initializeUserCredits();
+
+  //Categories
+  getCategoryButtons();
+
+  // Search bar
+initSearchBar();
 
   console.log("Global features initialized successfully.");
 }

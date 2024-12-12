@@ -12,8 +12,19 @@ export async function initListings() {
     console.warn("Listings container not found. Skipping initialization.");
     return;
   }
-  await fetchListingsAndDisplay();
-  initCategoryFiltering();
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const category = urlParams.get("category");
+
+  if (category) {
+    console.log(`Filtering listings by category: ${category}`);
+    await fetchListingsAndDisplay(); // Fetch all listings first
+    filterListingsByCategory(category); // Apply category filter
+  } else {
+    await fetchListingsAndDisplay(); // Default behavior
+  }
+
+  initCategoryFiltering(); // Still initialize filtering buttons
 }
 
 /**
@@ -68,22 +79,86 @@ function filterListingsByCategory(category) {
 /**
  * Render multiple listings
  */
-function displayListings(listingsToRender) {
+export function displayListings(listingsToRender = []) {
+  console.log("Displaying listings:", listingsToRender);
+
   const container = document.getElementById("listings-container");
   if (!container) {
     console.error("Listings container not found.");
     return;
   }
 
-  console.log("Rendering Listings:", listingsToRender); // Log listings to be rendered
-  container.innerHTML = ""; // Clear container before rendering
-  listingsToRender.forEach((listing) => displayListing(listing));
+  // Clear existing content
+  container.innerHTML = "";
+
+  if (listingsToRender.length === 0) {
+    container.innerHTML = `
+      <div class="text-center text-gray-500 p-4">
+        <p>No listings available. Try a different search or category.</p>
+      </div>
+    `;
+    return;
+  }
+
+  // Render each listing
+  listingsToRender.forEach((listing) => {
+    try {
+      const listingHTML = generateListingHTML(listing);
+      container.innerHTML += listingHTML;
+    } catch (error) {
+      console.error("Error rendering listing:", listing, error);
+    }
+  });
 }
+
+function generateListingHTML(listing) {
+  const highestBid =
+    listing.bids?.length > 0
+      ? Math.max(...listing.bids.map((bid) => bid.amount))
+      : "No bids yet";
+
+  return `
+    <div class="bg-white shadow rounded-lg overflow-hidden border border-gray-200">
+      <img
+        src="${
+          listing.media[0]?.url || "./media/placeholders/item-placeholder.png"
+        }"
+        alt="${listing.media[0]?.alt || "Listing Image"}"
+        class="h-40 w-full object-cover"
+      />
+      <div class="p-4">
+        <h3 class="text-lg font-bold text-gray-800 truncate">${
+          listing.title
+        }</h3>
+        <p class="text-sm text-gray-600 truncate">${listing.description}</p>
+        <p class="text-sm text-gray-600 mt-2">Ends: ${new Date(
+          listing.endsAt
+        ).toLocaleDateString()}</p>
+        <p class="text-sm font-bold text-primary mt-1">Highest Bid: ${highestBid}</p>
+        <div class="mt-4">
+          <input
+            type="number"
+            id="bidAmount-${listing.id}"
+            class="w-full border rounded p-2 mb-2"
+            placeholder="Enter your bid amount"
+          />
+          <button
+            class="w-full bg-primary text-white py-2 px-4 rounded hover:bg-primary-dark transition bid-btn"
+            data-id="${listing.id}"
+          >
+            Bid
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
 
 /**
  * Render a single listing
  */
-function displayListing(listing) {
+export function displayListing(listing) {
   const container = document.getElementById("listings-container");
 
   if (!container) {
