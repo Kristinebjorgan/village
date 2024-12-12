@@ -66,25 +66,45 @@ function initializeAuthPage() {
   console.log("Authentication page initialized successfully.");
 }
 
-/**
- * Initialize the appropriate page-specific functionality
- */
+// Initialize the appropriate page-specific functionality
 function initializePage() {
   const currentPath = window.location.pathname;
 
   if (currentPath.includes("profile.html")) {
     console.log("Profile page detected. Rendering profile page...");
-    renderProfilePage();
+    try {
+      renderProfilePage();
+    } catch (error) {
+      console.error("Error while rendering the profile page:", error);
+    }
   } else if (currentPath.includes("index.html")) {
     console.log("Index page detected. Initializing homepage features...");
-    listings.fetchListings(); // Load listings on the homepage
-  } else if (isCurrentPage("auth.html")) {
+
+    // Ensure that the listings container exists before proceeding
+    const listingsContainer = document.getElementById("listings-container");
+    if (!listingsContainer) {
+      console.error("Listings container not found. Skipping listing initialization.");
+      return;
+    }
+
+    try {
+      listings.fetchListingsAndDisplay(); // Load listings on the homepage
+    } catch (error) {
+      console.error("Error while fetching and displaying listings:", error);
+    }
+  } else if (currentPath.includes("auth.html")) {
     console.log("Authentication page detected. Initializing auth page...");
-    initializeAuthPage();
+    try {
+      initializeAuthPage();
+    } catch (error) {
+      console.error("Error while initializing authentication page:", error);
+    }
   } else {
     console.log("No specific page detected, initializing default features...");
+    // Placeholder for potential future functionality on generic or unmatched pages
   }
 }
+
 
 /**
  * Initialize global features shared across all pages
@@ -162,7 +182,15 @@ function ensureModalLoaded() {
     document.body.appendChild(container);
 
     // Initialize modal functionality after adding it to the DOM
-    modal.initializeModal();
+  modal.initializeModal();
+  document
+    .getElementById("addListingForm")
+    .addEventListener("submit", async (event) => {
+      event.preventDefault();
+      console.log("Add Listing form submitted.");
+      // Trigger fetch and display after successful submission
+      await listings.fetchListingsAndDisplay();
+    });
 
     // Attach the button to the modal functionality 
     modal.attachModalToButton("addListingBtn");

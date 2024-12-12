@@ -1,4 +1,5 @@
 import { sendApiRequest } from "./api.js";
+import { fetchListingsAndDisplay } from "./listings.js";
 
 export function getAddListingModalHTML() {
   return `
@@ -57,9 +58,10 @@ export function attachModalToButton(buttonId) {
 export function initializeModal() {
   const modal = document.getElementById("addListingModal");
   const closeModalBtn = document.getElementById("closeModalBtn");
+  const addListingForm = document.getElementById("addListingForm");
 
-  if (!modal || !closeModalBtn) {
-    console.error("Modal or Close button not found.");
+  if (!modal || !closeModalBtn || !addListingForm) {
+    console.error("Modal, form, or close button not found.");
     return;
   }
 
@@ -75,73 +77,62 @@ export function initializeModal() {
     }
   });
 
-  // Add submit listener to form
-  const addListingForm = document.getElementById("addListingForm");
-  if (addListingForm) {
-    addListingForm.addEventListener("submit", async (event) => {
-      event.preventDefault();
-      console.log("Add Listing Form submitted.");
+  // Handle form submission
+  addListingForm.addEventListener("submit", async (event) => {
+    event.preventDefault(); // Prevent default form submission
+    console.log("Add Listing Form submitted.");
 
-      // Gather form data
-      const title = document.getElementById("title").value.trim();
-      const description = document.getElementById("description").value.trim();
-      const mediaInput = document.getElementById("media").value.trim();
-      const tagsInput = document.getElementById("tags").value.trim();
-      const deadline = document.getElementById("deadline").value;
+    // Collect input values
+    const title = document.getElementById("title").value.trim();
+    const description = document.getElementById("description").value.trim();
+    const mediaInput = document.getElementById("media").value.trim();
+    const tagsInput = document.getElementById("tags").value.trim();
+    const deadline = document.getElementById("deadline").value;
 
-      // Validate required fields
-      if (!title || !deadline) {
-        alert("Please fill in all required fields.");
-        return;
-      }
+    // Validate required fields
+    if (!title || !deadline) {
+      alert("Please fill in all required fields.");
+      return;
+    }
 
-      // Prepare media array
-      const media = mediaInput
-        ? [{ url: mediaInput, alt: `${title} Image` }]
-        : [];
+    // Prepare media and tags
+    const media = mediaInput
+      ? [{ url: mediaInput, alt: `${title} Image` }]
+      : [];
+    const tags = tagsInput ? tagsInput.split(",").map((tag) => tag.trim()) : [];
 
-      // Prepare tags array
-      const tags = tagsInput
-        ? tagsInput.split(",").map((tag) => tag.trim())
-        : [];
+    // Prepare payload for the API
+    const payload = {
+      title,
+      description: description || "No description provided.",
+      tags: [...tags, "villageWebsite"], // Add default tag
+      media,
+      endsAt: new Date(deadline).toISOString(),
+    };
 
-      // Prepare the payload
-      const payload = {
-        title, // Required
-        description: description || "No description provided.", // Optional
-        tags: [...tags, "villageWebsite"], // Optional (add default tag)
-        media, // Optional (array of objects)
-        endsAt: new Date(deadline).toISOString(), // Required
-      };
+    console.log("Payload for API:", payload);
 
-      console.log("Payload for API:", payload);
+    try {
+      // Send data to the API
+      const data = await sendApiRequest("/auction/listings", "POST", payload);
 
-      try {
-        // Send request to the API
-        const data = await sendApiRequest("/auction/listings", "POST", payload);
-
-        // Log the response for debugging
-        console.log("API Response:", data);
-
-        if (data && data.data) {
-          alert(
-            `Listing added successfully! ID: ${data.data.id}, Title: ${data.data.title}`
-          );
-          modal.classList.add("hidden");
-          location.reload();
-        } else {
-          console.warn("Unexpected server response:", data);
-          alert("Please verify if the listing was successfully added.");
-        }
-      } catch (error) {
-        console.error("Error occurred while adding the listing:", error);
+      if (data && data.data) {
+        console.log("Listing added successfully:", data.data);
         alert(
-          `Error: ${
-            error.message || "Failed to add listing. Please try again."
-          }`
+          `Listing added successfully! ID: ${data.data.id}, Title: ${data.data.title}`
         );
-      }
-    });
-  }
-}
 
+        modal.classList.add("hidden"); // Close modal
+        fetchListingsAndDisplay(); // Refresh the listings
+      } else {
+        console.warn("Unexpected server response:", data);
+        alert("Please verify if the listing was successfully added.");
+      }
+    } catch (error) {
+      console.error("Error occurred while adding the listing:", error);
+      alert(
+        `Error: ${error.message || "Failed to add listing. Please try again."}`
+      );
+    }
+  });
+}

@@ -35,7 +35,7 @@ async function fetchListings() {
 /**
  * Fetch and display listings in one function
  */
-async function fetchListingsAndDisplay() {
+export async function fetchListingsAndDisplay() {
   await fetchListings();
   displayListings(listings);
 }
