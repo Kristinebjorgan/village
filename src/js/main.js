@@ -1,7 +1,12 @@
 import "./cloudinary.js";
 import * as utils from "./utils.js"; // Import all utility functions
 import { initForms } from "./forms.js"; // Initialize forms for auth.html
-import * as listings from "./listings.js"; // Import all functions from listings
+import {
+  displayListings,
+  fetchListingsAndDisplay,
+  initListings,
+  filterListingsByCategory,
+} from "./listings.js";
 import * as modal from "./modal.js"; // Import everything from modal.js
 import { loginUser, logoutUser, registerUser } from "./auth.js"; // Import auth functionality
 import { renderProfilePage } from "./profile.js"; // Import profile page functionality
@@ -14,29 +19,29 @@ async function initializeUserCredits() {
   try {
     const username = getUsername();
     if (!username) {
-      console.warn("[initializeUserCredits] No username found. Cannot fetch credits.");
+      console.warn(
+        "[initializeUserCredits] No username found. Cannot fetch credits."
+      );
       return;
     }
-
-    // Fetch user profile data
-    console.log("[initializeUserCredits] Fetching profile data for user credits...");
+    console.log(
+      "[initializeUserCredits] Fetching profile data for user credits..."
+    );
     const profileData = await fetchApi(`/auction/profiles/${username}`);
     console.log("[initializeUserCredits] Profile data fetched:", profileData);
-
     const userData = profileData.data;
-
-    // Update credit balance in the header
     updateCreditBalance(userData.credits);
   } catch (error) {
-    console.error("[initializeUserCredits] Failed to initialize user credits:", error.message);
+    console.error(
+      "[initializeUserCredits] Failed to initialize user credits:",
+      error.message
+    );
   }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   try {
     console.log("Initializing application...");
-
-    // Validate token
     const token = getToken();
     if (!isTokenValid(token)) {
       console.warn("Token is invalid or missing.");
@@ -44,20 +49,47 @@ document.addEventListener("DOMContentLoaded", () => {
       console.log("Token is valid. Proceeding with initialization...");
     }
 
-    // Fetch and display listings
-    listings.fetchListingsAndDisplay().then(() => {
-      console.log("Listings fetched and displayed successfully.");
-    });
+    // Initialize global features (fetch listings and search bar)
+    initializeGlobalFeatures();
 
     // Initialize authenticated pages
     initializePage();
-
-    // Attach global features
-    initializeGlobalFeatures();
   } catch (error) {
     console.error("Initialization Error:", error);
   }
 });
+
+function initializeGlobalFeatures() {
+  console.log("Initializing global application features...");
+  initForms();
+  attachLogoutFunctionality();
+  ensureModalLoaded();
+  initializeUserCredits();
+  getCategoryButtons();
+
+  // Fetch and initialize listings
+  fetchListingsAndDisplay()
+    .then((fetchedListings) => {
+      if (!fetchedListings || fetchedListings.length === 0) {
+        console.warn(
+          "No listings fetched. Search bar and display will remain inactive."
+        );
+      } else {
+        console.log("Fetched Listings:", fetchedListings);
+
+        // Initialize the search bar with fetched listings
+        initSearchBar(fetchedListings, displayListings);
+
+        // Display fetched listings on the page
+        displayListings(fetchedListings);
+      }
+    })
+    .catch((error) => {
+      console.error("Error fetching listings:", error);
+    });
+
+  console.log("Global features initialized successfully.");
+}
 
 /**
  * Helper function to check if the current page matches a specific name
@@ -66,16 +98,6 @@ function isCurrentPage(pageName) {
   return window.location.pathname.includes(pageName);
 }
 
-/**
- * Initialize the authentication page (login/signup)
- */
-function initializeAuthPage() {
-  console.log("Initializing authentication page...");
-  initForms(); // Initialize form-related listeners for auth.html
-  console.log("Authentication page initialized successfully.");
-}
-
-// Initialize the appropriate page-specific functionality
 function initializePage() {
   const currentPath = window.location.pathname;
 
@@ -90,9 +112,23 @@ function initializePage() {
     }
   } else if (currentPath.includes("auction.html")) {
     console.log("Auction page detected. Initializing auction listings...");
-    listings.initListings();
+    try {
+      initListings(); // Call directly imported function
+    } catch (error) {
+      console.error("Error while initializing auction listings:", error);
+    }
   } else if (currentPath.includes("index.html")) {
-    console.log("Index page detected. Initializing homepage features...");
+    console.log(
+      "Index page detected. Fetching and displaying homepage listings..."
+    );
+    try {
+      fetchListingsAndDisplay(); // Call directly imported function
+    } catch (error) {
+      console.error(
+        "Error while fetching or displaying homepage listings:",
+        error
+      );
+    }
   } else if (currentPath.includes("auth.html")) {
     console.log("Authentication page detected. Initializing auth page...");
     try {
@@ -101,38 +137,12 @@ function initializePage() {
       console.error("Error while initializing authentication page:", error);
     }
   } else {
-    console.log("No specific page detected, initializing default features...");
+    console.log(
+      "No specific page detected. No specific initialization required."
+    );
   }
 }
 
-
-
-/**
- * Initialize global features shared across all pages
- */
-function initializeGlobalFeatures() {
-  console.log("Initializing global application features...");
-
-  // Initialize forms
-  initForms();
-
-  // Attach logout functionality
-  attachLogoutFunctionality();
-
-  // Attach modal to the Add Listing button
-  ensureModalLoaded();
-
-  //Credits
-  initializeUserCredits();
-
-  //Categories
-  getCategoryButtons();
-
-  // Search bar
-initSearchBar();
-
-  console.log("Global features initialized successfully.");
-}
 
 /**
  * Attach logout functionality to the logout button

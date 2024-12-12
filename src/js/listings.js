@@ -18,8 +18,8 @@ export async function initListings() {
 
   if (category) {
     console.log(`Filtering listings by category: ${category}`);
-    await fetchListingsAndDisplay(); // Fetch all listings first
-    filterListingsByCategory(category); // Apply category filter
+    const allListings = await fetchListingsAndDisplay(); // Fetch all listings first
+    filterListingsByCategory(allListings, category); // Pass fetched listings and category
   } else {
     await fetchListingsAndDisplay(); // Default behavior
   }
@@ -27,77 +27,44 @@ export async function initListings() {
   initCategoryFiltering(); // Still initialize filtering buttons
 }
 
-/**
- * Fetch listings from the API and update the global listings variable
- */
-async function fetchListings() {
-  try {
-    console.log("Fetching all listings from API...");
-    const result =
-      await fetchApi(`/auction/listings?_tag=villageWebsite&_active=true
-`);
-    console.log("API Response:", result);
 
-    // Store the listings in the global variable
-    listings = result.data || [];
-    console.log("Listings after processing:", listings);
+/**
+ * Fetch all listings from the API
+ */
+export async function fetchListings() {
+  try {
+    console.log("Fetching all listings...");
+    const response = await fetchApi(
+      "/auction/listings?_tag=villageWebsite&_active=true"
+    );
+    console.log("Fetched Listings:", response.data);
+    return response.data;
   } catch (error) {
-    console.error("Failed to fetch listings:", error);
+    console.error("Error fetching listings:", error);
+    return []; // Return an empty array if an error occurs
   }
 }
+
 /**
- * Fetch and display listings in one function
+ * Display multiple listings by rendering them to the DOM
  */
-export async function fetchListingsAndDisplay() {
-  console.log("fetchListingsAndDisplay called...");
+export function displayListings(listingsToRender) {
   const container = document.getElementById("listings-container");
   if (!container) {
     console.error("Listings container not found in the DOM.");
-    return;
-  }
-  await fetchListings();
-  console.log("Fetched Listings:", listings);
-  displayListings(listings);
-}
-
-/**
- * Filter listings by category
- */
-function filterListingsByCategory(category) {
-  if (!listings.length) {
-    console.warn("Listings not yet fetched. Fetching all listings first...");
-    fetchListingsAndDisplay();
-    return;
-  }
-
-  const filteredListings = listings.filter((listing) =>
-    listing.tags.includes(category)
-  );
-  displayListings(filteredListings);
-}
-
-/**
- * Render multiple listings
- */
-export function displayListings(listingsToRender = []) {
-  console.log("Displaying listings:", listingsToRender);
-
-  const container = document.getElementById("listings-container");
-  if (!container) {
-    console.error("Listings container not found.");
-    return;
+    return; // Exit early if no container found
   }
 
   // Clear existing content
   container.innerHTML = "";
 
-  if (listingsToRender.length === 0) {
+  if (!listingsToRender || listingsToRender.length === 0) {
     container.innerHTML = `
       <div class="text-center text-gray-500 p-4">
         <p>No listings available. Try a different search or category.</p>
       </div>
     `;
-    return;
+    return; // Exit early if no listings to display
   }
 
   // Render each listing
@@ -109,6 +76,44 @@ export function displayListings(listingsToRender = []) {
       console.error("Error rendering listing:", listing, error);
     }
   });
+}
+
+
+/**
+ * Fetch listings from the API and update the global listings variable
+ */
+export async function fetchListingsAndDisplay() {
+  try {
+    console.log("Fetching all listings...");
+    const response = await fetchApi(
+      "/auction/listings?_tag=villageWebsite&_active=true"
+    );
+    const fetchedListings = response.data; // Assign fetched listings to a variable
+    console.log("Fetched Listings:", fetchedListings);
+    displayListings(fetchedListings); // Pass fetchedListings directly
+    return fetchedListings; // Return fetched listings if needed elsewhere
+  } catch (error) {
+    console.error("Error fetching listings:", error);
+    return []; // Return an empty array on error
+  }
+}
+
+
+/**
+ * Filter listings by category
+ */
+export function filterListingsByCategory(listings, category) {
+  if (!listings || !listings.length) {
+    console.warn("Listings not yet fetched. Fetching all listings first...");
+    return;
+  }
+
+  const filteredListings = listings.filter((listing) =>
+    listing.tags.includes(category)
+  );
+
+  // Pass filtered listings to displayListings
+  displayListings(filteredListings);
 }
 
 function generateListingHTML(listing) {
@@ -152,67 +157,6 @@ function generateListingHTML(listing) {
       </div>
     </div>
   `;
-}
-
-
-/**
- * Render a single listing
- */
-export function displayListing(listing) {
-  const container = document.getElementById("listings-container");
-
-  if (!container) {
-    console.error("Listings container not found.");
-    return;
-  }
-
-  console.log("Rendering single listing:", listing);
-
-  const highestBid =
-    listing.bids?.length > 0
-      ? Math.max(...listing.bids.map((bid) => bid.amount))
-      : "No bids yet";
-
-  const listingCard = `
-    <div class="bg-white shadow rounded-lg overflow-hidden border border-gray-200">
-      <img
-        src="${
-          listing.media[0]?.url || "./media/placeholders/item-placeholder.png"
-        }"
-        alt="${listing.media[0]?.alt || "Listing Image"}"
-        class="h-40 w-full object-cover"
-      />
-      <div class="p-4">
-        <h3 class="text-lg font-bold text-gray-800 truncate">${
-          listing.title
-        }</h3>
-        <p class="text-sm text-gray-600 truncate">${listing.description}</p>
-        <p class="text-sm text-gray-600 mt-2">Ends: ${new Date(
-          listing.endsAt
-        ).toLocaleDateString()}</p>
-        <p class="text-sm font-bold text-primary mt-1">Highest Bid: ${highestBid}</p>
-        <div class="mt-4">
-          <input
-            type="number"
-            id="bidAmount-${listing.id}"
-            class="w-full border rounded p-2 mb-2"
-            placeholder="Enter your bid amount"
-          />
-          <button
-            class="w-full bg-primary text-white py-2 px-4 rounded hover:bg-primary-dark transition bid-btn"
-            data-id="${listing.id}"
-          >
-            Bid
-          </button>
-        </div>
-      </div>
-    </div>
-  `;
-
-  container.innerHTML += listingCard;
-
-  // Attach bid button functionality
-  attachBidButton(listing.id);
 }
 
 /**

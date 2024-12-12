@@ -31,46 +31,23 @@ export function updateCreditBalance(credits) {
   }
 }
 
-// Search functionality
-export function performSearch(query, listings = [], displayListing) {
-  if (!listings || !Array.isArray(listings)) {
-    console.error("Invalid listings provided for search:", listings);
-    return;
-  }
-
+// Perform a search on the provided listings
+export function performSearch(query, listings, displayListings) {
   console.log("Performing search for:", query);
-  console.log("Listings before filtering:", listings);
+  console.log("Listings provided to search:", listings);
 
+  const normalizedQuery = query.trim().toLowerCase();
   const filteredListings = listings.filter((listing) =>
-    listing.title.toLowerCase().includes(query.toLowerCase())
+    (listing.title || "").toLowerCase().includes(normalizedQuery)
   );
 
   console.log("Filtered Listings:", filteredListings);
 
-  const container = document.getElementById("listings-container");
-  if (!container) {
-    console.error("Listings container not found in DOM.");
-    return;
-  }
-
-  // Clear previous listings
-  container.innerHTML = "";
-
-  if (filteredListings.length === 0) {
-    container.innerHTML = `
-      <div class="text-center text-gray-500 p-4">
-        <p>No listings match your search. Try another keyword.</p>
-      </div>
-    `;
-    return;
-  }
-
-  // Display filtered listings
-  filteredListings.forEach((listing) => displayListing(listing));
+  displayListings(filteredListings); // Pass the filtered results to be displayed
 }
 
 // Initialize the search bar
-export function initSearchBar(listings, displayListing) {
+export function initSearchBar(listings, displayListings) {
   const searchBar = document.getElementById("search-bar");
   const searchButton = document.getElementById("search-button");
 
@@ -85,7 +62,7 @@ export function initSearchBar(listings, displayListing) {
   searchButton.addEventListener("click", () => {
     const query = searchBar.value.trim();
     console.log("Search button clicked with query:", query);
-    performSearch(query, listings, displayListing);
+    performSearch(query, listings, displayListings);
   });
 
   // Event listener for the Enter key in the search bar
@@ -93,9 +70,11 @@ export function initSearchBar(listings, displayListing) {
     if (event.key === "Enter") {
       const query = searchBar.value.trim();
       console.log("Enter key pressed with query:", query);
-      performSearch(query, listings, displayListing);
+      performSearch(query, listings, displayListings);
     }
   });
 
   console.log("Search bar initialized successfully.");
 }
+
+
