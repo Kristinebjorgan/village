@@ -6,14 +6,14 @@ let listings = []; // Global variable to store fetched listings
  * Initialize the listings module
  */
 export async function initListings() {
+  console.log("Initializing listings...");
   const container = document.getElementById("listings-container");
   if (!container) {
     console.warn("Listings container not found. Skipping initialization.");
     return;
   }
-
-  await fetchListingsAndDisplay(); // Fetch and display all listings by default
-  initCategoryFiltering(); // Initialize category filtering
+  await fetchListingsAndDisplay();
+  initCategoryFiltering();
 }
 
 /**
@@ -21,22 +21,31 @@ export async function initListings() {
  */
 async function fetchListings() {
   try {
-    console.log("Fetching listings with 'villageWebsite' tag...");
-    const result = await fetchApi(
-      `/auction/listings?_tag=villageWebsite&_active=true`
-    );
-    console.log("Filtered listings fetched from API:", result.data);
+    console.log("Fetching all listings from API...");
+    const result =
+      await fetchApi(`/auction/listings?_tag=villageWebsite&_active=true
+`);
+    console.log("API Response:", result);
+
+    // Store the listings in the global variable
     listings = result.data || [];
+    console.log("Listings after processing:", listings);
   } catch (error) {
     console.error("Failed to fetch listings:", error);
   }
 }
-
 /**
  * Fetch and display listings in one function
  */
 export async function fetchListingsAndDisplay() {
+  console.log("fetchListingsAndDisplay called...");
+  const container = document.getElementById("listings-container");
+  if (!container) {
+    console.error("Listings container not found in the DOM.");
+    return;
+  }
   await fetchListings();
+  console.log("Fetched Listings:", listings);
   displayListings(listings);
 }
 
@@ -61,12 +70,12 @@ function filterListingsByCategory(category) {
  */
 function displayListings(listingsToRender) {
   const container = document.getElementById("listings-container");
-
   if (!container) {
     console.error("Listings container not found.");
     return;
   }
 
+  console.log("Rendering Listings:", listingsToRender); // Log listings to be rendered
   container.innerHTML = ""; // Clear container before rendering
   listingsToRender.forEach((listing) => displayListing(listing));
 }

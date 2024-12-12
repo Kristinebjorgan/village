@@ -110,8 +110,6 @@ export function initializeModal() {
       endsAt: new Date(deadline).toISOString(),
     };
 
-    console.log("Payload for API:", payload);
-
     try {
       // Send data to the API
       const data = await sendApiRequest("/auction/listings", "POST", payload);

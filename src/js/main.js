@@ -8,25 +8,29 @@ import { renderProfilePage } from "./profile.js"; // Import profile page functio
 import { fetchApi, getToken, setToken, setUsername, getUsername, isTokenValid } from "./api.js"; // Import authentication helpers
 import { updateCreditBalance } from "./utils.js";
 
-//credits
+
+// Fetch and display user credits
 async function initializeUserCredits() {
   try {
     const username = getUsername();
     if (!username) {
-      console.warn("No username found. Cannot fetch credits.");
+      console.warn("[initializeUserCredits] No username found. Cannot fetch credits.");
       return;
     }
 
+    // Fetch user profile data
+    console.log("[initializeUserCredits] Fetching profile data for user credits...");
     const profileData = await fetchApi(`/auction/profiles/${username}`);
+    console.log("[initializeUserCredits] Profile data fetched:", profileData);
+
     const userData = profileData.data;
 
     // Update credit balance in the header
     updateCreditBalance(userData.credits);
   } catch (error) {
-    console.error("Failed to initialize user credits:", error.message);
+    console.error("[initializeUserCredits] Failed to initialize user credits:", error.message);
   }
 }
-
 
 document.addEventListener("DOMContentLoaded", () => {
   try {
@@ -70,6 +74,8 @@ function initializeAuthPage() {
 function initializePage() {
   const currentPath = window.location.pathname;
 
+  console.log("Current Path:", currentPath);
+
   if (currentPath.includes("profile.html")) {
     console.log("Profile page detected. Rendering profile page...");
     try {
@@ -77,21 +83,11 @@ function initializePage() {
     } catch (error) {
       console.error("Error while rendering the profile page:", error);
     }
+  } else if (currentPath.includes("auction.html")) {
+    console.log("Auction page detected. Initializing auction listings...");
+    listings.initListings();
   } else if (currentPath.includes("index.html")) {
     console.log("Index page detected. Initializing homepage features...");
-
-    // Ensure that the listings container exists before proceeding
-    const listingsContainer = document.getElementById("listings-container");
-    if (!listingsContainer) {
-      console.error("Listings container not found. Skipping listing initialization.");
-      return;
-    }
-
-    try {
-      listings.fetchListingsAndDisplay(); // Load listings on the homepage
-    } catch (error) {
-      console.error("Error while fetching and displaying listings:", error);
-    }
   } else if (currentPath.includes("auth.html")) {
     console.log("Authentication page detected. Initializing auth page...");
     try {
@@ -101,9 +97,9 @@ function initializePage() {
     }
   } else {
     console.log("No specific page detected, initializing default features...");
-    // Placeholder for potential future functionality on generic or unmatched pages
   }
 }
+
 
 
 /**
