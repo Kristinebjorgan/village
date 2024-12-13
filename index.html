@@ -370,8 +370,51 @@ URGENT
 </button>
 </div>
     </header>
- <main>
+<main>
+    <!-- Carousel Section -->
+    <section id="recentListingsCarousel" class="py-8 bg-gray-100">
+      <h2 class="text-center text-2xl font-semibold mb-4">Most Recent Listings</h2>
+      <div class="carousel-container mx-auto max-w-6xl">
+        <div id="carousel" class="carousel">
+          <!-- Carousel items will be dynamically added -->
+<div class="text-center mt-4">
+  <button
+    onclick="window.location.href='auction.html'"
+    class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition"
+  >
+    Browse All
+  </button>
+</div>
+    </section>
 
+    <!-- Popular Categories Section -->
+    <section id="popularCategories" class="py-8">
+      <h2 class="text-center text-2xl font-semibold mb-4">Popular Categories</h2>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-6xl mx-auto">
+        <!-- Dynamically add category cards -->
+      </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="howItWorks" class="py-8 bg-gray-100">
+      <h2 class="text-center text-2xl font-semibold mb-4">How It Works</h2>
+      <div class="max-w-4xl mx-auto">
+        <p id="howItWorksContent" class="text-center text-gray-600">Loading...</p>
+      </div>
+    </section>
+
+    <!-- Sign Up Section -->
+    <section id="signUpNow" class="py-8">
+<div class="text-center mt-4">
+  <button
+    onclick="window.location.href='auth.html#signup'"
+    class="bg-secondary text-white px-4 py-2 rounded-lg hover:bg-secondary-dark transition"
+  >
+    Sign Up Now
+  </button>
+</div>
+    </section>
+  
     <!-- Add Listing Button -->
 <button id="addListingBtn" class="fixed bottom-8 right-8 bg-primary border-2 border-secondary-dark text-secondary-dark p-4 rounded-full shadow-lg hover:bg-primary-dark transition duration-300">
   <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">

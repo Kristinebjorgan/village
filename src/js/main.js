@@ -23,6 +23,38 @@ import {
   getCategoryButtons,
   initSearchBar,
 } from "./utils.js";
+import {
+  populateCarousel,
+  populatePopularCategories,
+  populateHowItWorksSection,
+  initializeIndexPage,
+} from "./index.js";
+
+//Initialize page
+function initializePage() {
+  const currentPath = window.location.pathname;
+
+  console.log("Current Path:", currentPath);
+
+  if (currentPath.includes("profile.html")) {
+    console.log("Profile page detected. Rendering profile page...");
+    renderProfilePage();
+    initializeAvatarUpdate(); // Avatar functionality
+  } else if (currentPath.includes("auction.html")) {
+    console.log("Auction page detected. Initializing auction listings...");
+    initListings();
+  } else if (currentPath.includes("index.html")) {
+    console.log("Index page detected. Initializing index page...");
+    initializeIndexPage(); // All index-related functionality
+  } else if (currentPath.includes("auth.html")) {
+    console.log("Authentication page detected. Initializing auth page...");
+    initializeAuthPage(); // Login, signup, etc.
+  } else {
+    console.log(
+      "No specific page detected. No specific initialization required."
+    );
+  }
+}
 
 // Fetch and display user credits
 async function initializeUserCredits() {
@@ -52,6 +84,7 @@ async function initializeUserCredits() {
 document.addEventListener("DOMContentLoaded", async () => {
   try {
     console.log("Initializing application...");
+    initializePage();
 
     // Handle Guest Mode
     const guestBtn = document.getElementById("guestBtn");
@@ -70,6 +103,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     } else {
       console.log("Token is valid. Proceeding with initialization...");
     }
+
+    //Initialize index
+    async function initializeIndexPage() {
+      try {
+        console.log("Initializing Index Page...");
+
+        // Populate the sections
+        await populateCarousel(); // Populate carousel
+        populatePopularCategories(); // Populate popular categories
+        populateHowItWorksSection(); // Populate "How It Works" section
+      } catch (error) {
+        console.error("Error initializing index page:", error);
+      }
+    }
+
 
     // Initialize profile features
     if (isCurrentPage("profile.html")) {
@@ -166,50 +214,6 @@ function isCurrentPage(pageName) {
   return window.location.pathname.includes(pageName);
 }
 
-function initializePage() {
-  const currentPath = window.location.pathname;
-
-  console.log("Current Path:", currentPath);
-
-  if (currentPath.includes("profile.html")) {
-    console.log("Profile page detected. Rendering profile page...");
-    try {
-      renderProfilePage();
-    } catch (error) {
-      console.error("Error while rendering the profile page:", error);
-    }
-  } else if (currentPath.includes("auction.html")) {
-    console.log("Auction page detected. Initializing auction listings...");
-    try {
-      initListings(); // Call directly imported function
-    } catch (error) {
-      console.error("Error while initializing auction listings:", error);
-    }
-  } else if (currentPath.includes("index.html")) {
-    console.log(
-      "Index page detected. Fetching and displaying homepage listings..."
-    );
-    try {
-      fetchListingsAndDisplay(); // Call directly imported function
-    } catch (error) {
-      console.error(
-        "Error while fetching or displaying homepage listings:",
-        error
-      );
-    }
-  } else if (currentPath.includes("auth.html")) {
-    console.log("Authentication page detected. Initializing auth page...");
-    try {
-      initializeAuthPage();
-    } catch (error) {
-      console.error("Error while initializing authentication page:", error);
-    }
-  } else {
-    console.log(
-      "No specific page detected. No specific initialization required."
-    );
-  }
-}
 
 /**
  * Attach logout functionality to the logout button
