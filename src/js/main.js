@@ -1,11 +1,9 @@
 import "./cloudinary.js";
-import * as utils from "./utils.js"; // Import all utility functions
 import { initForms } from "./forms.js"; // Initialize forms for auth.html
 import {
   displayListings,
   fetchListingsAndDisplay,
-  initListings,
-  filterListingsByCategory,
+  initListings, placeBid, attachBidButton,
 } from "./listings.js";
 import * as modal from "./modal.js"; // Import everything from modal.js
 import { loginUser, logoutUser, registerUser } from "./auth.js"; // Import auth functionality
@@ -49,15 +47,16 @@ document.addEventListener("DOMContentLoaded", async () => {
       console.log("Token is valid. Proceeding with initialization...");
     }
 
-    // Initialize global features (fetch listings and search bar)
+    // Initialize global features
     initializeGlobalFeatures();
 
-    // Initialize authenticated pages
-    initializePage();
+    // Fetch and display listings
+    await fetchListingsAndDisplay();
   } catch (error) {
     console.error("Initialization Error:", error);
   }
 });
+
 
 function initializeGlobalFeatures() {
   console.log("Initializing global application features...");
