@@ -9,7 +9,7 @@ import {
 } from "./listings.js";
 import * as modal from "./modal.js"; // Import everything from modal.js
 import { loginUser, logoutUser, registerUser } from "./auth.js"; // Import auth functionality
-import { renderProfilePage } from "./profile.js"; // Import profile page functionality
+import { renderProfilePage, initializeAvatarUpdate } from "./profile.js"; // Import profile page functionality
 import {
   fetchApi,
   getToken,
@@ -71,6 +71,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       console.log("Token is valid. Proceeding with initialization...");
     }
 
+    // Initialize profile features
+    if (isCurrentPage("profile.html")) {
+      renderProfilePage();
+      initializeAvatarUpdate(); // Avatar functionality
+    }
+
     // Initialize global features (e.g., forms, logout, modal, etc.)
     initializeGlobalFeatures();
 
@@ -85,6 +91,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.error("Error during initialization:", error);
   }
 });
+
 
 /**
  * Fetch all listings and include their bids dynamically

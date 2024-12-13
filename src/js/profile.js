@@ -1,4 +1,6 @@
 import { fetchApi, sendApiRequest, getUsername } from "./api.js";
+import { uploadFileToCloudinary } from "./cloudinary.js";
+
 
 
 // Fetch user profile data
@@ -111,6 +113,61 @@ async function handleEditBio() {
 // Attach event listener for saving bio
 document.getElementById("saveBioButton")?.addEventListener("click", handleEditBio);
 
+/**
+ * Handle avatar upload and profile update
+ */
+async function handleAvatarUpdate() {
+  const avatarInput = document.getElementById("avatarUpload");
+  const avatarFile = avatarInput.files[0];
+
+  if (!avatarFile) {
+    alert("Please select an image file to upload.");
+    return;
+  }
+
+  try {
+    // Upload file to Cloudinary
+    const uploadedAvatarUrl = await uploadFileToCloudinary(avatarFile);
+
+    // Update user profile with new avatar
+    const updatePayload = {
+      avatar: {
+        url: uploadedAvatarUrl,
+        alt: "Updated User Avatar",
+      },
+    };
+    await updateUserProfile(updatePayload);
+
+    // Update the UI dynamically
+    const avatarEl = document.getElementById("userAvatar");
+    avatarEl.src = uploadedAvatarUrl;
+    avatarEl.alt = "Updated User Avatar";
+
+    alert("Avatar updated successfully!");
+  } catch (error) {
+    console.error("Failed to update avatar:", error.message);
+    alert("Failed to update avatar. Please try again.");
+  }
+}
+
+/**
+ * Attach event listeners for avatar update
+ */
+export function initializeAvatarUpdate() {
+  const updateAvatarButton = document.getElementById("updateAvatarButton");
+  const avatarInput = document.getElementById("avatarUpload");
+
+  if (!updateAvatarButton || !avatarInput) {
+    console.error("Avatar update elements not found in the DOM.");
+    return;
+  }
+
+  updateAvatarButton.addEventListener("click", () => {
+    avatarInput.click(); // Trigger the file input dialog
+  });
+
+  avatarInput.addEventListener("change", handleAvatarUpdate); // Handle file selection
+}
 // Render Entire Profile Page
 export async function renderProfilePage() {
   try {

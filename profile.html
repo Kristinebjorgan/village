@@ -372,22 +372,33 @@ URGENT
     </header>
      <main class="p-4 max-w-6xl mx-auto">
       <!-- User Info -->
-      <section id="userInfo" class="p-4 bg-white rounded-lg shadow-md mb-6">
-        <div class="flex items-center space-x-4">
-          <img
-            id="userAvatar"
-            class="w-16 h-16 rounded-full"
-            src=""
-            alt="User Avatar"
-          />
-          <div>
-            <h2 id="userName" class="text-xl font-semibold"></h2>
-            <p id="userBio" class="text-sm text-gray-600"></p>
-            <p id="userCredits" class="text-sm text-primary-dark font-medium"></p>
-          </div>
-        </div>
-      </section>
-
+<section id="userInfo" class="p-4 bg-white rounded-lg shadow-md mb-6">
+  <div class="flex flex-col items-center space-y-4">
+    <img
+      id="userAvatar"
+      class="w-16 h-16 rounded-full"
+      src="https://via.placeholder.com/150"
+      alt="User Avatar"
+    />
+    <input
+      type="file"
+      id="avatarUpload"
+      accept="image/*"
+      class="hidden"
+    />
+    <button
+      id="updateAvatarButton"
+      class="bg-primary text-white px-4 py-2 rounded-lg"
+    >
+      Update Avatar
+    </button>
+    <div>
+      <h2 id="userName" class="text-xl font-semibold"></h2>
+      <p id="userBio" class="text-sm text-gray-600"></p>
+      <p id="userCredits" class="text-sm text-primary-dark font-medium"></p>
+    </div>
+  </div>
+</section>
       <section id="editBioSection" class="p-4 bg-white rounded-lg shadow-md mb-6">
   <textarea
     id="editBioInput"
@@ -401,8 +412,6 @@ URGENT
     Save Bio
   </button>
 </section>
-
-
       <!-- Listings -->
       <section id="userListings" class="p-4 bg-white rounded-lg shadow-md mb-6">
         <h2 class="text-lg font-semibold mb-2">My Listings</h2>
