@@ -77,4 +77,17 @@ export function initSearchBar(listings, displayListings) {
   console.log("Search bar initialized successfully.");
 }
 
-
+// retry API request when failing
+export async function retryApiRequest(apiCall, retries = 3, delay = 1000) {
+  for (let i = 0; i < retries; i++) {
+    try {
+      return await apiCall();
+    } catch (error) {
+      console.warn(`Retry ${i + 1} failed:`, error.message);
+      if (i < retries - 1) {
+        await new Promise((resolve) => setTimeout(resolve, delay));
+      }
+    }
+  }
+  throw new Error("API request failed after retries");
+}

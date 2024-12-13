@@ -1,4 +1,6 @@
 import { fetchApi, sendApiRequest } from "./api.js";
+import { retryApiRequest } from "./utils.js";
+
 
 /**
  * Initialize the listings module
@@ -54,70 +56,80 @@ export async function fetchListingsAndDisplay() {
       "/auction/listings?_tag=villageWebsite&_active=true"
     );
     const fetchedListings = response.data;
-    console.log("Fetched Listings:", fetchedListings);
 
-    // Display listings
+    // Render listings
     displayListings(fetchedListings);
 
-    // Attach bid button functionality
+    // Attach bid buttons after rendering
     fetchedListings.forEach((listing) => attachBidButton(listing.id));
-
-    return fetchedListings;
   } catch (error) {
     console.error("Error fetching listings:", error);
-    return [];
   }
 }
 
 
+// generate listings card
+export function generateListingHTML(listing) {
+  // Check for locally stored bid
+  const storedBid = JSON.parse(localStorage.getItem(`latestBid-${listing.id}`));
 
-function generateListingHTML(listing) {
-  const highestBid =
-    listing.bids?.length > 0
-      ? Math.max(...listing.bids.map((bid) => bid.amount))
-      : "No bids yet";
+  // Determine the highest bid
+  const highestBid = storedBid
+    ? Math.max(
+        storedBid.amount,
+        ...(listing.bids?.map((bid) => bid.amount) || [])
+      )
+    : listing.bids?.length
+    ? Math.max(...listing.bids.map((bid) => bid.amount))
+    : "No bids yet";
 
-const listingHTML = `
-  <div class="bg-white shadow rounded-lg overflow-hidden border border-gray-200">
-    <img
-      src="${
-        listing.media[0]?.url || "./media/placeholders/item-placeholder.png"
-      }"
-      alt="${listing.media[0]?.alt || "Listing Image"}"
-      class="h-40 w-full object-cover"
-    />
-    <div class="p-4">
-      <h3 class="text-lg font-bold text-gray-800 truncate">${listing.title}</h3>
-      <p class="text-sm text-gray-600 truncate">${listing.description}</p>
-      <p class="text-sm text-gray-600 mt-2">Ends: ${new Date(
-        listing.endsAt
-      ).toLocaleDateString()}</p>
-      <p class="text-sm font-bold text-primary mt-1">Highest Bid: ${
-        listing.bids?.length > 0
-          ? Math.max(...listing.bids.map((bid) => bid.amount))
-          : "No bids yet"
-      }</p>
-      <div class="mt-4">
-        <input
-          type="number"
-          id="bidAmount-${listing.id}"
-          class="w-full border rounded p-2 mb-2"
-          placeholder="Enter your bid amount"
-        />
-        <button
-          class="w-full bg-primary text-white py-2 px-4 rounded hover:bg-primary-dark transition bid-btn"
-          data-id="${listing.id}"
-        >
-          Bid
-        </button>
+  const { id, title, description, endsAt, media } = listing;
+  const imageUrl =
+    media?.[0]?.url || "./media/placeholders/item-placeholder.png";
+  const imageAlt = media?.[0]?.alt || "Listing Image";
+  const endDate = new Date(endsAt).toLocaleDateString();
+
+  return `
+    <div class="bg-white shadow rounded-lg overflow-hidden border border-gray-200" id="listing-${id}">
+      <img src="${imageUrl}" alt="${imageAlt}" class="h-40 w-full object-cover" />
+      <div class="p-4">
+        <h3 class="text-lg font-bold text-gray-800 truncate">${title}</h3>
+        <p class="text-sm text-gray-600 truncate">${description}</p>
+        <p class="text-sm text-gray-600 mt-2">Ends: ${endDate}</p>
+        <p class="text-sm font-bold text-primary mt-1" id="highest-bid-${id}">
+          Highest Bid: ${highestBid}
+        </p>
+        <div class="mt-4">
+          <input
+            type="number"
+            id="bidAmount-${id}"
+            class="w-full border rounded p-2 mb-2"
+            placeholder="Enter your bid amount"
+          />
+          <button
+            class="w-full bg-primary text-white py-2 px-4 rounded hover:bg-primary-dark transition bid-btn"
+            data-id="${id}"
+          >
+            Bid
+          </button>
+        </div>
       </div>
     </div>
-  </div>
-`;
+  `;
+}
+//clear old bids
+export function clearOldBids() {
+  const now = Date.now();
+  const expirationTime = 24 * 60 * 60 * 1000; // 1 day
 
-
-  // Return the HTML so it can be rendered
-  return listingHTML;
+  Object.keys(localStorage).forEach((key) => {
+    if (key.startsWith("latestBid-")) {
+      const bidData = JSON.parse(localStorage.getItem(key));
+      if (now - bidData.timestamp > expirationTime) {
+        localStorage.removeItem(key); // Remove expired bids
+      }
+    }
+  });
 }
 
 /**
@@ -220,21 +232,62 @@ export function displayListings(listingsToRender) {
   });
 }
 
+/**
+ * Fetch a specific listing by ID
+ */
+async function fetchListingById(listingId) {
+  try {
+    const response = await fetchApi(`/auction/listings/${listingId}?_bids=true`); 
+    console.log("Fetched latest listing with bids:", response.data); // Log the latest listing data
+    return response.data; // Return the fetched listing with bids
+  } catch (error) {
+    console.error("Error fetching listing by ID:", error);
+    throw error; // Throw the error to handle it appropriately
+  }
+}
 
 /**
- * Place a bid on a listing
+ * Fetch all bids for a specific listing
+ */
+export async function fetchBidsForListing(listingId) {
+  try {
+    const response = await fetchApi(`/auction/listings/${listingId}?_bids=true`);
+    console.log("Fetched listing with bids:", response.data);
+    return response.data.bids || []; // Return bids array or an empty array
+  } catch (error) {
+    console.error("Error fetching bids for listing:", error);
+    throw error;
+  }
+}
+
+/**
+ * Place a bid
  */
 export async function placeBid(listingId, amount) {
   try {
     console.log(`Placing bid of ${amount} on listing ${listingId}...`);
+
     const response = await sendApiRequest(
       `/auction/listings/${listingId}/bids`,
       "POST",
       { amount }
     );
+
     console.log("Bid placed successfully:", response);
     alert(`Your bid of ${amount} has been placed successfully!`);
-    return response.data; // Return the updated listing or bid confirmation
+
+    // Save the latest bid to localStorage
+    localStorage.setItem(
+      `latestBid-${listingId}`,
+      JSON.stringify({
+        amount,
+        timestamp: Date.now(),
+      })
+    );
+
+    // Fetch the latest bids after placing a bid (optional)
+    const updatedBids = await fetchBidsForListing(listingId);
+    return updatedBids; // Return updated bids
   } catch (error) {
     console.error("Error placing bid:", error);
     alert("Failed to place the bid. Please try again.");
@@ -242,17 +295,14 @@ export async function placeBid(listingId, amount) {
   }
 }
 
-
-
 /**
  * Attach functionality to the Bid button
  */
 export function attachBidButton(listingId) {
-  console.log(`Attempting to attach bid button for listing ID: ${listingId}`);
+  console.log(`Attaching bid button for listing ID: ${listingId}`);
   const bidButton = document.querySelector(`.bid-btn[data-id="${listingId}"]`);
   if (!bidButton) {
-    console.warn(`Bid button for listing ${listingId} not found. DOM state:`);
-    console.log(document.getElementById("listings-container").innerHTML);
+    console.warn(`Bid button for listing ${listingId} not found.`);
     return;
   }
 
@@ -261,22 +311,51 @@ export function attachBidButton(listingId) {
     const bidAmountInput = document.getElementById(`bidAmount-${listingId}`);
     const bidAmount = parseFloat(bidAmountInput.value);
 
+    // Validate bid amount
     if (!bidAmount || bidAmount <= 0) {
       alert("Please enter a valid bid amount.");
       return;
     }
 
     try {
-      const updatedListing = await placeBid(listingId, bidAmount);
-      console.log("Bid successful:", updatedListing);
+      // Fetch the current listing with bids to get the latest highest bid
+      const currentListing = await fetchListingById(listingId);
+      const currentHighest =
+        currentListing.bids?.length > 0
+          ? Math.max(...currentListing.bids.map((bid) => bid.amount))
+          : 0;
 
-      // Clear input field and refresh the UI
+      // Validate the bid amount against the current highest bid
+      if (bidAmount <= currentHighest) {
+        alert(
+          `Your bid must be higher than the current highest bid of ${currentHighest}.`
+        );
+        return;
+      }
+
+      // Place the bid and fetch updated bids
+      const updatedBids = await placeBid(listingId, bidAmount);
+      console.log("Updated bids after placing bid:", updatedBids);
+
+      // Dynamically update the "Highest Bid" in the UI
+      const highestBidElement = document.getElementById(
+        `highest-bid-${listingId}`
+      );
+      const newHighestBid =
+        updatedBids.length > 0
+          ? Math.max(...updatedBids.map((bid) => bid.amount))
+          : "No bids yet";
+      highestBidElement.textContent = `Highest Bid: ${newHighestBid}`;
+
+      // Clear the input field
       bidAmountInput.value = "";
-      const updatedListings = await fetchListings(); // Refresh listings
-      displayListings(updatedListings); // Display updated listings
     } catch (error) {
       console.error("Error handling bid:", error);
+
+      // Handle cases where the user tries to bid more than once
+      if (error.message.includes("already placed")) {
+        alert("You cannot place multiple bids on the same listing.");
+      }
     }
   });
 }
-

@@ -3,14 +3,26 @@ import { initForms } from "./forms.js"; // Initialize forms for auth.html
 import {
   displayListings,
   fetchListingsAndDisplay,
-  initListings, placeBid, attachBidButton,
+  initListings,
+  placeBid,
+  attachBidButton, clearOldBids,
 } from "./listings.js";
 import * as modal from "./modal.js"; // Import everything from modal.js
 import { loginUser, logoutUser, registerUser } from "./auth.js"; // Import auth functionality
 import { renderProfilePage } from "./profile.js"; // Import profile page functionality
-import { fetchApi, getToken, setToken, setUsername, getUsername, isTokenValid } from "./api.js"; // Import authentication helpers
-import { updateCreditBalance, getCategoryButtons, initSearchBar } from "./utils.js";
-
+import {
+  fetchApi,
+  getToken,
+  setToken,
+  setUsername,
+  getUsername,
+  isTokenValid,
+} from "./api.js"; // Import authentication helpers
+import {
+  updateCreditBalance,
+  getCategoryButtons,
+  initSearchBar,
+} from "./utils.js";
 
 // Fetch and display user credits
 async function initializeUserCredits() {
@@ -40,6 +52,8 @@ async function initializeUserCredits() {
 document.addEventListener("DOMContentLoaded", async () => {
   try {
     console.log("Initializing application...");
+
+    // Validate token
     const token = getToken();
     if (!isTokenValid(token)) {
       console.warn("Token is invalid or missing.");
@@ -47,15 +61,53 @@ document.addEventListener("DOMContentLoaded", async () => {
       console.log("Token is valid. Proceeding with initialization...");
     }
 
-    // Initialize global features
+    // Initialize global features (e.g., forms, logout, modal, etc.)
     initializeGlobalFeatures();
 
-    // Fetch and display listings
-    await fetchListingsAndDisplay();
+    // Fetch all listings with bids
+    const listingsWithBids = await fetchListingsWithBids();
+    console.log("Fetched listings with bids:", listingsWithBids);
+
+    // Display listings with their bids
+    displayListings(listingsWithBids);
+    clearOldBids();
   } catch (error) {
-    console.error("Initialization Error:", error);
+    console.error("Error during initialization:", error);
   }
 });
+
+/**
+ * Fetch all listings and include their bids dynamically
+ */
+async function fetchListingsWithBids() {
+  try {
+    // Fetch all listings
+    const listings = await fetchListings();
+    console.log("Fetched listings:", listings);
+
+    // Fetch bids for each listing
+    const listingsWithBids = await Promise.all(
+      listings.map(async (listing) => {
+        try {
+          const bids = await fetchBidsForListing(listing.id); // Fetch bids for the listing
+          return { ...listing, bids }; // Merge listing with its bids
+        } catch (error) {
+          console.error(
+            `Error fetching bids for listing ID ${listing.id}:`,
+            error
+          );
+          return listing; // Return listing without bids if there's an error
+        }
+      })
+    );
+
+    return listingsWithBids; // Return listings enriched with bids
+  } catch (error) {
+    console.error("Error fetching listings with bids:", error);
+    throw error; // Rethrow error for further handling
+  }
+}
+
 
 
 function initializeGlobalFeatures() {
@@ -142,7 +194,6 @@ function initializePage() {
   }
 }
 
-
 /**
  * Attach logout functionality to the logout button
  */
@@ -184,7 +235,6 @@ export function initializeModal() {
   // Add other modal-specific behavior here, like form submission
 }
 
-
 /**
  * Dynamically load and initialize the modal if not present
  */
@@ -198,17 +248,17 @@ function ensureModalLoaded() {
     document.body.appendChild(container);
 
     // Initialize modal functionality after adding it to the DOM
-  modal.initializeModal();
-  document
-    .getElementById("addListingForm")
-    .addEventListener("submit", async (event) => {
-      event.preventDefault();
-      console.log("Add Listing form submitted.");
-      // Trigger fetch and display after successful submission
-      await listings.fetchListingsAndDisplay();
-    });
+    modal.initializeModal();
+    document
+      .getElementById("addListingForm")
+      .addEventListener("submit", async (event) => {
+        event.preventDefault();
+        console.log("Add Listing form submitted.");
+        // Trigger fetch and display after successful submission
+        await listings.fetchListingsAndDisplay();
+      });
 
-    // Attach the button to the modal functionality 
+    // Attach the button to the modal functionality
     modal.attachModalToButton("addListingBtn");
   } else {
     console.log("Modal already present in the DOM.");
