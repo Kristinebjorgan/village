@@ -3,9 +3,13 @@ import { initForms } from "./forms.js"; // Initialize forms for auth.html
 import {
   displayListings,
   fetchListingsAndDisplay,
+  fetchListings,
   initListings,
   placeBid,
-  attachBidButton, clearOldBids,
+  attachBidButton,
+  clearOldBids,
+  loadBidsFromLocalStorage,
+  fetchBidsForListing,
 } from "./listings.js";
 import * as modal from "./modal.js"; // Import everything from modal.js
 import { loginUser, logoutUser, registerUser } from "./auth.js"; // Import auth functionality
@@ -46,14 +50,28 @@ function initializePage() {
   } else if (currentPath.includes("index.html")) {
     console.log("Index page detected. Initializing index page...");
     initializeIndexPage(); // All index-related functionality
-  } else if (currentPath.includes("auth.html")) {
-    console.log("Authentication page detected. Initializing auth page...");
-    initializeAuthPage(); // Login, signup, etc.
   } else {
     console.log(
       "No specific page detected. No specific initialization required."
     );
   }
+}
+
+//Store bid for viewving
+function initializeBids() {
+  const allListings = document.querySelectorAll(".listing");
+  allListings.forEach((listing) => {
+    const listingId = listing.dataset.id;
+    const savedBids = loadBidsFromLocalStorage(listingId);
+
+    if (savedBids.length > 0) {
+      const highestBidElement = document.getElementById(
+        `highest-bid-${listingId}`
+      );
+      const highestBid = Math.max(...savedBids.map((bid) => bid.amount));
+      highestBidElement.textContent = `Highest Bid: ${highestBid}`;
+    }
+  });
 }
 
 // Fetch and display user credits
@@ -118,7 +136,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     }
 
-
     // Initialize profile features
     if (isCurrentPage("profile.html")) {
       renderProfilePage();
@@ -131,6 +148,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Fetch all listings with bids
     const listingsWithBids = await fetchListingsWithBids();
     console.log("Fetched listings with bids:", listingsWithBids);
+
+    // Initialize bids after displaying listings
+    initializeBids();
 
     // Display listings with their bids
     displayListings(listingsWithBids);
@@ -172,8 +192,6 @@ async function fetchListingsWithBids() {
     throw error; // Rethrow error for further handling
   }
 }
-
-
 
 function initializeGlobalFeatures() {
   console.log("Initializing global application features...");

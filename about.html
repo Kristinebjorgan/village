@@ -169,7 +169,28 @@
 <div
   class="col-span-3 mt-2 px-4 pb-1 flex justify-center items-center space-x-2"
 >
-      
+  <!-- Back Button -->
+  <button
+    id="backButton"
+    class="absolute left-2 bottom-2 flex items-center text-primary hover:text-primary-dark transition"
+    onclick="history.back()"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="1.5"
+      stroke="currentColor"
+      class="h-6 w-6 mr-1"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
+      />
+    </svg>
+  </button>
+  
 <!-- Household -->
 <button
   title="household"
@@ -368,39 +389,74 @@ EVENT
 URGENT 
 </span>
 </button>
+  <!-- All Categories -->
+  <button
+    id="allCategoriesBtn"
+    title="All Categories"
+    class="relative flex flex-col items-center p-0 m-0 space-y-0 group"
+    onclick="window.location.href='auction.html'"
+  >
+    <img
+      src="./media/icons/everything.png"
+      alt="All Categories Icon"
+      class="h-36 w-24 group-hover:blur-sm transition-all duration-500"
+    />
+    <span
+      class="absolute top-1/2 transform -translate-y-1/2 text-m font-light text-secondary-dark tracking-min opacity-0 group-hover:opacity-100 transition-all duration-500"
+    >
+      EVERYTHING
+    </span>
+  </button>
+</div>
 </div>
     </header>
+<main class="max-w-6xl mx-auto p-6">
+    <!-- About Section -->
+    <section id="about" class="mb-8">
+      <h1 class="text-3xl font-bold mb-4">About Dugnad</h1>
+      <p class="text-gray-700 leading-relaxed">
+        The word "dugnad" originates from the Old Norse dugnaðr, meaning "help" or "support." Today, it defines a Nordic tradition of coming together as a community to share labor, uniting individuals through acts of selfless giving.
+      </p>
+      <p class="text-gray-700 leading-relaxed">
+        Dugnad is a digital space rooted in the Norwegian spirit of community—where people come together to help, uplift, and share their strengths. This site is a response to the need for genuine connections in today’s world, creating a platform where people can freely exchange time, skills, and support without the expectation of financial gain. It’s a movement to foster unity, where each contribution serves as a building brick in the community.
+      </p>
+    </section>
 
-<main class="bg-gray-50 min-h-screen p-4">
+    <!-- How It Works Section -->
+    <section id="howItWorks" class="mb-8">
+      <h2 class="text-2xl font-bold mb-4">How Dugnad Works</h2>
+      <article class="space-y-4">
+        <h3 class="text-xl font-semibold">Post Human Help as Auction Listings</h3>
+        <p class="text-gray-700 leading-relaxed">
+          Dugnad allows you to offer your skills or services to the community by creating a listing. Whether you’re offering gardening, organizing, tutoring, or helping at an event, you can describe your contribution in detail. Add a description, estimated time, and an image to make your listing stand out and attract bids from others in need of your help.
+        </p>
 
-  <!-- Listings Container -->
-  <div
-    id="listings-container"
-    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-  >
-    <!-- Loader -->
-    <div id="loader" class="col-span-full flex justify-center items-center">
-      <div class="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full"></div>
-    </div>
-  </div>
+        <h3 class="text-xl font-semibold">Bidding with Dugnad Credits</h3>
+        <p class="text-gray-700 leading-relaxed">
+          At Dugnad, we’ve created a community currency—Dugnad Credits—that eliminates the need for money. When you offer help, you earn credits. These credits empower you to "bid" on other listings when you need assistance. It’s a cycle of giving and receiving, fostering trust and mutual respect within the community.
+        </p>
 
-      <!-- Add Listing Button -->
-<button id="addListingBtn" class="fixed bottom-8 right-8 bg-primary border-2 border-secondary-dark text-secondary-dark p-4 rounded-full shadow-lg hover:bg-primary-dark transition duration-300">
-  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-  </svg>
-</button>
+        <h3 class="text-xl font-semibold">Review and Build Trust</h3>
+        <p class="text-gray-700 leading-relaxed">
+          After a listing is completed, participants can leave feedback for each other. This feature encourages accountability and strengthens the bonds of trust within the Dugnad community. Positive feedback helps contributors build their reputation and encourages continued engagement.
+        </p>
+      </article>
+    </section>
 
-  <!-- Load More Button -->
-  <div class="text-center mt-6">
-    <button
-      class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary-dark transition"
-    >
-      Load More
-    </button>
-  </div>
-</main>
-
+    <!-- FAQ Section -->
+    <section id="faq">
+      <h2 class="text-2xl font-bold mb-4">Frequently Asked Questions</h2>
+      <dl class="space-y-6">
+        <div>
+          <dt class="text-lg font-semibold">What is Dugnad?</dt>
+          <dd class="text-gray-700 leading-relaxed">
+            Dugnad is a digital platform inspired by the Nordic tradition of community labor. It’s a space where individuals can offer help, share skills, and exchange time using Dugnad Credits—no money involved. It’s about fostering a spirit of collaboration and giving.
+          </dd>
+        </div>
+        <!-- Repeat for each FAQ -->
+      </dl>
+    </section>
+ </main>
     <!-- Footer -->
     <footer class="bg-primary text-white py-4">
       <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -439,6 +495,7 @@ URGENT
                 />
               </svg>
             </a>
+            <!-- Add other icons -->
           </div>
         </div>
       </div>

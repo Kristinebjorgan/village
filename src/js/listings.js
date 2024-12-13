@@ -273,17 +273,16 @@ export async function placeBid(listingId, amount) {
     console.log("Bid placed successfully:", response);
     alert(`Your bid of ${amount} has been placed successfully!`);
 
-    // Save the latest bid to localStorage
-    localStorage.setItem(
-      `latestBid-${listingId}`,
-      JSON.stringify({
-        amount,
-        timestamp: Date.now(),
-      })
-    );
-
-    // Fetch the latest bids after placing a bid (optional)
+    // Fetch updated bids from the server
     const updatedBids = await fetchBidsForListing(listingId);
+
+    // Merge with localStorage bids (if they exist)
+    const storedBids = loadBidsFromLocalStorage(listingId);
+    const mergedBids = [...storedBids, ...updatedBids];
+
+    // Save merged bids to localStorage
+    saveBidsToLocalStorage(listingId, mergedBids);
+
     return updatedBids; // Return updated bids
   } catch (error) {
     console.error("Error placing bid:", error);
@@ -296,71 +295,88 @@ export async function placeBid(listingId, amount) {
  * Attach functionality to the Bid button
  */
 export function attachBidButton(listingId) {
-    console.log(`Attaching bid button for listing ID: ${listingId}`);
-    const bidButton = document.querySelector(
-      `.bid-btn[data-id="${listingId}"]`
-    );
-    if (!bidButton) {
-      console.warn(`Bid button for listing ${listingId} not found.`);
+  console.log(`Attaching bid button for listing ID: ${listingId}`);
+  const bidButton = document.querySelector(`.bid-btn[data-id="${listingId}"]`);
+  if (!bidButton) {
+    console.warn(`Bid button for listing ${listingId} not found.`);
+    return;
+  }
+
+  bidButton.addEventListener("click", async () => {
+    const isGuest = localStorage.getItem("isGuest") === "true";
+    if (isGuest) {
+      alert("Log in to place a bid.");
       return;
     }
 
-    bidButton.addEventListener("click", async () => {
-      const isGuest = localStorage.getItem("isGuest") === "true";
-      if (isGuest) {
-        alert("Log in to place a bid.");
-        return; 
-      }
+    console.log(`Bid button clicked for listing ID: ${listingId}`);
+    const bidAmountInput = document.getElementById(`bidAmount-${listingId}`);
+    const bidAmount = parseFloat(bidAmountInput.value);
 
-      console.log(`Bid button clicked for listing ID: ${listingId}`);
-      const bidAmountInput = document.getElementById(`bidAmount-${listingId}`);
-      const bidAmount = parseFloat(bidAmountInput.value);
+    // Validate bid amount
+    if (!bidAmount || bidAmount <= 0) {
+      alert("Please enter a valid bid amount.");
+      return;
+    }
 
-      // Validate bid amount
-      if (!bidAmount || bidAmount <= 0) {
-        alert("Please enter a valid bid amount.");
+    try {
+      // Fetch the current listing with bids to get the latest highest bid
+      const currentHighest = Math.max(
+        ...(loadBidsFromLocalStorage(listingId).map((bid) => bid.amount) || [0])
+      );
+
+      if (bidAmount <= currentHighest) {
+        alert(
+          `Your bid must be higher than the current highest bid of ${currentHighest}.`
+        );
         return;
       }
 
-      try {
-        // Fetch the current listing with bids to get the latest highest bid
-        const currentListing = await fetchListingById(listingId);
-        const currentHighest =
-          currentListing.bids?.length > 0
-            ? Math.max(...currentListing.bids.map((bid) => bid.amount))
-            : 0;
+      // Place the bid and fetch updated bids
+      const updatedBids = await placeBid(listingId, bidAmount);
+      console.log("Updated bids after placing bid:", updatedBids);
 
-        // Validate the bid amount against the current highest bid
-        if (bidAmount <= currentHighest) {
-          alert(
-            `Your bid must be higher than the current highest bid of ${currentHighest}.`
-          );
-          return;
-        }
+      // Dynamically update the "Highest Bid" in the UI
+      const highestBidElement = document.getElementById(
+        `highest-bid-${listingId}`
+      );
+      const newHighestBid =
+        updatedBids.length > 0
+          ? Math.max(...updatedBids.map((bid) => bid.amount))
+          : "No bids yet";
+      highestBidElement.textContent = `Highest Bid: ${newHighestBid}`;
 
-        // Place the bid and fetch updated bids
-        const updatedBids = await placeBid(listingId, bidAmount);
-        console.log("Updated bids after placing bid:", updatedBids);
+      // Clear the input field
+      bidAmountInput.value = "";
+    } catch (error) {
+      console.error("Error handling bid:", error);
 
-        // Dynamically update the "Highest Bid" in the UI
-        const highestBidElement = document.getElementById(
-          `highest-bid-${listingId}`
-        );
-        const newHighestBid =
-          updatedBids.length > 0
-            ? Math.max(...updatedBids.map((bid) => bid.amount))
-            : "No bids yet";
-        highestBidElement.textContent = `Highest Bid: ${newHighestBid}`;
-
-        // Clear the input field
-        bidAmountInput.value = "";
-      } catch (error) {
-        console.error("Error handling bid:", error);
-
-        // Handle cases where the user tries to bid more than once
-        if (error.message.includes("already placed")) {
-          alert("You cannot place multiple bids on the same listing.");
-        }
+      // Handle cases where the user tries to bid more than once
+      if (error.message.includes("already placed")) {
+        alert("You cannot place multiple bids on the same listing.");
       }
-    });
+    }
+  });
+}
+
+
+/**
+ * Save bids to localStorage.
+ * @param {string} listingId - The ID of the listing.
+ * @param {Array} bids - The array of bids to save.
+ */
+function saveBidsToLocalStorage(listingId, bids) {
+  const storedBids = JSON.parse(localStorage.getItem("bids")) || {};
+  storedBids[listingId] = bids;
+  localStorage.setItem("bids", JSON.stringify(storedBids));
+}
+
+/**
+ * Load bids from localStorage.
+ * @param {string} listingId - The ID of the listing.
+ * @returns {Array} The array of saved bids.
+ */
+export function loadBidsFromLocalStorage(listingId) {
+  const storedBids = JSON.parse(localStorage.getItem("bids")) || {};
+  return storedBids[listingId] || [];
 }
