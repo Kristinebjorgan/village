@@ -134,4 +134,6 @@ export function initializeModal() {
       );
     }
   });
+  
 }
+

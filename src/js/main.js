@@ -53,6 +53,16 @@ document.addEventListener("DOMContentLoaded", async () => {
   try {
     console.log("Initializing application...");
 
+    // Handle Guest Mode
+    const guestBtn = document.getElementById("guestBtn");
+    if (guestBtn) {
+      guestBtn.addEventListener("click", () => {
+        console.log("Guest mode activated.");
+        localStorage.setItem("isGuest", true); // Mark user as guest
+        window.location.href = "index.html"; // Redirect to the index page
+      });
+    }
+
     // Validate token
     const token = getToken();
     if (!isTokenValid(token)) {
