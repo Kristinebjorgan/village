@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Dugnad - The strenght in shared efforts"
+    />
+    <title>Village</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/heroicons@2.0.13/dist/24/solid/index.min.js"></script>
+          <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/css/styles.css" />
+    <meta name="theme-color" content="#4F796C" />
+<script src="./js/main.js" type="module"></script>
+  </head>
+  <body>
+<!-- Header -->
+<header class="grid grid-cols-3 grid-rows-2 gap-2 px-4 sm:px-6 lg:px-8 bg-white shadow-lg">
+  <!-- Row 1, Column 1: Logo -->
+  <a href="index.html">
+  <div class="relative flex items-center justify-start">
+    <!-- Logo -->
+    <img
+      src="./media/dugnad.png"
+      alt="Dugnad logo"
+      class="absolute h-40 w-40"
+    />
+    <!-- Title -->
+    <h1
+      class="relative text-m font-superlight sm:text-2xl lg:text-3xl font-header text-primary tracking-min"
+    >
+      dugnad
+    </h1>
+  </div>
+  </a>
+
+  <!-- Row 1, Column 2: Search Bar -->
+  <div class="flex items-center justify-center">
+    <div class="relative w-full max-w-lg">
+      <input
+        id="search-bar"
+        type="text"
+        placeholder="Search"
+        class="w-full h-8 sm:h-9 lg:h-10 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-accent text-primary placeholder-primary-light"
+      />
+      <button type="submit" class="absolute right-2 top-1/2 transform -translate-y-1/2" id="search-button">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="h-6 w-6 text-primary hover:text-primary-dark transition-colors duration-300"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+          />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Row 1, Column 3: Utility Icons -->
+  <div class="flex items-center justify-end gap-4">
+    <!-- Notifications, Credits, Profile -->
+  <div class="flex items-center justify-end gap-4">
+    <!-- Notifications -->
+    <a href="profile.html">
+      <button title="Notifications">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6 text-primary hover:text-primary-dark transition-colors duration-300"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-5-5.917V5a3 3 0 00-6 0v.083A6.002 6.002 0 002 11v3.159c0 .417-.16.825-.444 1.143L.999 17h5m0 0a3 3 0 006 0m-6 0H5"
+          />
+        </svg>
+      </button>
+    </a>
+    <!-- Credits -->
+    <a href="profile.html">
+      <button id="creditButton" title="Credits" class="flex flex-col items-center">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="h-6 w-6 text-primary"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125"
+          />
+        </svg>
+        <span id="creditBalance" class="text-sm font-light text-primary">
+
+        </span>
+      </button>
+    </a>
+    <!-- Profile -->
+    <a href="profile.html">
+      <button title="Profile">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="h-6 w-6 text-primary hover:text-primary-dark transition-colors duration-300"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+          />
+        </svg>
+      </button>
+    </a>
+          <!-- Settings -->
+        <a href="profile.html">
+        <button title="Settings">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+          class="h-6 w-6 text-primary hover:text-primary-dark transition-colors duration-300"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z"
+            />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+            />
+          </svg>
+        </button>
+        </a>
+        <!-- Log out -->
+        <button id="logoutBtn" title="Logout">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="h-6 w-6 text-primary hover:text-primary-dark transition-colors duration-300"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"
+            />
+          </svg>
+        </button>
+      </div>
+        </div>
+  </div>
+
+<div class="col-span-3">
+
+<!-- Hamburger Menu Button (Visible on Small Screens) -->
+<button id="categoriesToggle" class="block sm:hidden menu-btn" aria-label="Toggle Categories">
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-6 w-6">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16m-7 6h7" />
+  </svg>
+</button>
+  <button
+    id="backButton"
+    class="flex items-center text-primary hover:text-primary-dark transition"
+    onclick="history.back()"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="1.5"
+      stroke="currentColor"
+      class="h-6 w-6 mr-1"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
+      />
+    </svg>
+  </button>
+      
+  <div
+  class="col-span-3 mt-2 px-4 pb-1 flex justify-center items-center space-x-2"
+>
+</div>
+</header>
+<main>
+<!-- Desktop Categories -->
+<section id="categoriesContainer" class="hidden sm:flex flex-wrap justify-center items-center gap-4 mt-4">
+<!-- Household -->
+<button
+  title="household"
+  class="relative flex flex-col items-center p-0 m-0 space-y-0 group category-btn"
+  data-category="household"
+>
+  <!-- Icon -->
+  <img
+    src="./media/icons/house.png"
+    alt="Household Icon"
+    class="h-36 w-24 group-hover:blur-sm transition-all duration-500"
+  />
+<!-- Text -->
+<span
+  class="absolute top-1/2 transform -translate-y-1/2 text-m font-light text-secondary-dark tracking-min opacity-0 group-hover:opacity-100 transition-all duration-500"
+>
+  HOUSEHOLD
+</span>
+</button>
+
+
+        <!-- Homemade -->
+<button
+  title="homemade"
+  class="relative flex flex-col items-center p-0 m-0 space-y-0 group category-btn"
+    data-category="homemade"
+
+>
+  <img
+    src="./media/icons/homemade.png"
+    alt="Household Icon"
+    class="h-36 w-24 group-hover:blur-sm transition-all duration-500"
+  />
+<!-- Text -->
+<span
+  class="absolute top-1/2 transform -translate-y-1/2 text-m font-light text-secondary-dark tracking-min opacity-0 group-hover:opacity-100 transition-all duration-500"
+>
+  COOKING
+</span>
+</button>
+
+        <!-- Handcraft -->
+<button
+  title="handcraft"
+  class="relative flex flex-col items-center p-0 m-0 space-y-0 group category-btn"
+    data-category="handcraft"
+
+  
+>
+  <img
+    src="./media/icons/needle.png"
+    alt="Handcraft Icon"
+    class="h-36 w-24 group-hover:blur-sm transition-all duration-500"
+  />
+<!-- Text -->
+<span
+  class="absolute top-1/2 transform -translate-y-1/2 text-m font-light text-secondary-dark tracking-min opacity-0 group-hover:opacity-100 transition-all duration-500"
+>
+  HANDCRAFT
+</span>
+</button>
+
+        <!-- Sports -->
+<button
+  title="sports"
+  class="relative flex flex-col items-center p-0 m-0 space-y-0 group category-btn"
+    data-category="sports"
+
+>
+  <img
+    src="./media/icons/sports.png"
+    alt="Sports Icon"
+     class="h-36 w-24 group-hover:blur-sm transition-all duration-500"
+  />
+<!-- Text -->
+<span
+  class="absolute top-1/2 transform -translate-y-1/2 text-m font-light text-secondary-dark tracking-min opacity-0 group-hover:opacity-100 transition-all duration-500"
+>
+  SPORTS
+</span>
+</button>
+
+        <!-- Proffesional -->
+<button
+  title="proffesional"
+  class="relative flex flex-col items-center p-0 m-0 space-y-0 group category-btn"
+    data-category="proffesional"
+
+>
+  <img
+    src="./media/icons/star.png"
+    alt="Proffesional Icon"
+     class="h-36 w-24 group-hover:blur-sm transition-all duration-500"
+  />
+<!-- Text -->
+<span
+  class="absolute top-1/2 transform -translate-y-1/2 text-m font-light text-secondary-dark tracking-min opacity-0 group-hover:opacity-100 transition-all duration-500"
+>
+  EXPERT
+</span>
+</button>
+        <!-- Kids -->
+<button
+  title="toys"
+  class="relative flex flex-col items-center p-0 m-0 space-y-0 group category-btn"
+    data-category="kids"
+
+>
+  <img
+    src="./media/icons/toys.png"
+    alt="Toys Icon"
+     class="h-36 w-24 group-hover:blur-sm transition-all duration-500"
+  />
+<!-- Text -->
+<span
+  class="absolute top-1/2 transform -translate-y-1/2 text-m font-light text-secondary-dark tracking-min opacity-0 group-hover:opacity-100 transition-all duration-500"
+>
+  CHILDREN
+</span>
+</button>
+        <!-- Pets -->
+<button
+  title="pets"
+  class="relative flex flex-col items-center p-0 m-0 space-y-0 group category-btn"
+    data-category="pets"
+
+>
+  <img
+    src="./media/icons/paw.png"
+    alt="Pets Icon"
+     class="h-36 w-24 group-hover:blur-sm transition-all duration-500"
+  />
+<!-- Text -->
+<span
+  class="absolute top-1/2 transform -translate-y-1/2 text-m font-light text-secondary-dark tracking-min opacity-0 group-hover:opacity-100 transition-all duration-500"
+>
+PETS 
+</span>
+</button>
+        <!-- Eco swap -->
+<button
+  title="eco"
+  class="relative flex flex-col items-center p-0 m-0 space-y-0 group category-btn"
+    data-category="secondhand"
+
+>
+  <img
+    src="./media/icons/leaf.png"
+    alt="Leaf Icon"
+     class="h-36 w-24 group-hover:blur-sm transition-all duration-500"
+  />
+<!-- Text -->
+<span
+  class="absolute top-1/2 transform -translate-y-1/2 text-m font-light text-secondary-dark tracking-min opacity-0 group-hover:opacity-100 transition-all duration-500"
+>
+SECONHAND
+</span>
+</button>
+
+        <!-- Event -->
+<button
+  title="event"
+  class="relative flex flex-col items-center p-0 m-0 space-y-0 group category-btn"
+    data-category="event"
+
+>
+  <img
+    src="./media/icons/event.png"
+    alt="calendar Icon"
+     class="h-36 w-24 group-hover:blur-sm transition-all duration-500"
+  />
+<!-- Text -->
+<span
+  class="absolute top-1/2 transform -translate-y-1/2 text-m font-light text-secondary-dark tracking-min opacity-0 group-hover:opacity-100 transition-all duration-500"
+>
+EVENT 
+</span>
+</button>
+
+        <!-- Urgent -->
+<button
+  title="urgent"
+  class="relative flex flex-col items-center p-0 m-0 space-y-0 group category-btn"
+    data-category="urgent"
+
+>
+  <img
+    src="./media/icons/fire.png"
+    alt="fire Icon"
+     class="h-36 w-24 group-hover:blur-sm transition-all duration-500"
+  />
+<!-- Text -->
+<span
+  class="absolute top-1/2 transform -translate-y-1/2 text-m font-light text-secondary-dark tracking-min opacity-0 group-hover:opacity-100 transition-all duration-500"
+>
+URGENT 
+</span>
+</button>
+  <!-- All Categories -->
+  <button
+    id="allCategoriesBtn"
+    title="All Categories"
+    class="relative flex flex-col items-center p-0 m-0 space-y-0 group"
+    onclick="window.location.href='auction.html'"
+  >
+    <img
+      src="./media/icons/everything.png"
+      alt="All Categories Icon"
+      class="h-36 w-24 group-hover:blur-sm transition-all duration-500"
+    />
+    <span
+      class="absolute top-1/2 transform -translate-y-1/2 text-m font-light text-secondary-dark tracking-min opacity-0 group-hover:opacity-100 transition-all duration-500"
+    >
+      EVERYTHING
+    </span>
+  </button>
+</div>
+</section>
+<!-- Mobile Menu -->
+<div id="mobileMenu" class="hidden fixed inset-0 bg-white z-50 flex flex-col p-4">
+  <!-- Close Button -->
+  <button id="closeMenuButton" class="absolute top-4 right-4" aria-label="Close Menu">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+    </svg>
+  </button>
+
+  <!-- Mobile Categories -->
+  <div id="mobileCategoriesContainer" class="grid grid-cols-2 gap-4 mt-8">
+    <!-- Manually Add Categories -->
+    <button class="category-btn">
+      <img src="./media/icons/house.png" alt="Household Icon" />
+      <span>Household</span>
+    </button>
+    <button class="category-btn">
+      <img src="./media/icons/homemade.png" alt="Homemade Icon" />
+      <span>Homemade</span>
+    </button>
+    <button class="category-btn">
+      <img src="./media/icons/needle.png" alt="Handcraft Icon" />
+      <span>Handcraft</span>
+    </button>
+    <button class="category-btn">
+      <img src="./media/icons/sports.png" alt="Sports Icon" />
+      <span>Sports</span>
+    </button>
+    <button class="category-btn">
+      <img src="./media/icons/star.png" alt="Professional Icon" />
+      <span>Professional</span>
+    </button>
+    <button class="category-btn">
+      <img src="./media/icons/toys.png" alt="Kids Icon" />
+      <span>Kids</span>
+    </button>
+    <button class="category-btn">
+      <img src="./media/icons/paw.png" alt="Pets Icon" />
+      <span>Pets</span>
+    </button>
+    <button class="category-btn">
+      <img src="./media/icons/leaf.png" alt="Eco Swap Icon" />
+      <span>Eco Swap</span>
+    </button>
+    <button class="category-btn">
+      <img src="./media/icons/event.png" alt="Event Icon" />
+      <span>Event</span>
+    </button>
+    <button class="category-btn">
+      <img src="./media/icons/fire.png" alt="Urgent Icon" />
+      <span>Urgent</span>
+    </button>
+  </div>
+</div>
+</div>
+
+  <!-- Listings Container -->
+  <div
+    id="listings-container"
+    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+  >
+    <!-- Loader -->
+    <div id="loader" class="col-span-full flex justify-center items-center">
+      <div class="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full"></div>
+    </div>
+  </div>
+
+      <!-- Add Listing Button -->
+<button id="addListingBtn" class="fixed bottom-8 right-8 bg-primary border-2 border-secondary-dark text-secondary-dark p-4 rounded-full shadow-lg hover:bg-primary-dark transition duration-300">
+  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+  </svg>
+</button>
+
+  <!-- Load More Button -->
+  <div class="text-center mt-6">
+    <button
+      class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary-dark transition"
+    >
+      Load More
+    </button>
+  </div>
+</main>
+
+    <!-- Footer -->
+    <footer class="bg-primary text-white py-4">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div
+          class="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0"
+        >
+          <!-- Left Section -->
+          <div class="text-sm sm:text-base">
+            © 2024 Dugnad. All rights reserved.
+          </div>
+
+          <!-- Center Section -->
+          <div class="flex space-x-4">
+            <a href="/about.html" class="hover:underline text-sm sm:text-base"
+              >About</a
+            >
+            <a href="#" class="hover:underline text-sm sm:text-base"
+              >Privacy Policy</a
+            >
+            <a href="#" class="hover:underline text-sm sm:text-base"
+              >Terms of Service</a
+            >
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
