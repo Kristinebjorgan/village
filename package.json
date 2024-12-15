@@ -4,9 +4,8 @@
   "description": "This is the repo for my semesterproject 2 in frontend development",
   "main": "index.js",
   "scripts": {
-    "start": "live-server",
     "build-css": "tailwindcss -i ./src/css/tailwind.css -o ./dist/css/styles.css --minify",
-    "build": "tailwindcss -i ./src/css/tailwind.css -o ./dist/css/styles.css --minify"
+    "build": "mkdir -p dist && cp *.html dist && tailwindcss -i ./src/css/tailwind.css -o ./dist/css/styles.css --minify"
   },
   "keywords": [],
   "author": "",
