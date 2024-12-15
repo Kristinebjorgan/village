@@ -12,7 +12,6 @@ export const DEFAULT_TOKEN =
  */
 export function isTokenValid(token) {
   if (!token || typeof token !== "string" || !token.includes(".")) {
-    console.warn("Invalid token: Token is malformed or missing.");
     return false;
   }
 
@@ -20,7 +19,6 @@ export function isTokenValid(token) {
     const payloadPart = token.split(".")[1];
     const payload = JSON.parse(atob(payloadPart));
     if (!payload.exp) {
-      console.warn("Invalid token: Missing expiration time.");
       return false;
     }
     const expiry = payload.exp * 1000;
@@ -67,7 +65,6 @@ export function getToken() {
 export async function sendApiRequest(url, method, body = null) {
    const token = getToken() || DEFAULT_TOKEN;
    if (!getToken()) {
-     console.warn("Using fallback token instead of the actual token.");
    }
 
   const headers = {
@@ -130,7 +127,6 @@ export async function fetchApi(url) {
       try {
         errorData = await response.json();
       } catch (parseError) {
-        console.warn("Failed to parse error response as JSON. Falling back to text.");
         errorData = { message: await response.text() };
       }
       throw new Error(errorData.message || "An error occurred while fetching data");

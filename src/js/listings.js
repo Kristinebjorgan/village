@@ -6,7 +6,6 @@ import { retryApiRequest } from "./utils.js";
 export async function initListings() {
   const container = document.getElementById("listings-container");
   if (!container) {
-    console.warn("Listings container not found. Skipping initialization.");
     return;
   }
 
@@ -138,7 +137,6 @@ export function clearOldBids() {
  */
 export function filterListingsByCategory(listings, category) {
   if (!listings || !listings.length) {
-    console.warn("No listings available to filter.");
     return [];
   }
 
@@ -151,7 +149,6 @@ export function filterListingsByCategory(listings, category) {
 function initCategoryFiltering(allListings) {
   const categoryButtons = document.querySelectorAll(".category-btn");
   if (!categoryButtons.length) {
-    console.warn("No category buttons found.");
     return;
   }
 
@@ -168,7 +165,6 @@ function initCategoryFiltering(allListings) {
         // Attach bid button functionality to filtered listings
         filteredListings.forEach((listing) => attachBidButton(listing.id));
       } else {
-        console.warn("Category data missing for button:", button);
       }
     });
   });
@@ -301,7 +297,6 @@ export async function placeBid(listingId, amount) {
 export function attachBidButton(listingId) {
   const bidButton = document.querySelector(`.bid-btn[data-id="${listingId}"]`);
   if (!bidButton) {
-    console.warn(`Bid button for listing ${listingId} not found.`);
     return;
   }
 

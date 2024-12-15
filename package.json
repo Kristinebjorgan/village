@@ -5,10 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "live-server",
-    "test": "echo \"Error: no test specified\" && exit 1",
     "build-css": "tailwindcss -i ./src/css/tailwind.css -o ./dist/css/styles.css --minify",
     "build": "npm run build-css && cp -r ./src/js ./dist/js && cp -r ./media ./dist/media"
-
   },
   "keywords": [],
   "author": "",

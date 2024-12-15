@@ -39,23 +39,15 @@ import {
 function initializePage() {
   const currentPath = window.location.pathname;
 
-  console.log("Current Path:", currentPath);
 
   if (currentPath.includes("profile.html")) {
-    console.log("Profile page detected. Rendering profile page...");
     renderProfilePage();
     initializeAvatarUpdate(); // Avatar functionality
   } else if (currentPath.includes("auction.html")) {
-    console.log("Auction page detected. Initializing auction listings...");
     initListings();
   } else if (currentPath.includes("index.html")) {
-    console.log("Index page detected. Initializing index page...");
     initializeIndexPage(); // All index-related functionality
-  } else {
-    console.log(
-      "No specific page detected. No specific initialization required."
-    );
-  }
+  } 
 }
 
 // Fetch and display user credits
@@ -145,8 +137,8 @@ async function fetchListingsWithBids() {
 
 // global features
 function initializeGlobalFeatures() {
-  console.log("Initializing global features...");
 
+  
   // Initialize forms, logout, modal, and user credits
   initForms();
   attachLogoutFunctionality();
@@ -158,9 +150,7 @@ function initializeGlobalFeatures() {
   fetchListingsAndDisplay()
     .then((fetchedListings) => {
       if (!fetchedListings || fetchedListings.length === 0) {
-        console.warn("No listings fetched. Display and search bar are inactive.");
       } else {
-        console.log("Fetched listings successfully:", fetchedListings);
 
         // Initialize search bar functionality
         initSearchBar(fetchedListings, displayListings);
@@ -170,7 +160,6 @@ function initializeGlobalFeatures() {
       }
     })
     .catch((error) => {
-      console.error("Error fetching or displaying listings:", error);
     });
 }
 
@@ -190,7 +179,6 @@ function attachLogoutFunctionality() {
       logoutUser();
     });
   } else {
-    console.warn("Logout button not found in the DOM.");
   }
 }
 
@@ -200,7 +188,6 @@ export function initializeModal() {
   const closeModalBtn = document.getElementById("closeModalBtn");
 
   if (!modal || !closeModalBtn) {
-    console.error("Modal or Close button not found.");
     return;
   }
 
