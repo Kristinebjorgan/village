@@ -12,41 +12,37 @@ Core Values
 * Inclusiveness: Dugnad is open to everyone—no contribution is too small.
 
 Features
-Features
-The Dugnad platform delivers a seamless auction experience where users can list items, place bids, and track their activity. Key features include:
 
-User Registration and Authentication
+The Dugnad platform delivers a seamless auction experience where users can list items, place bids, and track their activity. 
+Key features include:
 
+* User Registration and Authentication
 Users with a valid stud.noroff.no email address can register.
 Registered users can log in and log out securely.
 Profile Management
 
-Users can update their profile avatars to personalize their accounts.
+* Users can update their profile avatars to personalize their accounts.
 View real-time credit balance to track earned and spent credits.
 Listing Creation
 
-Create new auction listings with the following details:
+* Create new auction listings with the following details:
 Title
 Deadline date (auction end date)
 Media gallery (upload images for the listing)
 Description of the item or service.
 Bidding System
 
-Users can place bids on other users' listings using their credits.
+* Users can place bids on other users' listings using their credits.
 View all bids made on a specific listing to monitor competition.
 Search and Browse Listings
 
-Unregistered users can search and browse through listings.
+* Guestusers can search and browse through listings.
 Dynamic filtering to explore active auctions and discover opportunities.
 Credit System
 
-All new users receive 1000 credits upon registration.
+* All new users receive 1000 credits upon registration.
 Credits are earned by selling items and spent by bidding on listings.
 Responsive Design
-
-Built using Tailwind CSS for a clean, modern, and fully responsive layout across devices.
-
-
 
 The project is built with:
 
