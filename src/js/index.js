@@ -32,7 +32,9 @@ export async function populateCarousel() {
       class="w-full h-64 object-cover rounded-lg"
     />
     <div class="text-center mt-2">
-      <h3 class="text-lg font-semibold">${listing.title}</h3>
+      <h3 class="text-lg font-normal text-center tracking-min">${
+        listing.title
+      }</h3>
       <p class="text-sm text-gray-600">${
         listing.description || "No description available."
       }</p>

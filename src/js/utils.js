@@ -11,22 +11,27 @@ export const setupCategoriesMenu = () => {
     return;
   }
 
+  console.log("Menu toggle setup initialized."); // Debugging log
+
   // Open mobile menu
-  toggleBtn.addEventListener("click", () => {
+  toggleBtn.addEventListener("click", (e) => {
+    e.preventDefault(); // Prevent any default behavior
     console.log("Hamburger menu clicked."); // Debug log
-    mobileMenu.classList.toggle("hidden");
-    mobileMenu.classList.toggle("show");
-    console.log("Classes on mobileMenu:", mobileMenu.classList);
+    mobileMenu.classList.remove("hidden");
+    mobileMenu.classList.add("flex");
   });
 
   // Close mobile menu
-  closeBtn.addEventListener("click", () => {
+  closeBtn.addEventListener("click", (e) => {
+    e.preventDefault(); // Prevent any default behavior
     console.log("Close button clicked."); // Debug log
     mobileMenu.classList.add("hidden");
-    mobileMenu.classList.remove("show");
-    console.log("Classes on mobileMenu after close:", mobileMenu.classList);
+    mobileMenu.classList.remove("flex");
   });
 };
+
+
+
 
 // Categories
 export function getCategoryButtons() {
@@ -58,18 +63,32 @@ export function updateCreditBalance(credits) {
   }
 }
 
-// Perform a search on the provided listings
-export function performSearch(query, listings, displayListings) {
-
+// Function to search listings and profiles
+export function performSearch(query, listings, profiles, displayResults) {
   const normalizedQuery = query.trim().toLowerCase();
+
+  // Filter listings and profiles
   const filteredListings = listings.filter((listing) =>
     (listing.title || "").toLowerCase().includes(normalizedQuery)
   );
-  displayListings(filteredListings); // Pass the filtered results to be displayed
+
+  const filteredProfiles = profiles.filter((profile) =>
+    (profile.name || "").toLowerCase().includes(normalizedQuery)
+  );
+
+  // Combine results
+  const combinedResults = [...filteredListings, ...filteredProfiles];
+
+  // Display results or show "no results" feedback
+  if (combinedResults.length === 0) {
+    displayResults([{ message: "No results found." }]);
+  } else {
+    displayResults(combinedResults);
+  }
 }
 
 // Initialize the search bar
-export function initSearchBar(listings, displayListings) {
+export function initSearchBar(listings, profiles, displayResults) {
   const searchBar = document.getElementById("search-bar");
   const searchButton = document.getElementById("search-button");
 
@@ -78,22 +97,21 @@ export function initSearchBar(listings, displayListings) {
     return;
   }
 
-
   // Event listener for the search button
   searchButton.addEventListener("click", () => {
     const query = searchBar.value.trim();
-    performSearch(query, listings, displayListings);
+    if (query) performSearch(query, listings, profiles, displayResults);
   });
 
   // Event listener for the Enter key in the search bar
   searchBar.addEventListener("keydown", (event) => {
     if (event.key === "Enter") {
       const query = searchBar.value.trim();
-      performSearch(query, listings, displayListings);
+      if (query) performSearch(query, listings, profiles, displayResults);
     }
   });
-
 }
+
 
 // retry API request when failing
 export async function retryApiRequest(apiCall, retries = 3, delay = 1000) {
