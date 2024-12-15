@@ -8,20 +8,21 @@ module.exports = {
     extend: {
       colors: {
         primary: {
-          light: "#D8E7E3",
-          DEFAULT: "#4F796C",
-          dark: "#244D40",
+          light: "#788da4",
+          DEFAULT: "#3c556e",
+          dark: "#25334a",
         },
         secondary: {
-          light: "#FDB05B",
-          DEFAULT: "#FDB05B",
-          dark: "#F69A34",
+          light: "#fada5e",
+          DEFAULT: "#ffbf00",
+          dark: "#D19400",
         },
-        accent: "#F74420",
-        bg: "#FDF2E4",
+        accent: "#D8DCE3",
+        bg: "#F4F6F5",
       },
       fontFamily: {
-        sans: ["Poppins", "Arial", "sans-serif"],
+        sans: ["Poppins", "Arial", "sans-serif"], 
+        header: ["Lora", "serif"], 
       },
       letterSpacing: {
         max: "0.5em",

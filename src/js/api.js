@@ -11,7 +11,6 @@ export const DEFAULT_TOKEN =
  * @returns {boolean} - Returns true if the token is valid, false otherwise
  */
 export function isTokenValid(token) {
-  console.log("Validating Token:", token);
   if (!token || typeof token !== "string" || !token.includes(".")) {
     console.warn("Invalid token: Token is malformed or missing.");
     return false;
@@ -20,25 +19,20 @@ export function isTokenValid(token) {
   try {
     const payloadPart = token.split(".")[1];
     const payload = JSON.parse(atob(payloadPart));
-    console.log("Token Payload:", payload);
     if (!payload.exp) {
       console.warn("Invalid token: Missing expiration time.");
       return false;
     }
     const expiry = payload.exp * 1000;
-    console.log("Token Expiry:", expiry, "Current Time:", Date.now());
     return Date.now() < expiry;
   } catch (error) {
-    console.error("Error validating token:", error);
     return false;
   }
 }
 
-
 export function setToken(token) {
   try {
     localStorage.setItem("jwtToken", token);
-    console.log("Token stored successfully:", token);
   } catch (error) {
     console.error("Failed to store token:", error);
   }
@@ -85,8 +79,7 @@ export async function sendApiRequest(url, method, body = null) {
     "X-Noroff-API-Key": getApiKey() || "04dfcfba-5d8b-491c-9ab1-962c4b746a47",
   };
 
-  // Use a hardcoded URL for testing
-  const apiUrl = `https://v2.api.noroff.dev${url}`; // Hardcoded base URL
+  const apiUrl = `https://v2.api.noroff.dev${url}`; 
 
   const options = {
     method,
@@ -115,7 +108,7 @@ export async function sendApiRequest(url, method, body = null) {
   }
 }
 
-// Function for GET requests
+// Fetch API
 export async function fetchApi(url) {
   const token = getToken() || "";
   const apiKey = getApiKey() || "";
@@ -126,9 +119,8 @@ export async function fetchApi(url) {
     "X-Noroff-API-Key": apiKey,
   };
 
-  // Construct the API URL and avoid duplicate slashes
+  // Construct API URL
   const apiUrl = new URL(url, API_BASE_URL).toString().replace(/([^:]\/)\/+/g, "$1");
-  console.log("Final API URL:", apiUrl); // Log the final URL for debugging
 
   try {
     const response = await fetch(apiUrl, { method: "GET", headers });
@@ -145,7 +137,6 @@ export async function fetchApi(url) {
     }
 
     const data = await response.json();
-    console.log("Fetched Data:", data); // Log the fetched data for debugging
     return data;
   } catch (error) {
     console.error("Fetch API Error:", {
@@ -156,7 +147,7 @@ export async function fetchApi(url) {
   }
 }
 
-// Helper to construct query strings
+// Helper for query strings
 export function buildQueryString(params = {}) {
   return Object.entries(params)
     .map(

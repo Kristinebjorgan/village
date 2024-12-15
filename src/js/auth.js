@@ -1,18 +1,14 @@
 import { setToken, setUsername, clearUserData } from "./api.js";
 import { sendApiRequest } from "./api.js";
 
-/**
- * Login User
- */
+// Login User
 export const loginUser = async (email, password) => {
-  const payload = { email, password }; // Define the payload
+  const payload = { email, password }; 
 
   try {
     const data = await sendApiRequest("/auth/login", "POST", payload);
 
-    console.log("API Response for Login:", data);
-
-    // Correctly extract the accessToken from the nested structure
+    // AccessToken
     const accessToken = data?.data?.accessToken;
     if (!accessToken) {
       throw new Error("Login failed: Missing accessToken in response.");
@@ -32,8 +28,6 @@ export const loginUser = async (email, password) => {
 
 //logout user
 export function logoutUser() { 
-  console.log("Logging out the user...");
-
   // Clear user data and ensure token is removed
   localStorage.removeItem("jwtToken"); 
   clearUserData();
@@ -61,8 +55,6 @@ export const registerUser = async (userData) => {
 
   try {
     const data = await sendApiRequest("/auth/register", "POST", payload);
-
-    console.log("Registration successful!");
     alert("Registration successful! Redirecting to homepage...");
     window.location.href = "index.html"; // Redirect to index.html after successful registration
     return data; // Return registration response for further handling if needed

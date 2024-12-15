@@ -16,25 +16,31 @@ export async function populateCarousel() {
     carouselContainer.innerHTML = ""; // Clear the container
     listings.data.forEach((listing) => {
       const carouselItem = document.createElement("div");
-      carouselItem.classList.add("carousel-item");
+      carouselItem.classList.add(
+        "carousel-item",
+        "transform",
+        "transition",
+        "hover:scale-105",
+        "duration-200"
+      ); 
       carouselItem.innerHTML = `
-        <img
-          src="${
-            listing.media?.[0]?.url ||
-            "./media/placeholders/item-placeholder.png"
-          }"
-          alt="${listing.title}"
-          class="w-full h-64 object-cover rounded-lg"
-        />
-        <div class="text-center mt-2">
-          <h3 class="text-lg font-semibold">${listing.title}</h3>
-          <p class="text-sm text-gray-600">${
-            listing.description || "No description available."
-          }</p>
-        </div>
-      `;
+    <img
+      src="${
+        listing.media?.[0]?.url || "./media/placeholders/item-placeholder.png"
+      }"
+      alt="${listing.title}"
+      class="w-full h-64 object-cover rounded-lg"
+    />
+    <div class="text-center mt-2">
+      <h3 class="text-lg font-semibold">${listing.title}</h3>
+      <p class="text-sm text-gray-600">${
+        listing.description || "No description available."
+      }</p>
+    </div>
+  `;
       carouselContainer.appendChild(carouselItem);
     });
+
   } catch (error) {
     console.error("Error populating carousel:", error);
     document.getElementById("carousel").innerHTML =
@@ -62,8 +68,9 @@ export function populatePopularCategories() {
     { title: "Sports", icon: "./media/icons/sports.png", category: "sports" },
   ];
 
-  const categoriesContainer = document.getElementById("popularCategories");
-  categoriesContainer.innerHTML = "";
+  // Target only the grid container
+  const categoriesGrid = document.getElementById("popCategoriesGrid");
+  categoriesGrid.innerHTML = ""; // Clear only the grid content
 
   categories.forEach((category) => {
     const categoryCard = document.createElement("div");
@@ -86,20 +93,40 @@ export function populatePopularCategories() {
         <h3 class="mt-2 text-lg font-medium">${category.title}</h3>
       </button>
     `;
-    categoriesContainer.appendChild(categoryCard);
+    categoriesGrid.appendChild(categoryCard);
   });
 }
 
-export function populateHowItWorksSection() {
-  const howItWorksContent = document.getElementById("howItWorksContent");
-  howItWorksContent.innerHTML = `
-    <h3 class="text-xl font-semibold mb-2">How It Works</h3>
-    <p class="text-gray-600">
-      Village connects people in your community. Create listings, offer services, or bid on help needed.
-      It’s a place to bring people together.
-    </p>
-  `;
+export async function populateHowItWorksSection() {
+  const howItWorksContent = document.getElementById("howItWorks");
+
+  try {
+    // Fetch the about.html file
+    const response = await fetch("about.html");
+    if (!response.ok) {
+      throw new Error(`Failed to fetch about.html: ${response.statusText}`);
+    }
+
+    // Extract and insert content
+    const htmlText = await response.text();
+    const sectionStart = htmlText.indexOf('<section id="howItWorks"');
+    const sectionEnd = htmlText.indexOf("</section>", sectionStart) + 10;
+    const howItWorksHTML = htmlText.slice(sectionStart, sectionEnd);
+
+    // Populate
+    howItWorksContent.innerHTML = howItWorksHTML;
+  } catch (error) {
+    console.error("Error fetching How It Works section:", error);
+    howItWorksContent.innerHTML = `
+      <h3 class="text-xl font-semibold mb-2">How It Works</h3>
+      <p class="text-gray-600">
+        Village connects people in your community. Create listings, offer services, or bid on help needed.
+        It’s a place to bring people together.
+      </p>
+    `;
+  }
 }
+
 
 export async function initializeIndexPage() {
   try {

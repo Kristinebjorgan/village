@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.btn-primary {
+  @apply bg-primary text-white font-bold py-2 px-4 rounded hover:bg-primary-light;
+}
+
+#creditButton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0; /* Remove padding from the button */
+}
+
+#creditBalance {
+  margin: 0;
+  line-height: 1; /* Ensure the text has no extra space above/below */
+}
+
+svg {
+  display: block; /* Ensure the icon does not have any extra spacing */
+  margin-bottom: 2px; /* Adjust spacing between icon and text */
+}
+
+.space-y-1 > * + * {
+  margin-top: 2px; /* Controlled spacing between stacked elements */
+}
+
+#backButton {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  transition: all 0.3s ease-in-out;
+}
+
+#backButton:hover {
+  background-color: #f3f3f3; /* Optional hover effect */
+}

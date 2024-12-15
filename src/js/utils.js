@@ -1,5 +1,33 @@
 import { fetchApi } from "./api.js";
 
+// Hamburger menu toggle
+export const setupCategoriesMenu = () => {
+  const toggleBtn = document.getElementById("categoriesToggle"); // Hamburger button
+  const closeBtn = document.getElementById("closeMenuButton"); // Close button
+  const mobileMenu = document.getElementById("mobileMenu"); // Mobile menu container
+
+  if (!toggleBtn || !closeBtn || !mobileMenu) {
+    console.error("Menu toggle setup failed. Missing required elements.");
+    return;
+  }
+
+  // Open mobile menu
+  toggleBtn.addEventListener("click", () => {
+    console.log("Hamburger menu clicked."); // Debug log
+    mobileMenu.classList.toggle("hidden");
+    mobileMenu.classList.toggle("show");
+    console.log("Classes on mobileMenu:", mobileMenu.classList);
+  });
+
+  // Close mobile menu
+  closeBtn.addEventListener("click", () => {
+    console.log("Close button clicked."); // Debug log
+    mobileMenu.classList.add("hidden");
+    mobileMenu.classList.remove("show");
+    console.log("Classes on mobileMenu after close:", mobileMenu.classList);
+  });
+};
+
 // Categories
 export function getCategoryButtons() {
   const categoryButtons = document.querySelectorAll(".category-btn");
@@ -12,7 +40,6 @@ export function getCategoryButtons() {
     button.addEventListener("click", () => {
       const category = button.dataset.category;
       if (category) {
-        console.log(`Redirecting to auction.html with category: ${category}`);
         window.location.href = `auction.html?category=${category}`;
       } else {
         console.warn("Category data missing for button:", button);
@@ -33,16 +60,11 @@ export function updateCreditBalance(credits) {
 
 // Perform a search on the provided listings
 export function performSearch(query, listings, displayListings) {
-  console.log("Performing search for:", query);
-  console.log("Listings provided to search:", listings);
 
   const normalizedQuery = query.trim().toLowerCase();
   const filteredListings = listings.filter((listing) =>
     (listing.title || "").toLowerCase().includes(normalizedQuery)
   );
-
-  console.log("Filtered Listings:", filteredListings);
-
   displayListings(filteredListings); // Pass the filtered results to be displayed
 }
 
@@ -56,12 +78,10 @@ export function initSearchBar(listings, displayListings) {
     return;
   }
 
-  console.log("Initializing Search Bar with Listings:", listings);
 
   // Event listener for the search button
   searchButton.addEventListener("click", () => {
     const query = searchBar.value.trim();
-    console.log("Search button clicked with query:", query);
     performSearch(query, listings, displayListings);
   });
 
@@ -69,12 +89,10 @@ export function initSearchBar(listings, displayListings) {
   searchBar.addEventListener("keydown", (event) => {
     if (event.key === "Enter") {
       const query = searchBar.value.trim();
-      console.log("Enter key pressed with query:", query);
       performSearch(query, listings, displayListings);
     }
   });
 
-  console.log("Search bar initialized successfully.");
 }
 
 // retry API request when failing
@@ -91,3 +109,4 @@ export async function retryApiRequest(apiCall, retries = 3, delay = 1000) {
   }
   throw new Error("API request failed after retries");
 }
+

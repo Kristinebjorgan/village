@@ -2,11 +2,8 @@ import { fetchApi, sendApiRequest } from "./api.js";
 import { retryApiRequest } from "./utils.js";
 
 
-/**
- * Initialize the listings module
- */
+//Initialize listings module
 export async function initListings() {
-  console.log("Initializing listings...");
   const container = document.getElementById("listings-container");
   if (!container) {
     console.warn("Listings container not found. Skipping initialization.");
@@ -19,7 +16,6 @@ export async function initListings() {
   const allListings = await fetchListings(); // Fetch all listings once
 
   if (category) {
-    console.log(`Filtering listings by category: ${category}`);
     const filteredListings = filterListingsByCategory(allListings, category); // Filter fetched listings
     displayListings(filteredListings); // Display filtered listings
   } else {
@@ -29,29 +25,21 @@ export async function initListings() {
   initCategoryFiltering(allListings); // Initialize category filtering
 }
 
-/**
- * Fetch all listings from the API
- */
+//Fetch all listings from api
 export async function fetchListings() {
   try {
-    console.log("Fetching all listings...");
     const response = await fetchApi(
       "/auction/listings?_tag=villageWebsite&_active=true"
     );
-    console.log("Fetched Listings:", response.data);
     return response.data;
   } catch (error) {
     console.error("Error fetching listings:", error);
     return []; // Return an empty array if an error occurs
   }
 }
-
-/**
- * Fetch listings from the API and display them with bid functionality
- */
+//Fetch and display with bids
 export async function fetchListingsAndDisplay() {
   try {
-    console.log("Fetching all listings...");
     const response = await fetchApi(
       "/auction/listings?_tag=villageWebsite&_active=true"
     );
@@ -67,6 +55,22 @@ export async function fetchListingsAndDisplay() {
   }
 }
 
+//Store bid for viewving
+export function initializeBids() {
+  const allListings = document.querySelectorAll(".listing");
+  allListings.forEach((listing) => {
+    const listingId = listing.dataset.id;
+    const savedBids = loadBidsFromLocalStorage(listingId);
+
+    if (savedBids.length > 0) {
+      const highestBidElement = document.getElementById(
+        `highest-bid-${listingId}`
+      );
+      const highestBid = Math.max(...savedBids.map((bid) => bid.amount));
+      highestBidElement.textContent = `Highest Bid: ${highestBid}`;
+    }
+  });
+}
 
 // generate listings card
 function generateListingHTML(listing, isGuest = false) {
@@ -155,7 +159,6 @@ function initCategoryFiltering(allListings) {
     button.addEventListener("click", () => {
       const category = button.dataset.category;
       if (category) {
-        console.log(`Filtering by category: ${category}`);
         const filteredListings = filterListingsByCategory(
           allListings,
           category
@@ -176,58 +179,71 @@ function initCategoryFiltering(allListings) {
  */
 export function displayListings(listingsToRender) {
   const container = document.getElementById("listings-container");
+
   if (!container) {
     console.error("Listings container not found in the DOM.");
-    return; // Exit early if no container found
+    return;
   }
-  // Clear existing content
-  container.innerHTML = "";
+
+  container.innerHTML = ""; // Clear existing content
 
   if (!listingsToRender || listingsToRender.length === 0) {
     container.innerHTML = `
       <div class="text-center text-gray-500 p-4">
         <p>No listings available. Try a different search or category.</p>
-      </div>
-    `;
-    return; // Exit early if no listings to display
+      </div>`;
+    return;
   }
 
-  // Render each listing and attach bid button functionality
   listingsToRender.forEach((listing) => {
     try {
+      // Generate the HTML and append it to the container
       const listingHTML = generateListingHTML(listing);
       container.innerHTML += listingHTML;
-
-      // Attach bid button functionality for this listing
-      const bidButton = document.querySelector(`.bid-btn[data-id="${listing.id}"]`);
-      if (bidButton) {
-        bidButton.addEventListener("click", async () => {
-          console.log(`Bid button clicked for listing ID: ${listing.id}`);
-          const bidAmountInput = document.getElementById(`bidAmount-${listing.id}`);
-          const bidAmount = parseFloat(bidAmountInput.value);
-
-          if (!bidAmount || bidAmount <= 0) {
-            alert("Please enter a valid bid amount.");
-            return;
-          }
-
-          try {
-            const updatedListing = await placeBid(listing.id, bidAmount);
-            console.log("Bid successful:", updatedListing);
-
-            // Clear input field and refresh the UI
-            bidAmountInput.value = "";
-            fetchListingsAndDisplay(); // Refresh listings
-          } catch (error) {
-            console.error("Error handling bid:", error);
-          }
-        });
-      }
     } catch (error) {
       console.error("Error rendering listing:", listing, error);
     }
   });
+
+  // Attach bid button functionality after rendering
+  listingsToRender.forEach((listing) => {
+    const bidButton = document.querySelector(
+      `.bid-btn[data-id="${listing.id}"]`
+    );
+    if (bidButton) {
+      bidButton.addEventListener("click", () => handleBid(listing.id));
+    }
+  });
 }
+
+async function handleBid(listingId) {
+  const bidAmountInput = document.getElementById(`bidAmount-${listingId}`);
+  const bidAmount = parseFloat(bidAmountInput.value);
+
+  if (!bidAmount || bidAmount <= 0) {
+    alert("Please enter a valid bid amount.");
+    return;
+  }
+
+  try {
+    console.log(`Placing bid of ${bidAmount} on listing ID: ${listingId}`);
+    const updatedBids = await placeBid(listingId, bidAmount);
+
+    // Update the UI with the new highest bid
+    const highestBidElement = document.getElementById(
+      `highest-bid-${listingId}`
+    );
+    const newHighestBid = Math.max(...updatedBids.map((bid) => bid.amount));
+    highestBidElement.textContent = `Highest Bid: ${newHighestBid}`;
+
+    // Clear the input field
+    bidAmountInput.value = "";
+  } catch (error) {
+    console.error("Error placing bid:", error);
+    alert("Failed to place the bid. Please try again.");
+  }
+}
+
 
 /**
  * Fetch a specific listing by ID
@@ -235,42 +251,32 @@ export function displayListings(listingsToRender) {
 async function fetchListingById(listingId) {
   try {
     const response = await fetchApi(`/auction/listings/${listingId}?_bids=true`); 
-    console.log("Fetched latest listing with bids:", response.data); // Log the latest listing data
-    return response.data; // Return the fetched listing with bids
+    return response.data; 
   } catch (error) {
     console.error("Error fetching listing by ID:", error);
-    throw error; // Throw the error to handle it appropriately
+    throw error; 
   }
 }
 
-/**
- * Fetch all bids for a specific listing
- */
+//fetch all bids for speicfic listing
 export async function fetchBidsForListing(listingId) {
   try {
     const response = await fetchApi(`/auction/listings/${listingId}?_bids=true`);
-    console.log("Fetched listing with bids:", response.data);
-    return response.data.bids || []; // Return bids array or an empty array
+    return response.data.bids || []; 
   } catch (error) {
     console.error("Error fetching bids for listing:", error);
     throw error;
   }
 }
 
-/**
- * Place a bid
- */
+//Place a bid
 export async function placeBid(listingId, amount) {
   try {
-    console.log(`Placing bid of ${amount} on listing ${listingId}...`);
-
     const response = await sendApiRequest(
       `/auction/listings/${listingId}/bids`,
       "POST",
       { amount }
     );
-
-    console.log("Bid placed successfully:", response);
     alert(`Your bid of ${amount} has been placed successfully!`);
 
     // Fetch updated bids from the server
@@ -291,11 +297,8 @@ export async function placeBid(listingId, amount) {
   }
 }
 
-/**
- * Attach functionality to the Bid button
- */
+//Bid button functionality
 export function attachBidButton(listingId) {
-  console.log(`Attaching bid button for listing ID: ${listingId}`);
   const bidButton = document.querySelector(`.bid-btn[data-id="${listingId}"]`);
   if (!bidButton) {
     console.warn(`Bid button for listing ${listingId} not found.`);
@@ -309,7 +312,6 @@ export function attachBidButton(listingId) {
       return;
     }
 
-    console.log(`Bid button clicked for listing ID: ${listingId}`);
     const bidAmountInput = document.getElementById(`bidAmount-${listingId}`);
     const bidAmount = parseFloat(bidAmountInput.value);
 
@@ -334,7 +336,6 @@ export function attachBidButton(listingId) {
 
       // Place the bid and fetch updated bids
       const updatedBids = await placeBid(listingId, bidAmount);
-      console.log("Updated bids after placing bid:", updatedBids);
 
       // Dynamically update the "Highest Bid" in the UI
       const highestBidElement = document.getElementById(
@@ -360,22 +361,13 @@ export function attachBidButton(listingId) {
 }
 
 
-/**
- * Save bids to localStorage.
- * @param {string} listingId - The ID of the listing.
- * @param {Array} bids - The array of bids to save.
- */
+//Save bids to localStorage
 function saveBidsToLocalStorage(listingId, bids) {
   const storedBids = JSON.parse(localStorage.getItem("bids")) || {};
   storedBids[listingId] = bids;
   localStorage.setItem("bids", JSON.stringify(storedBids));
 }
 
-/**
- * Load bids from localStorage.
- * @param {string} listingId - The ID of the listing.
- * @returns {Array} The array of saved bids.
- */
 export function loadBidsFromLocalStorage(listingId) {
   const storedBids = JSON.parse(localStorage.getItem("bids")) || {};
   return storedBids[listingId] || [];

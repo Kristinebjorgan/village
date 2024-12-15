@@ -10,6 +10,7 @@ import {
   clearOldBids,
   loadBidsFromLocalStorage,
   fetchBidsForListing,
+  initializeBids,
 } from "./listings.js";
 import * as modal from "./modal.js"; // Import everything from modal.js
 import { loginUser, logoutUser, registerUser } from "./auth.js"; // Import auth functionality
@@ -25,7 +26,7 @@ import {
 import {
   updateCreditBalance,
   getCategoryButtons,
-  initSearchBar,
+  initSearchBar, setupCategoriesMenu,
 } from "./utils.js";
 import {
   populateCarousel,
@@ -57,23 +58,6 @@ function initializePage() {
   }
 }
 
-//Store bid for viewving
-function initializeBids() {
-  const allListings = document.querySelectorAll(".listing");
-  allListings.forEach((listing) => {
-    const listingId = listing.dataset.id;
-    const savedBids = loadBidsFromLocalStorage(listingId);
-
-    if (savedBids.length > 0) {
-      const highestBidElement = document.getElementById(
-        `highest-bid-${listingId}`
-      );
-      const highestBid = Math.max(...savedBids.map((bid) => bid.amount));
-      highestBidElement.textContent = `Highest Bid: ${highestBid}`;
-    }
-  });
-}
-
 // Fetch and display user credits
 async function initializeUserCredits() {
   try {
@@ -84,11 +68,7 @@ async function initializeUserCredits() {
       );
       return;
     }
-    console.log(
-      "[initializeUserCredits] Fetching profile data for user credits..."
-    );
     const profileData = await fetchApi(`/auction/profiles/${username}`);
-    console.log("[initializeUserCredits] Profile data fetched:", profileData);
     const userData = profileData.data;
     updateCreditBalance(userData.credits);
   } catch (error) {
@@ -99,38 +79,27 @@ async function initializeUserCredits() {
   }
 }
 
+//Initialize the page
 document.addEventListener("DOMContentLoaded", async () => {
   try {
-    console.log("Initializing application...");
     initializePage();
 
     // Handle Guest Mode
     const guestBtn = document.getElementById("guestBtn");
     if (guestBtn) {
       guestBtn.addEventListener("click", () => {
-        console.log("Guest mode activated.");
-        localStorage.setItem("isGuest", true); // Mark user as guest
-        window.location.href = "index.html"; // Redirect to the index page
+        localStorage.setItem("isGuest", true); 
+        window.location.href = "index.html"; 
       });
-    }
-
-    // Validate token
-    const token = getToken();
-    if (!isTokenValid(token)) {
-      console.warn("Token is invalid or missing.");
-    } else {
-      console.log("Token is valid. Proceeding with initialization...");
     }
 
     //Initialize index
     async function initializeIndexPage() {
       try {
-        console.log("Initializing Index Page...");
-
         // Populate the sections
-        await populateCarousel(); // Populate carousel
-        populatePopularCategories(); // Populate popular categories
-        populateHowItWorksSection(); // Populate "How It Works" section
+        await populateCarousel(); 
+        populatePopularCategories(); 
+        populateHowItWorksSection(); 
       } catch (error) {
         console.error("Error initializing index page:", error);
       }
@@ -139,15 +108,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Initialize profile features
     if (isCurrentPage("profile.html")) {
       renderProfilePage();
-      initializeAvatarUpdate(); // Avatar functionality
+      initializeAvatarUpdate(); 
     }
+
+    //mobile menu toggle
+    setupCategoriesMenu();
 
     // Initialize global features (e.g., forms, logout, modal, etc.)
     initializeGlobalFeatures();
 
     // Fetch all listings with bids
     const listingsWithBids = await fetchListingsWithBids();
-    console.log("Fetched listings with bids:", listingsWithBids);
 
     // Initialize bids after displaying listings
     initializeBids();
@@ -161,14 +132,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 
-/**
- * Fetch all listings and include their bids dynamically
- */
+//fetch all listings with bids
 async function fetchListingsWithBids() {
   try {
     // Fetch all listings
     const listings = await fetchListings();
-    console.log("Fetched listings:", listings);
 
     // Fetch bids for each listing
     const listingsWithBids = await Promise.all(
@@ -193,55 +161,50 @@ async function fetchListingsWithBids() {
   }
 }
 
+// global features
 function initializeGlobalFeatures() {
-  console.log("Initializing global application features...");
+  console.log("Initializing global features...");
+
+  // Initialize forms, logout, modal, and user credits
   initForms();
   attachLogoutFunctionality();
   ensureModalLoaded();
   initializeUserCredits();
   getCategoryButtons();
 
-  // Fetch and initialize listings
+  // Fetch listings and handle them
   fetchListingsAndDisplay()
     .then((fetchedListings) => {
       if (!fetchedListings || fetchedListings.length === 0) {
-        console.warn(
-          "No listings fetched. Search bar and display will remain inactive."
-        );
+        console.warn("No listings fetched. Display and search bar are inactive.");
       } else {
-        console.log("Fetched Listings:", fetchedListings);
+        console.log("Fetched listings successfully:", fetchedListings);
 
-        // Initialize the search bar with fetched listings
+        // Initialize search bar functionality
         initSearchBar(fetchedListings, displayListings);
 
-        // Display fetched listings on the page
+        // Display listings dynamically
         displayListings(fetchedListings);
       }
     })
     .catch((error) => {
-      console.error("Error fetching listings:", error);
+      console.error("Error fetching or displaying listings:", error);
     });
-
-  console.log("Global features initialized successfully.");
 }
 
-/**
- * Helper function to check if the current page matches a specific name
- */
+
+//Check curent page
 function isCurrentPage(pageName) {
   return window.location.pathname.includes(pageName);
 }
 
 
-/**
- * Attach logout functionality to the logout button
- */
+//Logout
 function attachLogoutFunctionality() {
   const logoutBtn = document.getElementById("logoutBtn");
 
   if (logoutBtn) {
     logoutBtn.addEventListener("click", () => {
-      console.log("Logout button clicked.");
       logoutUser();
     });
   } else {
@@ -270,17 +233,12 @@ export function initializeModal() {
       modal.classList.add("hidden");
     }
   });
-
-  // Add other modal-specific behavior here, like form submission
 }
 
-/**
- * Dynamically load and initialize the modal if not present
- */
+//dynamically load modal
 function ensureModalLoaded() {
   const modalElement = document.getElementById("addListingModal");
   if (!modalElement) {
-    console.log("Adding modal to the DOM...");
     const modalHTML = modal.getAddListingModalHTML();
     const container = document.createElement("div");
     container.innerHTML = modalHTML;
@@ -292,97 +250,14 @@ function ensureModalLoaded() {
       .getElementById("addListingForm")
       .addEventListener("submit", async (event) => {
         event.preventDefault();
-        console.log("Add Listing form submitted.");
-        // Trigger fetch and display after successful submission
         await listings.fetchListingsAndDisplay();
       });
 
     // Attach the button to the modal functionality
     modal.attachModalToButton("addListingBtn");
   } else {
-    console.log("Modal already present in the DOM.");
 
     // Reattach modal functionality to the button
     modal.attachModalToButton("addListingBtn");
-  }
-}
-
-/**
- * Save token and username to localStorage after login
- */
-async function handleLogin(event) {
-  event.preventDefault();
-
-  const email = document.getElementById("loginUsername")?.value.trim();
-  const password = document.getElementById("loginPassword")?.value.trim();
-  const loginError = document.getElementById("loginError");
-
-  loginError.textContent = "";
-  loginError.classList.add("hidden");
-
-  if (!email || !password) {
-    displayError("Please fill in both email and password.", loginError);
-    return;
-  }
-
-  try {
-    const data = await loginUser(email, password);
-
-    // Save token and username to localStorage
-    setToken(data.accessToken);
-    setUsername(data.name);
-
-    alert("Login successful!");
-    window.location.href = "index.html";
-  } catch (error) {
-    displayError(error.message || "Login failed.", loginError);
-  }
-}
-
-/**
- * Save token and username to localStorage after registration
- */
-async function handleRegister(event) {
-  event.preventDefault();
-
-  const username = document.getElementById("username")?.value.trim();
-  const email = document.getElementById("registerEmail")?.value.trim();
-  const password = document.getElementById("registerPassword")?.value.trim();
-  const repeatPassword = document
-    .getElementById("repeatPassword")
-    ?.value.trim();
-  const bio = document.getElementById("biography")?.value.trim();
-  const signupError = document.getElementById("loginError");
-
-  signupError.textContent = "";
-
-  // Validate inputs
-  if (!username || !email || !password || !repeatPassword) {
-    displayError("All fields are required.", signupError);
-    return;
-  }
-  if (password !== repeatPassword) {
-    displayError("Passwords do not match.", signupError);
-    return;
-  }
-
-  const userData = {
-    name: username,
-    email,
-    password,
-    bio: bio || "",
-  };
-
-  try {
-    const data = await registerUser(userData);
-
-    // Save token and username to localStorage
-    setToken(data.accessToken);
-    setUsername(data.name);
-
-    alert("Registration successful! Redirecting to login...");
-    document.getElementById("loginTab").click();
-  } catch (error) {
-    displayError(error.message || "Registration failed.", signupError);
   }
 }

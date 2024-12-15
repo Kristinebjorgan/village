@@ -3,9 +3,7 @@ import { loginUser, registerUser } from "./auth.js";
 
 let avatarURL = ""; // Global variable for avatar URL
 
-/**
- * Initialize form-related event listeners
- */
+//form event listeners
 export function initForms() {
   const loginTab = document.getElementById("loginTab");
   const signupTab = document.getElementById("signupTab");
@@ -19,24 +17,17 @@ export function initForms() {
     return;
   }
 
-  console.log("Initializing form-related event listeners...");
-
-  // Add listeners for tab switching
+  // Tab switching
   loginTab.addEventListener("click", () => toggleForms("login"));
   signupTab.addEventListener("click", () => toggleForms("signup"));
 
-  // Attach form-specific listeners
+  // Form-specific listeners
   signupForm?.addEventListener("submit", handleRegister);
   avatarUpload?.addEventListener("change", handleAvatarUpload);
   loginForm?.addEventListener("submit", handleLogin);
-
-  console.log("Form listeners attached successfully.");
 }
 
-/**
- * Toggle between login and signup forms
- * @param {string} formType - The form to show ("login" or "signup")
- */
+//toggle forms
 function toggleForms(formType) {
   const loginForm = document.getElementById("loginForm");
   const signupForm = document.getElementById("signupForm");
@@ -50,9 +41,7 @@ function toggleForms(formType) {
   }
 }
 
-/**
- * Handle login
- */
+//handle login 
 async function handleLogin(event) {
   event.preventDefault();
 
@@ -77,9 +66,7 @@ async function handleLogin(event) {
   }
 }
 
-/**
- * Handle user registration
- */
+///handle registration
 async function handleRegister(event) {
   event.preventDefault();
 
@@ -121,14 +108,14 @@ async function handleRegister(event) {
     return;
   }
 
-  // Process avatar upload if a file is provided
+  // Process avatar upload
   let avatar = null;
   if (avatarFile) {
     try {
       const avatarURL = await uploadFileToCloudinary(avatarFile);
       avatar = {
         url: avatarURL,
-        alt: `${username}'s avatar`, // Optional alt text
+        alt: `${username}'s avatar`, 
       };
     } catch (error) {
       console.error("Avatar upload failed:", error.message);
@@ -137,7 +124,7 @@ async function handleRegister(event) {
     }
   }
 
-  // Build the userData payload
+  // userData payload
   const userData = {
     name: username,
     email,
@@ -149,14 +136,13 @@ async function handleRegister(event) {
   };
 
   try {
-    // Register the user
     await registerUser(userData);
 
-    // Automatically log the user in
+    // Automatically redirect to login
     try {
-      await loginUser(email, password); // Use the same credentials for login
+      await loginUser(email, password); 
       alert("Registration and login successful!");
-      window.location.href = "index.html"; // Redirect to index
+      window.location.href = "login.html"; 
     } catch (loginError) {
       console.error("Login after registration failed:", loginError.message);
       displayError(
@@ -169,9 +155,7 @@ async function handleRegister(event) {
   }
 }
 
-/**
- * Handle avatar upload
- */
+//Avatar upload
 async function handleAvatarUpload(event) {
   console.log("Avatar upload event triggered.");
   const file = event.target.files[0];
@@ -225,9 +209,7 @@ function isValidUrl(url) {
   return regex.test(url);
 }
 
-/**
- * Display error messages on forms or as alerts.
- */
+//Error messages
 export function displayError(message, errorElement = null) {
   if (errorElement) {
     errorElement.textContent = message;

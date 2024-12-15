@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Village - A platform to offer and seek help in your community."
+      content="Dugnad - The strenght in shared efforts"
     />
     <title>Village</title>
     <link
@@ -19,79 +19,119 @@
     <script src="./src/js/main.js" type="module"></script>
   </head>
   <body>
-    <header
-      class="grid grid-cols-3 gap-x-4 px-4 sm:px-6 lg:px-8 bg-white shadow-lg"
-    >
-      <!-- Row 1 -->
-      <div
-        class="flex items-center justify-start pl-2 mt-[-20px] sm:pl-4 lg:pl-6"
-      >
+<!-- Header -->
+<header class="grid grid-cols-3 grid-rows-2 gap-2 px-4 sm:px-6 lg:px-8 bg-white shadow-lg">
+  <!-- Row 1, Column 1: Logo -->
   <a href="index.html">
+  <div class="relative flex items-center justify-start">
+    <!-- Logo -->
     <img
-      src="./media/village_logo3.png"
-      alt="Village logo"
-      class="h-40 sm:h-48 lg:h-56 object-contain"
-      style="transform: rotate(-90deg)"
+      src="./media/dugnad.png"
+      alt="Dugnad logo"
+      class="absolute h-40 w-40"
     />
+    <!-- Title -->
+    <h1
+      class="relative text-m font-superlight sm:text-2xl lg:text-3xl font-header text-primary tracking-min"
+    >
+      dugnad
+    </h1>
+  </div>
   </a>
-      </div>
-      <div class="flex items-center justify-center mt-[-40px]">
-        <h1
-          class="text-3xl sm:text-4xl lg:text-5xl font-normal tracking-medio text-primary drop-shadow-xl leading-tight"
+
+  <!-- Row 1, Column 2: Search Bar -->
+  <div class="flex items-center justify-center">
+    <div class="relative w-full max-w-lg">
+      <input
+        id="search-bar"
+        type="text"
+        placeholder="Search listings, users, or categories"
+        class="w-full h-8 sm:h-9 lg:h-10 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-accent text-primary placeholder-primary-light"
+      />
+      <button type="submit" class="absolute right-2 top-1/2 transform -translate-y-1/2" id="search-button">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="h-6 w-6 text-primary hover:text-primary-dark transition-colors duration-300"
         >
-          VILLAGE
-        </h1>
-      </div>
-      <div class="flex items-center justify-end mt-[-100px] space-x-3">
-        <!-- Utility Icons -->
-        <!-- Bell -->
-        <a href="profile.html">
-        <button title="Notifications">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6 text-primary hover:text-primary-dark transition-colors duration-300"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-5-5.917V5a3 3 0 00-6 0v.083A6.002 6.002 0 002 11v3.159c0 .417-.16.825-.444 1.143L.999 17h5m0 0a3 3 0 006 0m-6 0H5"
-            />
-          </svg>
-        </button>
-        </a>
-        <!-- Coin -->
-        <a href="profile.html">
-<button id="creditButton" title="Credits" class="flex items-center space-x-2">
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6 text-primary">
-    <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125" />
-  </svg>
-  <span id="creditBalance" class="text-sm font-light text-primary"></span>
-</button>
-        </a>
-        <!-- Profile -->
-        <a href="profile.html">
-        <button title="Profile">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="h-6 w-6 text-primary hover:text-primary-dark transition-colors duration-300"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
-            />
-          </svg>
-        </button>
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+          />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Row 1, Column 3: Utility Icons -->
+  <div class="flex items-center justify-end gap-4">
+    <!-- Notifications, Credits, Profile -->
+  <div class="flex items-center justify-end gap-4">
+    <!-- Notifications -->
+    <a href="profile.html">
+      <button title="Notifications">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6 text-primary hover:text-primary-dark transition-colors duration-300"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-5-5.917V5a3 3 0 00-6 0v.083A6.002 6.002 0 002 11v3.159c0 .417-.16.825-.444 1.143L.999 17h5m0 0a3 3 0 006 0m-6 0H5"
+          />
+        </svg>
+      </button>
     </a>
-        <!-- Settings -->
+    <!-- Credits -->
+    <a href="profile.html">
+      <button id="creditButton" title="Credits" class="flex flex-col items-center">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="h-6 w-6 text-primary"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125"
+          />
+        </svg>
+        <span id="creditBalance" class="text-sm font-light text-primary">
+
+        </span>
+      </button>
+    </a>
+    <!-- Profile -->
+    <a href="profile.html">
+      <button title="Profile">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="h-6 w-6 text-primary hover:text-primary-dark transition-colors duration-300"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+          />
+        </svg>
+      </button>
+    </a>
+          <!-- Settings -->
         <a href="profile.html">
         <button title="Settings">
           <svg
@@ -100,7 +140,7 @@
             viewBox="0 0 24 24"
             stroke-width="1.5"
             stroke="currentColor"
-            class="h-6 w-6 text-primary hover:text-primary-dark transition-colors duration-300"
+          class="h-6 w-6 text-primary hover:text-primary-dark transition-colors duration-300"
           >
             <path
               stroke-linecap="round"
@@ -133,43 +173,46 @@
           </svg>
         </button>
       </div>
-<!-- Row 2: Search Bar -->
-<div class="col-span-3 pb-3 mt-[-40px] flex justify-center">
-  <div class="relative w-3/4 max-w-xl">
-    <input
-    id="search-bar"
-      type="text"
-      placeholder="Search listings, users, or categories"
-      class="w-full p-2 sm:p-3 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-primary-light text-primary-dark-700 placeholder-primary-dark-500"
-    />
-    <button
-      type="submit"
-      class="absolute right-2 top-1/2 transform -translate-y-1/2"
-      id="search-button" class="search-button"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
-        stroke="currentColor"
-        class="h-6 w-6 text-primary-dark hover:text-primary-light transition-colors duration-300"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-        />
-      </svg>
-    </button>
+        </div>
   </div>
-</div>
 
-<!-- Row 3: Categories -->
-<div
+<div class="col-span-3">
+
+<!-- Hamburger Menu Button (Visible on Small Screens) -->
+<button id="categoriesToggle" class="block sm:hidden menu-btn" aria-label="Toggle Categories">
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-6 w-6">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16m-7 6h7" />
+  </svg>
+</button>
+  <button
+    id="backButton"
+    class="flex items-center text-primary hover:text-primary-dark transition"
+    onclick="history.back()"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="1.5"
+      stroke="currentColor"
+      class="h-6 w-6 mr-1"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
+      />
+    </svg>
+  </button>
+      
+  <div
   class="col-span-3 mt-2 px-4 pb-1 flex justify-center items-center space-x-2"
 >
-      
+</div>
+</header>
+<main>
+<!-- Desktop Categories -->
+<section id="categoriesContainer" class="hidden sm:flex flex-wrap justify-center items-center gap-4 mt-4">
 <!-- Household -->
 <button
   title="household"
@@ -368,53 +411,152 @@ EVENT
 URGENT 
 </span>
 </button>
-</div>
-    </header>
-<main>
-    <!-- Carousel Section -->
-    <section id="recentListingsCarousel" class="py-8 bg-gray-100">
-      <h2 class="text-center text-2xl font-semibold mb-4">Most Recent Listings</h2>
-      <div class="carousel-container mx-auto max-w-6xl">
-        <div id="carousel" class="carousel">
-          <!-- Carousel items will be dynamically added -->
-<div class="text-center mt-4">
+  <!-- All Categories -->
   <button
+    id="allCategoriesBtn"
+    title="All Categories"
+    class="relative flex flex-col items-center p-0 m-0 space-y-0 group"
     onclick="window.location.href='auction.html'"
-    class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition"
   >
-    Browse All
+    <img
+      src="./media/icons/everything.png"
+      alt="All Categories Icon"
+      class="h-36 w-24 group-hover:blur-sm transition-all duration-500"
+    />
+    <span
+      class="absolute top-1/2 transform -translate-y-1/2 text-m font-light text-secondary-dark tracking-min opacity-0 group-hover:opacity-100 transition-all duration-500"
+    >
+      EVERYTHING
+    </span>
   </button>
 </div>
-    </section>
+</section>
+<!-- Mobile Menu -->
+<div id="mobileMenu" class="hidden fixed inset-0 bg-white z-50 flex flex-col p-4">
+  <!-- Close Button -->
+  <button id="closeMenuButton" class="absolute top-4 right-4" aria-label="Close Menu">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+    </svg>
+  </button>
 
-    <!-- Popular Categories Section -->
-    <section id="popularCategories" class="py-8">
-      <h2 class="text-center text-2xl font-semibold mb-4">Popular Categories</h2>
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-6xl mx-auto">
-        <!-- Dynamically add category cards -->
+  <!-- Mobile Categories -->
+  <div id="mobileCategoriesContainer" class="grid grid-cols-2 gap-4 mt-8">
+    <!-- Manually Add Categories -->
+    <button class="category-btn">
+      <img src="./media/icons/house.png" alt="Household Icon" />
+      <span>Household</span>
+    </button>
+    <button class="category-btn">
+      <img src="./media/icons/homemade.png" alt="Homemade Icon" />
+      <span>Homemade</span>
+    </button>
+    <button class="category-btn">
+      <img src="./media/icons/needle.png" alt="Handcraft Icon" />
+      <span>Handcraft</span>
+    </button>
+    <button class="category-btn">
+      <img src="./media/icons/sports.png" alt="Sports Icon" />
+      <span>Sports</span>
+    </button>
+    <button class="category-btn">
+      <img src="./media/icons/star.png" alt="Professional Icon" />
+      <span>Professional</span>
+    </button>
+    <button class="category-btn">
+      <img src="./media/icons/toys.png" alt="Kids Icon" />
+      <span>Kids</span>
+    </button>
+    <button class="category-btn">
+      <img src="./media/icons/paw.png" alt="Pets Icon" />
+      <span>Pets</span>
+    </button>
+    <button class="category-btn">
+      <img src="./media/icons/leaf.png" alt="Eco Swap Icon" />
+      <span>Eco Swap</span>
+    </button>
+    <button class="category-btn">
+      <img src="./media/icons/event.png" alt="Event Icon" />
+      <span>Event</span>
+    </button>
+    <button class="category-btn">
+      <img src="./media/icons/fire.png" alt="Urgent Icon" />
+      <span>Urgent</span>
+    </button>
+  </div>
+</div>
+</div>
+
+<main class="bg-white">
+  <!-- Carousel Section -->
+  <section id="recentListingsCarousel" class="py-8 bg-gray-100">
+    <h2 class="text-center text-2xl font-semibold mb-4">Most Recent Listings</h2>
+    <div class="carousel-container mx-auto max-w-6xl overflow-hidden">
+      <!-- Flexbox Carousel Wrapper -->
+      <div id="carousel" class="flex gap-6 overflow-x-auto snap-x snap-mandatory">
+        <!-- Dynamically Added Carousel Items -->
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- How It Works Section -->
-    <section id="howItWorks" class="py-8 bg-gray-100">
-      <h2 class="text-center text-2xl font-semibold mb-4">How It Works</h2>
-      <div class="max-w-4xl mx-auto">
-        <p id="howItWorksContent" class="text-center text-gray-600">Loading...</p>
+  <!-- Browse All Button -->
+  <div class="text-center mt-8">
+    <button
+      onclick="window.location.href='auction.html'"
+      class="bg-secondary-light text-primary-dark px-6 py-3 rounded-lg hover:bg-secondary-dark tracking-min transition"
+    >
+      BROWSE ALL
+    </button>
+  </div>
+
+  <!-- Popular Categories Section -->
+  <section id="popularCategories" class="py-8">
+    <h2 class="text-center text-2xl font-semibold mb-4">Popular Categories</h2>
+    <div class="max-w-4xl mx-auto px-4">
+      <!-- Flexbox Grid for Categories -->
+      <div id="popCategoriesGrid" class="flex flex-wrap justify-center gap-6">
+        <!-- Dynamically Fetched Categories -->
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- Sign Up Section -->
-    <section id="signUpNow" class="py-8">
-<div class="text-center mt-4">
+  <!-- How It Works Section -->
+  <section id="howItWorks" class="py-8 bg-gray-100">
+    <div class="max-w-4xl mx-auto">
+      <p id="howItWorksContent" class="text-center text-gray-600">Loading...</p>
+    </div>
+  </section>
+
+  <!-- Sign Up Section -->
+  <section id="signUpNow" class="py-8">
+    <div class="text-center">
+      <button
+        onclick="window.location.href='auth.html#signup'"
+        class="bg-secondary text-white px-4 py-2 rounded-lg hover:bg-secondary-dark transition"
+      >
+        Sign Up Now
+      </button>
+    </div>
+  </section>
+
+  <!-- Add Listing Button -->
   <button
-    onclick="window.location.href='auth.html#signup'"
-    class="bg-secondary text-white px-4 py-2 rounded-lg hover:bg-secondary-dark transition"
+    id="addListingBtn"
+    class="fixed bottom-8 right-8 bg-primary border-2 border-secondary-dark text-secondary-dark p-4 rounded-full shadow-lg hover:bg-primary-dark transition duration-300"
   >
-    Sign Up Now
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="h-6 w-6"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      stroke-width="2"
+    >
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+    </svg>
   </button>
-</div>
-    </section>
-  
+</main>
+
     <!-- Add Listing Button -->
 <button id="addListingBtn" class="fixed bottom-8 right-8 bg-primary border-2 border-secondary-dark text-secondary-dark p-4 rounded-full shadow-lg hover:bg-primary-dark transition duration-300">
   <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -435,8 +577,8 @@ URGENT
 
           <!-- Center Section -->
           <div class="flex space-x-4">
-            <a href="#" class="hover:underline text-sm sm:text-base"
-              >About Us</a
+            <a href="/about.html" class="hover:underline text-sm sm:text-base"
+              >About</a
             >
             <a href="#" class="hover:underline text-sm sm:text-base"
               >Privacy Policy</a
@@ -460,7 +602,6 @@ URGENT
                 />
               </svg>
             </a>
-            <!-- Add other icons -->
           </div>
         </div>
       </div>

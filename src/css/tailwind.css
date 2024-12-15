@@ -2,10 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Primary Button Styling */
 .btn-primary {
   @apply bg-primary text-white font-bold py-2 px-4 rounded hover:bg-primary-light;
 }
 
+/* Credit Button Styling */
 #creditButton {
   display: flex;
   flex-direction: column;
@@ -19,11 +21,102 @@
   line-height: 1; /* Ensure the text has no extra space above/below */
 }
 
+/* SVG Styling */
 svg {
   display: block; /* Ensure the icon does not have any extra spacing */
   margin-bottom: 2px; /* Adjust spacing between icon and text */
 }
 
+/* Space Between Elements */
 .space-y-1 > * + * {
   margin-top: 2px; /* Controlled spacing between stacked elements */
+}
+
+/* Back Button Styling */
+#backButton {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  transition: all 0.3s ease-in-out;
+}
+
+#backButton:hover {
+  background-color: #f3f3f3; /* Optional hover effect */
+}
+
+/* Show Categories Grid on Desktop */
+.desktop-categories {
+  display: none; /* Hidden by default */
+}
+
+@media (min-width: 640px) { /* Tailwind's sm breakpoint */
+  .desktop-categories {
+    display: grid; /* Grid layout on desktop */
+    grid-template-columns: repeat(3, minmax(0, 1fr)); /* 3 columns */
+    gap: 1rem; /* Add space between category buttons */
+  }
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #f8f8f8;
+}
+
+/* Simplified  */
+.hidden {
+  display: none !important;
+}
+
+.show {
+  display: flex !important; /* Ensures flex layout works */
+}
+
+/* Utility Icons Alignment */
+.utility-icons {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem; /* Spacing between icons */
+}
+
+.utility-icons svg {
+  height: 1.5rem; /* Adjust icon size */
+  width: 1.5rem;
+}
+
+/* Category Buttons Styling */
+.category-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  background: none; /* Transparent background */
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.category-btn:hover {
+  transform: scale(1.05); /* Hover zoom */
+}
+
+.category-btn img {
+  height: 50px;
+  width: auto;
+}
+
+.category-btn span {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: #333;
+}
+
+#popCategoriesGrid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* Center-align items */
+  gap: 1.5rem; /* Space between items */
 }
