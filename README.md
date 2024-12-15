@@ -1,19 +1,3 @@
-<!-- Custom Font Import -->
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&display=swap');
-* {
-  font-family: 'Lora', serif;
-}
-h1, h2, h3 {
-  text-decoration: underline;
-}
-</style>
-
-<!-- New Logo -->
-<p align="center">
-  <img src="media/dugnad.png" alt="Dugnad Logo" width="200px">
-</p>
-
 # **DUGNAD**
 *The strenght found in shared efforts*
 
