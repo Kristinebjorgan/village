@@ -87,8 +87,8 @@ function generateListingHTML(listing, isGuest = false) {
     <div class="bg-white shadow rounded-lg overflow-hidden border border-gray-200" id="listing-${id}">
       <img src="${imageUrl}" alt="Listing Image" class="h-40 w-full object-cover" />
       <div class="p-4">
-        <h3 class="text-lg font-bold text-gray-800 truncate">${title}</h3>
-        <p class="text-sm text-gray-600 truncate">${description}</p>
+        <h3 class="text-lg font-normal text-center tracking-min text-gray-800 truncate">${title}</h3>
+        <p class="text-sm text-center text-gray-600 truncate">${description}</p>
         <p class="text-sm text-gray-600 mt-2">Ends: ${endDate}</p>
         <p class="text-sm font-bold text-primary mt-1" id="highest-bid-${id}">
           Highest Bid: ${highestBid}

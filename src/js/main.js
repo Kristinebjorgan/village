@@ -26,7 +26,7 @@ import {
 import {
   updateCreditBalance,
   getCategoryButtons,
-  initSearchBar, setupCategoriesMenu,
+  initSearchBar, setupCategoriesMenu, 
 } from "./utils.js";
 import {
   populateCarousel,
@@ -91,24 +91,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         localStorage.setItem("isGuest", true); 
         window.location.href = "index.html"; 
       });
-    }
-
-    //Initialize index
-    async function initializeIndexPage() {
-      try {
-        // Populate the sections
-        await populateCarousel(); 
-        populatePopularCategories(); 
-        populateHowItWorksSection(); 
-      } catch (error) {
-        console.error("Error initializing index page:", error);
-      }
-    }
-
-    // Initialize profile features
-    if (isCurrentPage("profile.html")) {
-      renderProfilePage();
-      initializeAvatarUpdate(); 
     }
 
     //mobile menu toggle
