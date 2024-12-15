@@ -15,40 +15,43 @@ export async function populateCarousel() {
 
     carouselContainer.innerHTML = ""; // Clear the container
     listings.data.forEach((listing) => {
-      const carouselItem = document.createElement("div");
+      const carouselItem = document.createElement("a"); // Use <a> to make it clickable
       carouselItem.classList.add(
         "carousel-item",
         "transform",
         "transition",
         "hover:scale-105",
-        "duration-200"
-      ); 
+        "duration-200",
+        "block"
+      );
+carouselItem.href = "auction.html";
       carouselItem.innerHTML = `
-    <img
-      src="${
-        listing.media?.[0]?.url || "./media/placeholders/item-placeholder.png"
-      }"
-      alt="${listing.title}"
-      class="w-full h-64 object-cover rounded-lg"
-    />
-    <div class="text-center mt-2">
-      <h3 class="text-lg font-normal text-center tracking-min">${
-        listing.title
-      }</h3>
-      <p class="text-sm text-gray-600">${
-        listing.description || "No description available."
-      }</p>
-    </div>
-  `;
+        <img
+          src="${
+            listing.media?.[0]?.url ||
+            "./media/placeholders/item-placeholder.png"
+          }"
+          alt="${listing.title}"
+          class="w-full h-64 object-cover rounded-lg"
+        />
+        <div class="text-center mt-2">
+          <h3 class="text-lg font-normal text-center tracking-min">${
+            listing.title
+          }</h3>
+          <p class="text-sm text-gray-600">${
+            listing.description || "No description available."
+          }</p>
+        </div>
+      `;
       carouselContainer.appendChild(carouselItem);
     });
-
   } catch (error) {
     console.error("Error populating carousel:", error);
     document.getElementById("carousel").innerHTML =
       "<p>Failed to load recent listings. Please try again later.</p>";
   }
 }
+
 
 export function populatePopularCategories() {
   const categories = [

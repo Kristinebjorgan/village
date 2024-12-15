@@ -15,10 +15,6 @@
     <script src="https://cdn.jsdelivr.net/npm/heroicons@2.0.13/dist/24/solid/index.min.js"></script>
           <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="./dist/css/styles.css" />
-    <link
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-  rel="stylesheet"
-/>
     <meta name="theme-color" content="#4F796C" />
     <script src="./src/js/main.js" type="module"></script>
   </head>
@@ -36,35 +32,30 @@
     />
     <!-- Title -->
     <h1
-      class="relative text-l font-superlight sm:text-2xl lg:text-3xl font-header text-primary tracking-medio"
+      class="relative text-m font-superlight sm:text-2xl lg:text-3xl font-header text-primary tracking-min"
     >
       dugnad
     </h1>
   </div>
   </a>
 
-<div class="px-4 sm:px-6 lg:px-8">
-  <div class="flex flex-col sm:flex-row items-center justify-center gap-2">
-    <!-- Search Bar -->
-    <div class="relative w-full sm:max-w-md lg:max-w-lg">
+  <!-- Row 1, Column 2: Search Bar -->
+  <div class="flex items-center justify-center">
+    <div class="relative w-full max-w-lg">
       <input
         id="search-bar"
         type="text"
-        placeholder="Search"
-        class="w-full h-10 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-accent text-primary placeholder-primary-light transition-all"
+        placeholder="Search listings, users, or categories"
+        class="w-full h-8 sm:h-9 lg:h-10 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-accent text-primary placeholder-primary-light"
       />
-      <button
-        type="submit"
-        class="absolute right-3 top-1/2 transform -translate-y-1/2"
-        id="search-button"
-      >
+      <button type="submit" class="absolute right-2 top-1/2 transform -translate-y-1/2" id="search-button">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
-          stroke-width="2"
+          stroke-width="1.5"
           stroke="currentColor"
-          class="h-5 w-5 text-primary hover:text-primary-dark transition-all"
+          class="h-6 w-6 text-primary hover:text-primary-dark transition-colors duration-300"
         >
           <path
             stroke-linecap="round"
@@ -75,30 +66,17 @@
       </button>
     </div>
   </div>
-</div>
 
-<!-- Row 1, Column 3: Utility Icons -->
-<div class="flex items-center justify-end gap-4">
-  <!-- Menu Toggle Button (Visible on Small Screens) -->
-<button
-  id="utilityMenuToggle"
-  class="sm:hidden h-8 w-8 p-1 rounded-full bg-primary-light text-white border border-gray-300 hover:bg-primary-dark transition-all duration-300 flex items-center justify-center"
-  onclick="document.getElementById('utilityMenu').classList.toggle('hidden')"
->
-  <i class="fas fa-cog"></i>
-</button>
-
-  <!-- Utility Icons (Hidden on Small Screens) -->
-  <div
-    id="utilityMenu"
-    class="hidden sm:flex flex-col sm:flex-row items-center justify-end gap-2 sm:gap-4"
-  >
+  <!-- Row 1, Column 3: Utility Icons -->
+  <div class="flex items-center justify-end gap-4">
+    <!-- Notifications, Credits, Profile -->
+  <div class="flex items-center justify-end gap-4">
     <!-- Notifications -->
     <a href="profile.html">
       <button title="Notifications">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-  class="h-6 w-6 text-primary hover:text-primary-dark transition-colors duration-300 flex-shrink-0"
+          class="h-6 w-6 text-primary hover:text-primary-dark transition-colors duration-300"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -112,7 +90,6 @@
         </svg>
       </button>
     </a>
-
     <!-- Credits -->
     <a href="profile.html">
       <button id="creditButton" title="Credits" class="flex flex-col items-center">
@@ -122,7 +99,7 @@
           viewBox="0 0 24 24"
           stroke-width="1.5"
           stroke="currentColor"
-  class="h-6 w-6 text-primary hover:text-primary-dark transition-colors duration-300 flex-shrink-0"
+          class="h-6 w-6 text-primary"
         >
           <path
             stroke-linecap="round"
@@ -130,10 +107,11 @@
             d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125"
           />
         </svg>
-        <span id="creditBalance" class="text-sm font-light text-primary"></span>
+        <span id="creditBalance" class="text-sm font-light text-primary">
+
+        </span>
       </button>
     </a>
-
     <!-- Profile -->
     <a href="profile.html">
       <button title="Profile">
@@ -143,7 +121,7 @@
           viewBox="0 0 24 24"
           stroke-width="1.5"
           stroke="currentColor"
-  class="h-6 w-6 text-primary hover:text-primary-dark transition-colors duration-300 flex-shrink-0"
+          class="h-6 w-6 text-primary hover:text-primary-dark transition-colors duration-300"
         >
           <path
             stroke-linecap="round"
@@ -162,7 +140,7 @@
             viewBox="0 0 24 24"
             stroke-width="1.5"
             stroke="currentColor"
-  class="h-6 w-6 text-primary hover:text-primary-dark transition-colors duration-300 flex-shrink-0"
+          class="h-6 w-6 text-primary hover:text-primary-dark transition-colors duration-300"
           >
             <path
               stroke-linecap="round"
@@ -185,7 +163,7 @@
             viewBox="0 0 24 24"
             stroke-width="1.5"
             stroke="currentColor"
-  class="h-6 w-6 text-primary hover:text-primary-dark transition-colors duration-300 flex-shrink-0"
+            class="h-6 w-6 text-primary hover:text-primary-dark transition-colors duration-300"
           >
             <path
               stroke-linecap="round"
@@ -194,10 +172,19 @@
             />
           </svg>
         </button>
+      </div>
+        </div>
   </div>
-</div>
-</div>
-    <button
+
+<div class="col-span-3">
+
+<!-- Hamburger Menu Button (Visible on Small Screens) -->
+<button id="categoriesToggle" class="block sm:hidden menu-btn" aria-label="Toggle Categories">
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-6 w-6">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16m-7 6h7" />
+  </svg>
+</button>
+  <button
     id="backButton"
     class="flex items-center text-primary hover:text-primary-dark transition"
     onclick="history.back()"
@@ -217,31 +204,16 @@
       />
     </svg>
   </button>
-  </div>
-</header>
-<div class="col-span-3">
-
-<!-- Hamburger Menu Button -->
-<button
-  id="categoriesToggle"
-  type="button"
-  class="block sm:hidden h-10 w-10 flex items-center justify-center rounded-full bg-primary-light text-white border border-gray-300 hover:bg-primary-dark transition-all duration-300 m-5"
-  aria-label="Toggle Menu"
+      
+  <div
+  class="col-span-3 mt-2 px-4 pb-1 flex justify-center items-center space-x-2"
 >
-  <i class="fas fa-bars"></i>
-</button>
-
-
-<!-- Updated Container -->
-<div class="col-span-3 mt-2 px-4 py-1 flex justify-center items-center space-x-2 bg-gray-100 rounded-lg shadow-sm">
 </div>
-
-<main class="bg-white">
-  <!-- Desktop Categories -->
-<section
-  id="categoriesContainer"
-  class="flex flex-wrap justify-center items-center gap-4 mt-4 sm:flex hidden"
-><!-- Household -->
+</header>
+<main>
+<!-- Desktop Categories -->
+<section id="categoriesContainer" class="hidden sm:flex flex-wrap justify-center items-center gap-4 mt-4">
+<!-- Household -->
 <button
   title="household"
   class="relative flex flex-col items-center p-0 m-0 space-y-0 group category-btn"
@@ -460,10 +432,7 @@ URGENT
 </div>
 </section>
 <!-- Mobile Menu -->
-<div
-  id="mobileMenu"
-  class="hidden fixed inset-0 bg-white z-50 flex-col p-4 gap-4"
->
+<div id="mobileMenu" class="hidden fixed inset-0 bg-white z-50 flex flex-col p-4">
   <!-- Close Button -->
   <button id="closeMenuButton" class="absolute top-4 right-4" aria-label="Close Menu">
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
@@ -471,7 +440,7 @@ URGENT
     </svg>
   </button>
 
-  <!-- Mobile Categories as Grid -->
+  <!-- Mobile Categories -->
   <div id="mobileCategoriesContainer" class="grid grid-cols-2 gap-4 mt-8">
     <!-- Manually Add Categories -->
     <button class="category-btn">
@@ -517,22 +486,18 @@ URGENT
   </div>
 </div>
 </div>
-<section>
-<!-- Carousel Section -->
-<section id="recentListingsCarousel" class="py-8">
-  <h2 class="text-center text-2xl font-light uppercase tracking-min mb-4">
-    Most Recent Listings
-  </h2>
-  <div class="carousel-container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-    <!-- Wrapper switches between grid and flex based on screen size -->
-    <div
-      id="carousel"
-      class="grid gap-6 sm:grid-cols-2 sm:grid-rows-2 lg:flex lg:gap-6 lg:overflow-x-auto lg:snap-x lg:snap-mandatory"
-    >
-      <!-- Dynamically Added Carousel Items -->
+
+<main class="bg-white">
+  <!-- Carousel Section -->
+  <section id="recentListingsCarousel" class="py-8 bg-gray-100">
+    <h2 class="text-center text-2xl font-semibold mb-4">Most Recent Listings</h2>
+    <div class="carousel-container mx-auto max-w-6xl overflow-x-auto">
+      <!-- Flexbox Carousel Wrapper -->
+      <div id="carousel" class="flex gap-6 overflow-x-auto snap-x snap-mandatory">
+        <!-- Dynamically Added Carousel Items -->
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
   <!-- Browse All Button -->
   <div class="text-center mt-8">
@@ -545,8 +510,8 @@ URGENT
   </div>
 
   <!-- Popular Categories Section -->
-  <section id="popularCategories" class="py-8 bg-#F4F6F5">
-    <h2 class="text-center text-2xl font-light uppercase tracking-minmb-4">Popular Categories</h2>
+  <section id="popularCategories" class="py-8">
+    <h2 class="text-center text-2xl font-semibold mb-4">Popular Categories</h2>
     <div class="max-w-4xl mx-auto px-4">
       <!-- Flexbox Grid for Categories -->
       <div id="popCategoriesGrid" class="flex flex-wrap justify-center gap-6">
@@ -556,7 +521,7 @@ URGENT
   </section>
 
   <!-- How It Works Section -->
-  <section id="howItWorks" class="py-8 bg-gray-100 shadow-lg">
+  <section id="howItWorks" class="py-8 bg-gray-100">
     <div class="max-w-4xl mx-auto">
       <p id="howItWorksContent" class="text-center text-gray-600">Loading...</p>
     </div>
@@ -567,15 +532,33 @@ URGENT
     <div class="text-center">
       <button
         onclick="window.location.href='auth.html#signup'"
-        class="bg-secondary-light text-primary-dark font-light uppercase tracking-min px-4 py-2 rounded-lg hover:bg-secondary-dark transition"
+        class="bg-secondary text-white px-4 py-2 rounded-lg hover:bg-secondary-dark transition"
       >
         Sign Up Now
       </button>
     </div>
   </section>
 
+  <!-- Add Listing Button -->
+  <button
+    id="addListingBtn"
+    class="fixed bottom-8 right-8 bg-primary border-2 border-secondary-dark text-secondary-dark p-4 rounded-full shadow-lg hover:bg-primary-dark transition duration-300"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="h-6 w-6"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      stroke-width="2"
+    >
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+    </svg>
+  </button>
+</main>
+
     <!-- Add Listing Button -->
-<button id="addListingBtn" class="fixed bottom-8 right-8 bg-primary-light border-2 border-secondary-light text-secondary-light p-4 rounded-full shadow-lg hover:bg-primary-dark transition duration-300">
+<button id="addListingBtn" class="fixed bottom-8 right-8 bg-primary border-2 border-secondary-dark text-secondary-dark p-4 rounded-full shadow-lg hover:bg-primary-dark transition duration-300">
   <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
   </svg>
